@@ -4,6 +4,7 @@ import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -42,16 +43,17 @@ class SignUp : AppCompatActivity() {
     }
 
     private fun signUp(email: String, password: String, name: String) {
-        if (password != "" && email != "" && name != "") {
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(name)) {
+            Toast.makeText(this@SignUp, "please fill all the fields", Toast.LENGTH_SHORT).show()
+        } else {
             mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isComplete) {
                         val intent = Intent(this@SignUp, MainActivity::class.java)
                         startActivity(intent)
+                        finish()
                     }
                 }
-        } else {
-            Toast.makeText(this@SignUp, "You need to fill in enough information to register", Toast.LENGTH_SHORT).show()
         }
     }
 }

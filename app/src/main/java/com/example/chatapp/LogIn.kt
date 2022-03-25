@@ -3,9 +3,11 @@ package com.example.chatapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_log_in.*
@@ -44,14 +46,21 @@ class LogIn : AppCompatActivity() {
     }
 
     private fun login(email: String, password: String) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isComplete) {
-                    val intent = Intent(this@LogIn, MainActivity::class.java)
-                    startActivity(intent)
-                } else {
-                  Toast.makeText(this@LogIn, "user does not exist", Toast.LENGTH_SHORT).show()
-                }
-            }
+
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+            Toast.makeText(this@LogIn, "please fill all the fields", Toast.LENGTH_LONG).show()
+        } else {
+            mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, OnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "Successfully Logged In", Toast.LENGTH_LONG).show()
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show()
+                    }
+                })
+        }
     }
 }
