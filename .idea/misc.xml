@@ -6,7 +6,9 @@
         <entry key="app/src/main/res/drawable/btn_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/edt_background.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_log_in.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.22685185185185186" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/user_layout.xml" value="0.335" />
       </map>
     </option>
   </component>
