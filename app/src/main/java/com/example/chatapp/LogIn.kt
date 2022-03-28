@@ -1,14 +1,17 @@
 package com.example.chatapp
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.auth.User
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_log_in.*
 
@@ -38,8 +41,8 @@ class LogIn : AppCompatActivity() {
         }
 
         btn_login.setOnClickListener {
-            val email = edtEmail.text.toString()
-            val password = edtPassword.text.toString()
+            val email = edtEmail.text.toString().trim()
+            val password = edtPassword.text.toString().trim()
 
             login(email, password)
         }
@@ -58,7 +61,7 @@ class LogIn : AppCompatActivity() {
                         startActivity(intent)
                         finish()
                     } else {
-                        Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show()
+                       Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show()
                     }
                 })
         }
