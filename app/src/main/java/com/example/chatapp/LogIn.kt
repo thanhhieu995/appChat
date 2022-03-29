@@ -42,7 +42,7 @@ class LogIn : AppCompatActivity() {
 
         btn_login.setOnClickListener {
             val email = edtEmail.text.toString().trim()
-            val password = edtPassword.text.toString().trim()
+            val password = edtPassword.text.toString()
 
             login(email, password)
         }
