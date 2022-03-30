@@ -9,6 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 
 class UserAdapter(val context: Context, val userList: ArrayList<User>): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
+      val dataList = ArrayList<User>(userList)
+
+//    private fun init() {
+//        this.dataList.addAll(userList)
+//        notifyDataSetChanged()
+//    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.user_layout, parent, false)
@@ -16,19 +23,25 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        for (user in userList) {
-            //val currentUser = userList[position]
-            holder.textName.text = user.name
-        }
-//        val currentUser = userList[position]
-//        holder.textName.text = currentUser.name
+//        for (user in userList) {
+//            //val currentUser = userList[position]
+//            holder.textName.text = user.name
+//        }
+//        init()
+        val currentUser = dataList[position]
+        holder.textName.text = currentUser.name
     }
 
     override fun getItemCount(): Int {
-        return userList.size
+        return dataList.size
     }
 
     class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textName = itemView.findViewById<TextView>(R.id.txt_name)
+    }
+
+    fun addItems(item: User) {
+        dataList.addAll(listOf(item))
+        notifyDataSetChanged()
     }
 }
