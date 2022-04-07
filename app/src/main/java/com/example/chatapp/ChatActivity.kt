@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
 
 class ChatActivity : AppCompatActivity() {
 
@@ -73,6 +72,7 @@ class ChatActivity : AppCompatActivity() {
 
             val message = messageBox.text.toString()
             val messageObject = Message(message, senderUid)
+            messageAdapter.addMessage(messageObject)
 
             mDbRef.child("chats").child(senderRoom!!).child("message").push()
                 .setValue(messageObject).addOnSuccessListener {
