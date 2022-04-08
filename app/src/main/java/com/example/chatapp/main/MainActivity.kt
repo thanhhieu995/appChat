@@ -1,4 +1,4 @@
-package com.example.chatapp
+package com.example.chatapp.main
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +7,9 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.chatapp.R
+import com.example.chatapp.User
+import com.example.chatapp.accountLogin.LogIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 

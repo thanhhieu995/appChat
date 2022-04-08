@@ -1,4 +1,4 @@
-package com.example.chatapp
+package com.example.chatapp.chat
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,7 +7,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.tasks.OnSuccessListener
+import com.example.chatapp.Message
+import com.example.chatapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
@@ -30,14 +31,14 @@ class ChatActivity : AppCompatActivity() {
         val intent = Intent()
         val name = intent.getStringExtra("name")
         var receiverUid = intent.getStringExtra("uid")
-
         val senderUid = FirebaseAuth.getInstance().currentUser?.uid
+
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
         senderRoom = receiverUid + senderUid
         receiverUid = senderUid + receiverUid
 
-        supportActionBar?. title = name
+        supportActionBar?.title = name
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
         messageBox = findViewById(R.id.messageBox)

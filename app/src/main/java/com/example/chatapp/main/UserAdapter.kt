@@ -1,4 +1,4 @@
-package com.example.chatapp
+package com.example.chatapp.main
 
 import android.content.Context
 import android.content.Intent
@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
+import com.example.chatapp.chat.ChatActivity
+import com.example.chatapp.R
+import com.example.chatapp.User
 
 class UserAdapter(val context: Context, val userList: ArrayList<User>): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
