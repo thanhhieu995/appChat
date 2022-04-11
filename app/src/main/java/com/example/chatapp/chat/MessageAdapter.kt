@@ -50,6 +50,7 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
         } else {
             return ITEM_RECEIVE
         }
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {

@@ -30,14 +30,17 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
         val currentUser = dataList[position]
         holder.textName.text = currentUser.name
 
-        holder.itemView.setOnClickListener {
-            val intent = Intent(context, ChatActivity::class.java)
+        holder.itemView.setOnClickListener(object : View.OnClickListener{
+            override fun onClick(v: View?) {
+                val intent = Intent(context, ChatActivity::class.java)
 
-            intent.putExtra("name", currentUser.name)
-            intent.putExtra("uid", currentUser.uid)
+                intent.putExtra("name", currentUser.name)
+                intent.putExtra("uid", currentUser.uid)
 
-            context.startActivity(intent)
-        }
+                context.startActivity(intent)
+                notifyDataSetChanged()
+            }
+        })
     }
 
     override fun getItemCount(): Int {

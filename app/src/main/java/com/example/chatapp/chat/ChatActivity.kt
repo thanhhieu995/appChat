@@ -28,17 +28,18 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        val intent = Intent()
-        val name = intent.getStringExtra("name")
-        var receiverUid = intent.getStringExtra("uid")
+        //val intent = Intent()
+
+        val name = intent.getSerializableExtra("name")
+        var receiverUid = intent.getSerializableExtra("uid")
         val senderUid = FirebaseAuth.getInstance().currentUser?.uid
 
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
-        senderRoom = receiverUid + senderUid
+        senderRoom = receiverUid.toString() + senderUid
         receiverUid = senderUid + receiverUid
 
-        supportActionBar?.title = name
+        supportActionBar?.title = name.toString()
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
         messageBox = findViewById(R.id.messageBox)
@@ -69,7 +70,7 @@ class ChatActivity : AppCompatActivity() {
                         val message = postSnapshot.getValue(Message::class.java)
                         messageList.add(message!!)
                     }
-                    chatRecyclerView.scrollToPosition(messageList.size)
+                    //chatRecyclerView.scrollToPosition(messageList.size)
                     messageAdapter.notifyDataSetChanged()
                 }
 
