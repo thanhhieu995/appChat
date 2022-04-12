@@ -15,12 +15,6 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
 
       val dataList = ArrayList<User>(userList)
 
-//    private fun init() {
-//        this.dataList.addAll(userList)
-//        notifyDataSetChanged()
-//    }
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.user_layout, parent, false)
         return UserViewHolder(view)
@@ -36,7 +30,6 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
 
                 intent.putExtra("name", currentUser.name)
                 intent.putExtra("uid", currentUser.uid)
-
                 context.startActivity(intent)
                 notifyDataSetChanged()
             }
@@ -52,7 +45,7 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
     }
 
     fun addItems(item: User) {
-        dataList.addAll(listOf(item))
+        dataList.add(item)
         notifyDataSetChanged()
     }
 }

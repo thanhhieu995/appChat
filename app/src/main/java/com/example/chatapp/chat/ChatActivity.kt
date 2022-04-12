@@ -1,6 +1,5 @@
 package com.example.chatapp.chat
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
@@ -21,7 +20,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
 
-    val receiverRoom: String? = null
+    var receiverRoom: String? = null
     var senderRoom: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,12 +31,15 @@ class ChatActivity : AppCompatActivity() {
 
         val name = intent.getSerializableExtra("name")
         var receiverUid = intent.getSerializableExtra("uid")
-        val senderUid = FirebaseAuth.getInstance().currentUser?.uid
+
+        val senderUid = FirebaseAuth.getInstance().currentUser?.uid // lay uid tu account???
+        //???????????????
+
 
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
-        senderRoom = receiverUid.toString() + senderUid
-        receiverUid = senderUid + receiverUid
+        senderRoom = receiverUid.toString() //+ senderUid
+        receiverRoom = senderUid //+ receiverUid
 
         supportActionBar?.title = name.toString()
 
@@ -80,8 +82,24 @@ class ChatActivity : AppCompatActivity() {
 
             })
 
+        mDbRef.child("chats").child(receiverRoom!!).child("message")
+            .addValueEventListener(object: ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (postSnapshot in snapshot.children) {
+                        val message = postSnapshot.getValue(Message::class.java)
+                        messageList.add(message!!)
+                    }
+                    messageAdapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+
         sentButton.setOnClickListener {
-            sendChatMessage(senderUid)
+            sendChatMessage(receiverUid as String?)
 
             chatRecyclerView.scrollToPosition(messageList.size - 1)
             (chatRecyclerView.layoutManager as LinearLayoutManager).reverseLayout = true
@@ -89,10 +107,12 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendChatMessage(senderUid: String?) {
+    private fun sendChatMessage(receiveUid: String?) {
         val message = messageBox.text.toString()
-        val messageObject = Message(message, senderUid)
-        messageAdapter.addMessage(messageObject)
+        val messageObject = Message(message, receiveUid)
+        if (receiveUid != null) {
+            messageAdapter.addMessage(messageObject, receiveUid)
+        }
 
         mDbRef.child("chats").child(senderRoom!!).child("message").push().setValue(messageObject)
 //        mDbRef.child("chats").child(senderRoom!!).child("message").push()

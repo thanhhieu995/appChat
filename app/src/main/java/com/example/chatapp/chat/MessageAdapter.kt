@@ -15,6 +15,7 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
     val ITEM_RECEIVE = 1
     val ITEM_SENT = 2
 
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         if(viewType == 1) {
@@ -33,11 +34,13 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
         if (holder.javaClass == SentViewHolder::class.java) {
 
             val viewHolder = holder as SentViewHolder
-            holder.sentMessage.text = currentMessage.message
+            //holder.sentMessage.text = currentMessage.message
+            viewHolder.sentMessage.text = currentMessage.message
 
         } else {
             val viewHolder = holder as ReceiveViewHolder
-            holder.receiveMessage.text = currentMessage.message
+            //holder.receiveMessage.text = currentMessage.message
+            viewHolder.receiveMessage.text = currentMessage.message
         }
     }
 
@@ -51,6 +54,13 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
             return ITEM_RECEIVE
         }
         notifyDataSetChanged()
+
+//        if (senderUid.equals(receiveUid)) {
+//            return ITEM_SENT
+//        } else {
+//            return ITEM_RECEIVE
+//        }
+//        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
@@ -65,7 +75,7 @@ class MessageAdapter(val context: Context, val messageList: ArrayList<Message>):
         val sentMessage = itemView.findViewById<TextView>(R.id.txt_sent_message)
     }
 
-    fun addMessage(messageObject: Message) {
+    fun addMessage(messageObject: Message, receiveUid: String) {
         messageList.add(messageObject)
         notifyDataSetChanged()
     }
