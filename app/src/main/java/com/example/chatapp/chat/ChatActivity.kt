@@ -38,7 +38,7 @@ class ChatActivity : AppCompatActivity() {
 
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
-        senderRoom = receiverUid.toString() + senderUid
+        senderRoom = receiverUid.toString() //+ senderUid
         receiverRoom = senderUid //+ receiverUid
 
         supportActionBar?.title = name.toString()
@@ -105,8 +105,12 @@ class ChatActivity : AppCompatActivity() {
             (chatRecyclerView.layoutManager as LinearLayoutManager).reverseLayout = true
             (chatRecyclerView.layoutManager as LinearLayoutManager).stackFromEnd = true
 
-            chatAdapter.notifyDataSetChanged()
+
+            chatRecyclerView.layoutManager = LinearLayoutManager(this)
             chatRecyclerView.adapter = chatAdapter
+
+            //chatAdapter.messageList
+            chatAdapter.notifyDataSetChanged()
         }
     }
 
@@ -116,6 +120,7 @@ class ChatActivity : AppCompatActivity() {
         if (receiveUid != null) {
             chatAdapter.addMessage(messageObject, receiveUid)
         }
+
 
         mDbRef.child("chats").child(senderRoom!!).child("message").push().setValue(messageObject)
 //        mDbRef.child("chats").child(senderRoom!!).child("message").push()
