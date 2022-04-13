@@ -16,7 +16,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var chatRecyclerView: RecyclerView
     private lateinit var messageBox: EditText
     private lateinit var sentButton: ImageView
-    private lateinit var messageAdapter: MessageAdapter
+    private lateinit var chatAdapter: ChatAdapter
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
 
@@ -38,7 +38,7 @@ class ChatActivity : AppCompatActivity() {
 
         mDbRef = FirebaseDatabase.getInstance().getReference()
 
-        senderRoom = receiverUid.toString() //+ senderUid
+        senderRoom = receiverUid.toString() + senderUid
         receiverRoom = senderUid //+ receiverUid
 
         supportActionBar?.title = name.toString()
@@ -48,7 +48,7 @@ class ChatActivity : AppCompatActivity() {
         sentButton = findViewById(R.id.img_sent)
 
         messageList = ArrayList()
-        messageAdapter = MessageAdapter(this, messageList)
+        chatAdapter = ChatAdapter(this, messageList)
 
 
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -59,7 +59,7 @@ class ChatActivity : AppCompatActivity() {
         (chatRecyclerView.layoutManager as LinearLayoutManager).stackFromEnd = true
 
 
-        chatRecyclerView.adapter = messageAdapter
+        chatRecyclerView.adapter = chatAdapter
 
 
         mDbRef.child("chats").child(senderRoom!!).child("message")
@@ -73,7 +73,7 @@ class ChatActivity : AppCompatActivity() {
                         messageList.add(message!!)
                     }
                     //chatRecyclerView.scrollToPosition(messageList.size)
-                    messageAdapter.notifyDataSetChanged()
+                    chatAdapter.notifyDataSetChanged()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -82,14 +82,14 @@ class ChatActivity : AppCompatActivity() {
 
             })
 
-        mDbRef.child("chats").child(receiverRoom!!).child("message")
+        mDbRef.child("chats").child(receiverRoom!!).child("messages")
             .addValueEventListener(object: ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (postSnapshot in snapshot.children) {
                         val message = postSnapshot.getValue(Message::class.java)
                         messageList.add(message!!)
                     }
-                    messageAdapter.notifyDataSetChanged()
+                    chatAdapter.notifyDataSetChanged()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -104,6 +104,9 @@ class ChatActivity : AppCompatActivity() {
             chatRecyclerView.scrollToPosition(messageList.size - 1)
             (chatRecyclerView.layoutManager as LinearLayoutManager).reverseLayout = true
             (chatRecyclerView.layoutManager as LinearLayoutManager).stackFromEnd = true
+
+            chatAdapter.notifyDataSetChanged()
+            chatRecyclerView.adapter = chatAdapter
         }
     }
 
@@ -111,7 +114,7 @@ class ChatActivity : AppCompatActivity() {
         val message = messageBox.text.toString()
         val messageObject = Message(message, receiveUid)
         if (receiveUid != null) {
-            messageAdapter.addMessage(messageObject, receiveUid)
+            chatAdapter.addMessage(messageObject, receiveUid)
         }
 
         mDbRef.child("chats").child(senderRoom!!).child("message").push().setValue(messageObject)
@@ -123,6 +126,32 @@ class ChatActivity : AppCompatActivity() {
 //                        .setValue(messageObject)
 //                }
 //            })
+
+        mDbRef.child("chats").child(receiverRoom!!).child("messages").push().setValue(messageObject)
+
         messageBox.setText("")
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        mDbRef.child("chats").child(senderRoom!!).child("message")
+//            .addValueEventListener(object: ValueEventListener{
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    for(postSnapshot in snapshot.children) {
+//
+//                        //messageList.clear()
+//
+//                        val message = postSnapshot.getValue(Message::class.java)
+//                        messageList.add(message!!)
+//                    }
+//                    //chatRecyclerView.scrollToPosition(messageList.size)
+//                    chatAdapter.notifyDataSetChanged()
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//
+//                }
+//
+//            })
+//    }
 }

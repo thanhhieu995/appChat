@@ -10,7 +10,7 @@ import com.example.chatapp.Message
 import com.example.chatapp.R
 import com.google.firebase.auth.FirebaseAuth
 
-class MessageAdapter(val context: Context, val messageList: ArrayList<Message>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val ITEM_RECEIVE = 1
     val ITEM_SENT = 2
