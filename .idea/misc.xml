@@ -8,7 +8,7 @@
         <entry key="app/src/main/res/drawable/message_box_background.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/text_chat_message.xml" value="0.116" />
         <entry key="app/src/main/res/drawable/text_receive_background.xml" value="0.116" />
-        <entry key="app/src/main/res/layout/activity_chat.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_chat.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_log_in.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22685185185185186" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.375" />
