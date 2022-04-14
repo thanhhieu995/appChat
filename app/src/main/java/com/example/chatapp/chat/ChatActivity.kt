@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
@@ -121,10 +122,9 @@ class ChatActivity : AppCompatActivity() {
     private fun sendChatMessage(receiveUid: String?) {
         val message = messageBox.text.toString()
         val messageObject = Message(message, receiveUid)
-        if (receiveUid != null) {
+        if (receiveUid != null && message.trim().isNotEmpty()) {
             chatAdapter.addMessage(messageObject, receiveUid)
         }
-
 
         mDbRef.child("chats").child(senderRoom!!).child("message").push().setValue(messageObject)
 //        mDbRef.child("chats").child(senderRoom!!).child("message").push()
