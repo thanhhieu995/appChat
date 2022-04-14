@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/linearLayout"
         android:layout_alignParentTop="true"
+        android:layout_marginBottom="5dp"
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="1dp" />
 

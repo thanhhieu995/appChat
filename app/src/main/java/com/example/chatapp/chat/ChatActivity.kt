@@ -2,6 +2,7 @@ package com.example.chatapp.chat
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
@@ -11,6 +12,8 @@ import com.example.chatapp.Message
 import com.example.chatapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ChatActivity : AppCompatActivity() {
 
@@ -37,7 +40,7 @@ class ChatActivity : AppCompatActivity() {
         //???????????????
 
 
-        mDbRef = FirebaseDatabase.getInstance().getReference()
+        mDbRef = FirebaseDatabase.getInstance().reference
 
         senderRoom = receiverUid.toString() //+ senderUid
         receiverRoom = senderUid //+ receiverUid
@@ -90,8 +93,8 @@ class ChatActivity : AppCompatActivity() {
 
                     chatRecyclerView.scrollToPosition(messageList.size - 1)
 
-                    (chatRecyclerView.layoutManager as LinearLayoutManager).reverseLayout = true
-                    (chatRecyclerView.layoutManager as LinearLayoutManager).stackFromEnd = true
+//                    (chatRecyclerView.layoutManager as LinearLayoutManager).reverseLayout = true
+//                    (chatRecyclerView.layoutManager as LinearLayoutManager).stackFromEnd = true
 
                     chatAdapter.notifyDataSetChanged()
                 }
@@ -102,17 +105,22 @@ class ChatActivity : AppCompatActivity() {
 
             })
 
+        messageBox.setOnClickListener{
+            chatRecyclerView.scrollToPosition(messageList.size - 1)
+        }
+
+
 
         sentButton.setOnClickListener {
             sendChatMessage(receiverUid as String?)
 
             chatRecyclerView.scrollToPosition(messageList.size - 1)
-            (chatRecyclerView.layoutManager as LinearLayoutManager).reverseLayout = true
-            (chatRecyclerView.layoutManager as LinearLayoutManager).stackFromEnd = true
+//            (chatRecyclerView.layoutManager as LinearLayoutManager).reverseLayout = true
+//            (chatRecyclerView.layoutManager as LinearLayoutManager).stackFromEnd = true
 
 
-            chatRecyclerView.layoutManager = LinearLayoutManager(this)
-            chatRecyclerView.adapter = chatAdapter
+//            chatRecyclerView.layoutManager = LinearLayoutManager(this)
+//            chatRecyclerView.adapter = chatAdapter
 
             //chatAdapter.messageList
             chatAdapter.notifyDataSetChanged()
@@ -124,43 +132,17 @@ class ChatActivity : AppCompatActivity() {
         val messageObject = Message(message, receiveUid)
         if (receiveUid != null && message.trim().isNotEmpty()) {
             chatAdapter.addMessage(messageObject, receiveUid)
+
+
+            mDbRef.child("chats").child(senderRoom!!).child("message").push()
+                .setValue(messageObject)
+
+
+            mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
+                .setValue(messageObject)
+        } else {
+            Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG).show()
         }
-
-        mDbRef.child("chats").child(senderRoom!!).child("message").push().setValue(messageObject)
-//        mDbRef.child("chats").child(senderRoom!!).child("message").push()
-//            .setValue(messageObject)
-//            .addOnSuccessListener(object: OnSuccessListener<Void> {
-//                override fun onSuccess(p0: Void?) {
-//                    mDbRef.child("chats").child(receiverRoom!!).child("message").push()
-//                        .setValue(messageObject)
-//                }
-//            })
-
-        mDbRef.child("chats").child(receiverRoom!!).child("messages").push().setValue(messageObject)
-
         messageBox.setText("")
     }
-
-//    override fun onResume() {
-//        super.onResume()
-//        mDbRef.child("chats").child(senderRoom!!).child("message")
-//            .addValueEventListener(object: ValueEventListener{
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    for(postSnapshot in snapshot.children) {
-//
-//                        //messageList.clear()
-//
-//                        val message = postSnapshot.getValue(Message::class.java)
-//                        messageList.add(message!!)
-//                    }
-//                    //chatRecyclerView.scrollToPosition(messageList.size)
-//                    chatAdapter.notifyDataSetChanged()
-//                }
-//
-//                override fun onCancelled(error: DatabaseError) {
-//
-//                }
-//
-//            })
-//    }
 }

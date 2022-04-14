@@ -11,6 +11,7 @@
         android:theme="@style/Theme.ChatApp">
         <activity
             android:name=".chat.ChatActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:exported="false" />
         <activity
             android:name=".accountLogin.SignUp"
