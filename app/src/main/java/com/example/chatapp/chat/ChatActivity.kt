@@ -1,7 +1,10 @@
 package com.example.chatapp.chat
 
+import android.content.Context
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -30,6 +33,7 @@ class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
+
 
         //val intent = Intent()
 
@@ -64,9 +68,9 @@ class ChatActivity : AppCompatActivity() {
 
 
         mDbRef.child("chats").child(senderRoom!!).child("message")
-            .addValueEventListener(object: ValueEventListener{
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    for(postSnapshot in snapshot.children) {
+                    for (postSnapshot in snapshot.children) {
 
                         //messageList.clear()
 
@@ -84,7 +88,7 @@ class ChatActivity : AppCompatActivity() {
             })
 
         mDbRef.child("chats").child(receiverRoom!!).child("messages")
-            .addValueEventListener(object: ValueEventListener{
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (postSnapshot in snapshot.children) {
                         val message = postSnapshot.getValue(Message::class.java)
@@ -105,7 +109,7 @@ class ChatActivity : AppCompatActivity() {
 
             })
 
-        messageBox.setOnClickListener{
+        messageBox.setOnClickListener {
             chatRecyclerView.scrollToPosition(messageList.size - 1)
         }
 
@@ -141,7 +145,8 @@ class ChatActivity : AppCompatActivity() {
             mDbRef.child("chats").child(receiverRoom!!).child("messages").push()
                 .setValue(messageObject)
         } else {
-            Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG)
+                .show()
         }
         messageBox.setText("")
     }

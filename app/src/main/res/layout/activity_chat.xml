@@ -28,10 +28,10 @@
         <EditText
             android:id="@+id/messageBox"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_weight="80"
             android:layout_marginLeft="10dp"
-            android:padding="10dp"
+            android:padding="13dp"
             android:background="@drawable/message_box_background"
             android:hint="Type a message" />
 
