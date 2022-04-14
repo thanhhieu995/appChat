@@ -53,13 +53,10 @@ class ChatActivity : AppCompatActivity() {
 
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        chatRecyclerView.scrollToPosition(messageList.size - 1)
-
-        (chatRecyclerView.layoutManager as LinearLayoutManager).reverseLayout = true
-        (chatRecyclerView.layoutManager as LinearLayoutManager).stackFromEnd = true
-
 
         chatRecyclerView.adapter = chatAdapter
+
+
 
 
         mDbRef.child("chats").child(senderRoom!!).child("message")
@@ -89,6 +86,12 @@ class ChatActivity : AppCompatActivity() {
                         val message = postSnapshot.getValue(Message::class.java)
                         messageList.add(message!!)
                     }
+
+                    chatRecyclerView.scrollToPosition(messageList.size - 1)
+
+                    (chatRecyclerView.layoutManager as LinearLayoutManager).reverseLayout = true
+                    (chatRecyclerView.layoutManager as LinearLayoutManager).stackFromEnd = true
+
                     chatAdapter.notifyDataSetChanged()
                 }
 
@@ -97,6 +100,7 @@ class ChatActivity : AppCompatActivity() {
                 }
 
             })
+
 
         sentButton.setOnClickListener {
             sendChatMessage(receiverUid as String?)

@@ -30,6 +30,7 @@
             android:layout_height="50dp"
             android:layout_weight="80"
             android:layout_marginLeft="10dp"
+            android:padding="10dp"
             android:background="@drawable/message_box_background"
             android:hint="Type a message" />
 
