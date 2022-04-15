@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="5dp">
 
     <RelativeLayout
+        android:id="@+id/RL_receiveLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
+        android:background="@drawable/text_receive_background"
         android:padding="5dp"
-        android:background="@drawable/text_receive_background">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/time_receive"
+        tools:ignore="MissingConstraints">
 
         <TextView
             android:id="@+id/txt_receive_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="This is receive message"
             android:padding="10dp"
+            android:text="This is receive message"
             android:textSize="18sp" />
 
     </RelativeLayout>
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/time_receive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="time receive message"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
