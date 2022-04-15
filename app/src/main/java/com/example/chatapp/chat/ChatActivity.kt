@@ -8,6 +8,7 @@ import android.util.DisplayMetrics
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,7 @@ import com.example.chatapp.Message
 import com.example.chatapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -26,6 +28,9 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
+
+    private lateinit var timeSent: TextView
+    private lateinit var timeReceive: TextView
 
     var receiverRoom: String? = null
     var senderRoom: String? = null
@@ -55,6 +60,9 @@ class ChatActivity : AppCompatActivity() {
         messageBox = findViewById(R.id.messageBox)
         sentButton = findViewById(R.id.img_sent)
 
+//        timeSent = findViewById(R.id.txt_sent_message)
+//        timeReceive = findViewById(R.id.txt_receive_message)
+
         messageList = ArrayList()
         chatAdapter = ChatAdapter(this, messageList)
 
@@ -65,6 +73,9 @@ class ChatActivity : AppCompatActivity() {
         chatRecyclerView.adapter = chatAdapter
 
 
+        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+        val currentDate = sdf.format(Date())
+        //System.out.println(" C DATE is  "+currentDate)
 
 
         mDbRef.child("chats").child(senderRoom!!).child("message")
@@ -109,14 +120,9 @@ class ChatActivity : AppCompatActivity() {
 
             })
 
-        messageBox.setOnClickListener {
-            chatRecyclerView.scrollToPosition(messageList.size - 1)
-        }
-
-
 
         sentButton.setOnClickListener {
-            sendChatMessage(receiverUid as String?)
+            sendChatMessage(receiverUid as String?, currentDate)
 
             chatRecyclerView.scrollToPosition(messageList.size - 1)
 //            (chatRecyclerView.layoutManager as LinearLayoutManager).reverseLayout = true
@@ -131,9 +137,9 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendChatMessage(receiveUid: String?) {
+    private fun sendChatMessage(receiveUid: String?, currenDate:String?) {
         val message = messageBox.text.toString()
-        val messageObject = Message(message, receiveUid)
+        val messageObject = Message(message, receiveUid, currenDate)
         if (receiveUid != null && message.trim().isNotEmpty()) {
             chatAdapter.addMessage(messageObject, receiveUid)
 

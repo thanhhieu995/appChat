@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
 import com.example.chatapp.R
 import com.google.firebase.auth.FirebaseAuth
+import org.w3c.dom.Text
 
 class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -36,11 +37,17 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
             val viewHolder = holder as SentViewHolder
             //holder.sentMessage.text = currentMessage.message
             viewHolder.sentMessage.text = currentMessage.message
+            if (currentMessage.time != null) {
+                viewHolder.time_sent.text = currentMessage.time
+            }
 
         } else {
             val viewHolder = holder as ReceiveViewHolder
             //holder.receiveMessage.text = currentMessage.message
             viewHolder.receiveMessage.text = currentMessage.message
+            if (currentMessage.time != null) {
+                viewHolder.time_receive.text = currentMessage.time
+            }
         }
     }
 
@@ -69,10 +76,12 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 
     class ReceiveViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val receiveMessage = itemView.findViewById<TextView>(R.id.txt_receive_message)
+        val time_receive = itemView.findViewById<TextView>(R.id.time_receive)
     }
 
     class SentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val sentMessage = itemView.findViewById<TextView>(R.id.txt_sent_message)
+        val time_sent = itemView.findViewById<TextView>(R.id.time_sent)
     }
 
     fun addMessage(messageObject: Message, receiveUid: String) {
