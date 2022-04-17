@@ -16,9 +16,13 @@ import com.example.chatapp.Message
 import com.example.chatapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.firestore.FirebaseFirestore
+import com.squareup.okhttp.internal.Internal.instance
+import io.grpc.util.TransmitStatusRuntimeExceptionInterceptor.instance
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class ChatActivity : AppCompatActivity() {
 
@@ -104,6 +108,11 @@ class ChatActivity : AppCompatActivity() {
                     for (postSnapshot in snapshot.children) {
                         val message = postSnapshot.getValue(Message::class.java)
                         messageList.add(message!!)
+
+                        val hashMap: HashMap<String, Boolean> = HashMap()
+                        hashMap["isSeen"] = true
+                        mDbRef.updateChildren(hashMap as Map<String, Any>)
+
                     }
 
                     chatRecyclerView.scrollToPosition(messageList.size - 1)
@@ -155,5 +164,15 @@ class ChatActivity : AppCompatActivity() {
                 .show()
         }
         messageBox.setText("")
+    }
+
+    private fun seeMsg(senderId: String?){
+        val query = FirebaseFirestore.getInstance()
+                .collection("chat")
+                .document()
+                .collection("Message")
+                .whereEqualTo("senderId", senderId)
+                .whereEqualTo("read", false)
+                .get()
     }
 }
