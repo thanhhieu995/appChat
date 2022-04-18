@@ -1,11 +1,8 @@
 package com.example.chatapp.chat
 
-import android.content.Context
-import android.content.res.Configuration
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.DisplayMetrics
-import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,8 +14,6 @@ import com.example.chatapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
-import com.squareup.okhttp.internal.Internal.instance
-import io.grpc.util.TransmitStatusRuntimeExceptionInterceptor.instance
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -35,6 +30,9 @@ class ChatActivity : AppCompatActivity() {
 
     private lateinit var timeSent: TextView
     private lateinit var timeReceive: TextView
+    private  var statusMessage: String = "empty"
+//    val hashMap: HashMap<String, Boolean> = HashMap()
+//    var hasMore: Boolean = false
 
     var receiverRoom: String? = null
     var senderRoom: String? = null
@@ -84,15 +82,20 @@ class ChatActivity : AppCompatActivity() {
 
         mDbRef.child("chats").child(senderRoom!!).child("message")
             .addValueEventListener(object : ValueEventListener {
+                @SuppressLint("SetTextI18n")
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (postSnapshot in snapshot.children) {
 
                         //messageList.clear()
 
                         val message = postSnapshot.getValue(Message::class.java)
+
+
                         messageList.add(message!!)
+
                     }
                     //chatRecyclerView.scrollToPosition(messageList.size)
+
                     chatAdapter.notifyDataSetChanged()
                 }
 
@@ -107,11 +110,8 @@ class ChatActivity : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (postSnapshot in snapshot.children) {
                         val message = postSnapshot.getValue(Message::class.java)
-                        messageList.add(message!!)
 
-                        val hashMap: HashMap<String, Boolean> = HashMap()
-                        hashMap["isSeen"] = true
-                        mDbRef.updateChildren(hashMap as Map<String, Any>)
+                        messageList.add(message!!)
 
                     }
 
@@ -131,7 +131,7 @@ class ChatActivity : AppCompatActivity() {
 
 
         sentButton.setOnClickListener {
-            sendChatMessage(receiverUid as String?, currentDate)
+            sendChatMessage(receiverUid as String?, currentDate, statusMessage)
 
             chatRecyclerView.scrollToPosition(messageList.size - 1)
 //            (chatRecyclerView.layoutManager as LinearLayoutManager).reverseLayout = true
@@ -146,9 +146,9 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendChatMessage(receiveUid: String?, currenDate:String?) {
+    private fun sendChatMessage(receiveUid: String?, currenDate:String?, statusMessage: String) {
         val message = messageBox.text.toString()
-        val messageObject = Message(message, receiveUid, currenDate)
+        val messageObject = Message(message, receiveUid, currenDate, statusMessage)
         if (receiveUid != null && message.trim().isNotEmpty()) {
             chatAdapter.addMessage(messageObject, receiveUid)
 
@@ -164,15 +164,5 @@ class ChatActivity : AppCompatActivity() {
                 .show()
         }
         messageBox.setText("")
-    }
-
-    private fun seeMsg(senderId: String?){
-        val query = FirebaseFirestore.getInstance()
-                .collection("chat")
-                .document()
-                .collection("Message")
-                .whereEqualTo("senderId", senderId)
-                .whereEqualTo("read", false)
-                .get()
     }
 }

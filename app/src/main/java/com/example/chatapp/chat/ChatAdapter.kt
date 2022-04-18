@@ -16,6 +16,7 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
     val ITEM_RECEIVE = 1
     val ITEM_SENT = 2
 
+    var hasMore: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
@@ -32,6 +33,13 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 
         val currentMessage = messageList[position]
 
+//        if (hasMore) {
+//            currentMessage.status_message = "Delivery"
+//        } else {
+//
+//            currentMessage.status_message = "Seen"
+//        }
+
         if (holder.javaClass == SentViewHolder::class.java) {
 
             val viewHolder = holder as SentViewHolder
@@ -41,6 +49,9 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
                 viewHolder.time_sent.text = currentMessage.time
             }
 
+
+            viewHolder.status_Sent.text = currentMessage.status_message
+
         } else {
             val viewHolder = holder as ReceiveViewHolder
             //holder.receiveMessage.text = currentMessage.message
@@ -48,6 +59,7 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
             if (currentMessage.time != null) {
                 viewHolder.time_receive.text = currentMessage.time
             }
+            viewHolder.status_receive.text = currentMessage.status_message
         }
     }
 
@@ -56,18 +68,13 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
         val currentMessage = messageList[position]
 
         if (FirebaseAuth.getInstance().currentUser?.uid.equals(currentMessage.senderId)) {
+                hasMore = true
             return ITEM_SENT
         } else {
             return ITEM_RECEIVE
         }
         notifyDataSetChanged()
 
-//        if (senderUid.equals(receiveUid)) {
-//            return ITEM_SENT
-//        } else {
-//            return ITEM_RECEIVE
-//        }
-//        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
@@ -77,11 +84,13 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
     class ReceiveViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val receiveMessage = itemView.findViewById<TextView>(R.id.txt_receive_message)
         val time_receive = itemView.findViewById<TextView>(R.id.time_receive)
+        val status_receive = itemView.findViewById<TextView>(R.id.status_messageReceive)
     }
 
     class SentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val sentMessage = itemView.findViewById<TextView>(R.id.txt_sent_message)
         val time_sent = itemView.findViewById<TextView>(R.id.time_sent)
+        val status_Sent = itemView.findViewById<TextView>(R.id.status_messageSent)
     }
 
     fun addMessage(messageObject: Message, receiveUid: String) {
