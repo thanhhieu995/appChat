@@ -30,7 +30,7 @@ class ChatActivity : AppCompatActivity() {
 
     private lateinit var timeSent: TextView
     private lateinit var timeReceive: TextView
-    private  var statusMessage: String = "empty"
+    private  var statusMessage: String = ""
 //    val hashMap: HashMap<String, Boolean> = HashMap()
 //    var hasMore: Boolean = false
 
@@ -74,6 +74,10 @@ class ChatActivity : AppCompatActivity() {
 
         chatRecyclerView.adapter = chatAdapter
 
+        chatAdapter.addStastus("online")
+
+        chatAdapter.addUid(receiverUid.toString())
+
 
         val sdf = SimpleDateFormat("dd/M/yyyy  hh:mm:ss aaa")
         val currentDate = sdf.format(Date())
@@ -90,13 +94,23 @@ class ChatActivity : AppCompatActivity() {
 
                         val message = postSnapshot.getValue(Message::class.java)
 
+//                        if (receiverUid != null) {
+//                            if (receiverUid.equals(senderUid)) {
+//
+//                                val hashMap: HashMap<String, Boolean> = HashMap()
+//
+//                                hashMap.put("isSeen", true)
+//                                mDbRef.child("chats").updateChildren(hashMap as Map<String, Any>)
+//                            }
+//                            messageList.add(message!!)
+//
+//                        }
 
                         messageList.add(message!!)
+                        //chatRecyclerView.scrollToPosition(messageList.size)
 
+                        chatAdapter.notifyDataSetChanged()
                     }
-                    //chatRecyclerView.scrollToPosition(messageList.size)
-
-                    chatAdapter.notifyDataSetChanged()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -164,5 +178,15 @@ class ChatActivity : AppCompatActivity() {
                 .show()
         }
         messageBox.setText("")
+    }
+
+    private fun seeMessage(receiveUid: String?) {
+        val reference = FirebaseDatabase.getInstance().getReference("chats")
+
+    }
+
+    private fun status (chatRecentUid: String?) {
+        val chatRecentUid = chatRecentUid
+        chatAdapter.addStastus(chatRecentUid)
     }
 }

@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
 import com.example.chatapp.R
 import com.google.firebase.auth.FirebaseAuth
-import org.w3c.dom.Text
 
 class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -17,6 +16,9 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
     val ITEM_SENT = 2
 
     var hasMore: Boolean = false
+    var status: String? = ""
+
+    private var uidActing: String? = ""
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
@@ -33,6 +35,18 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 
         val currentMessage = messageList[position]
 
+        uidActing = currentMessage.senderId
+
+        if (position == messageList.size - 1 && FirebaseAuth.getInstance().uid != currentMessage.senderId && status == "online") {
+            currentMessage.status_message = "seen"
+            // use for gan status = "" nguoc lai
+//            for (item in messageList) {
+//                currentMessage.status_message = "seen"
+//            }
+        } else {
+            currentMessage.status_message = ""
+        }
+
 //        if (hasMore) {
 //            currentMessage.status_message = "Delivery"
 //        } else {
@@ -48,7 +62,6 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
             if (currentMessage.time != null) {
                 viewHolder.time_sent.text = currentMessage.time
             }
-
 
             viewHolder.status_Sent.text = currentMessage.status_message
 
@@ -95,6 +108,16 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 
     fun addMessage(messageObject: Message, receiveUid: String) {
         messageList.add(messageObject)
+        notifyDataSetChanged()
+    }
+
+    fun addStastus(status: String?) {
+        this.status = status
+        notifyDataSetChanged()
+    }
+
+    fun addUid(uid: String?) {
+        uidActing = uid
         notifyDataSetChanged()
     }
 }
