@@ -44,6 +44,7 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 //                currentMessage.status_message = "seen"
 //            }
         } else {
+
             currentMessage.status_message = ""
         }
 

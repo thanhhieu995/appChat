@@ -52,8 +52,10 @@ class MainActivity : AppCompatActivity() {
 //
 //                    }
 
-                    userList.add(currentUser!!)
-                    adapter.addItems(currentUser)
+                    //userList.add(currentUser!!)
+                    if (currentUser != null && mAuth.uid != currentUser.uid) {
+                        adapter.addItems(currentUser)
+                    }
                 }
                 adapter.notifyDataSetChanged()
             }

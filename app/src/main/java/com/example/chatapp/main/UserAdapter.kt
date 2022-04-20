@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.chat.ChatActivity
 import com.example.chatapp.R
 import com.example.chatapp.User
+import com.google.firebase.auth.FirebaseAuth
 
 class UserAdapter(val context: Context, val userList: ArrayList<User>): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
@@ -22,8 +23,8 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val currentUser = dataList[position]
-        holder.textName.text = currentUser.name
-
+       // if (FirebaseAuth.getInstance().currentUser?.uid != currentUser.uid ) {
+            holder.textName.text = currentUser.name
         holder.itemView.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
                 val intent = Intent(context, ChatActivity::class.java)

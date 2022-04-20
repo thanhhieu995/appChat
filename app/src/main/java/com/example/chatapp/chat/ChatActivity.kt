@@ -71,12 +71,11 @@ class ChatActivity : AppCompatActivity() {
 
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
 
-
-        chatRecyclerView.adapter = chatAdapter
-
-        chatAdapter.addStastus("online")
+        //chatAdapter.addStastus("online")
 
         chatAdapter.addUid(receiverUid.toString())
+
+        chatRecyclerView.adapter = chatAdapter
 
 
         val sdf = SimpleDateFormat("dd/M/yyyy  hh:mm:ss aaa")
@@ -188,5 +187,17 @@ class ChatActivity : AppCompatActivity() {
     private fun status (chatRecentUid: String?) {
         val chatRecentUid = chatRecentUid
         chatAdapter.addStastus(chatRecentUid)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        chatAdapter.addStastus("online")
+        chatAdapter.notifyDataSetChanged()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        chatAdapter.addStastus("offline")
+        chatAdapter.notifyDataSetChanged()
     }
 }
