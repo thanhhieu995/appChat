@@ -16,6 +16,8 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
 
       val dataList = ArrayList<User>(userList)
 
+    var UidLogin: String? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.user_layout, parent, false)
         return UserViewHolder(view)
@@ -30,7 +32,9 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
                 val intent = Intent(context, ChatActivity::class.java)
 
                 intent.putExtra("name", currentUser.name)
-                intent.putExtra("uid", currentUser.uid)
+                intent.putExtra("uidFriend", currentUser.uid)
+
+                intent.putExtra("uidLogin", UidLogin)
                 context.startActivity(intent)
                 notifyDataSetChanged()
             }
@@ -47,6 +51,11 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
 
     fun addItems(item: User) {
         dataList.add(item)
+        notifyDataSetChanged()
+    }
+
+    fun addUidLogin(Uid: String?) {
+        this.UidLogin = Uid
         notifyDataSetChanged()
     }
 }

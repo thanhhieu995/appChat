@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                         adapter.addItems(currentUser)
                     }
                 }
+                adapter.addUidLogin(mAuth.uid)
                 adapter.notifyDataSetChanged()
             }
 

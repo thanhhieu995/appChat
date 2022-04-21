@@ -15,12 +15,11 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
     val ITEM_RECEIVE = 1
     val ITEM_SENT = 2
 
-    var senderUid: String = ""
+    var loginUid: String = ""
 
-    var hasMore: Boolean = false
     var status: String? = ""
 
-    private var uidActing: String? = ""
+    private var friendUid: String? = ""
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
@@ -37,25 +36,15 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 
         val currentMessage = messageList[position]
 
-        uidActing = currentMessage.senderId
+        //uidActing = currentMessage.senderId
 
         if (position == messageList.size - 1 && FirebaseAuth.getInstance().uid != currentMessage.senderId && status == "online") {
             currentMessage.status_message = "seen"
-            // use for gan status = "" nguoc lai
-//            for (item in messageList) {
-//                currentMessage.status_message = "seen"
-//            }
         } else {
 
             currentMessage.status_message = ""
         }
 
-//        if (hasMore) {
-//            currentMessage.status_message = "Delivery"
-//        } else {
-//
-//            currentMessage.status_message = "Seen"
-//        }
 
         if (holder.javaClass == SentViewHolder::class.java) {
 
@@ -83,11 +72,10 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 
         val currentMessage = messageList[position]
 
-        if (hasMore) {
-                //hasMore = true
-            return ITEM_SENT
+        return if (loginUid == currentMessage.senderId) {
+            ITEM_SENT
         } else {
-            return ITEM_RECEIVE
+            ITEM_RECEIVE
         }
         notifyDataSetChanged()
 
@@ -109,9 +97,9 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
         val status_Sent = itemView.findViewById<TextView>(R.id.status_messageSent)
     }
 
-    fun addMessage(messageObject: Message, senderUid: String, hasMore: Boolean) {
-        this.hasMore = hasMore
-        this.senderUid = senderUid
+    fun addMessage(messageObject: Message, loginUid: String, friendUid: String) {
+        this.friendUid = friendUid
+        this.loginUid = loginUid
         messageList.add(messageObject)
         notifyDataSetChanged()
     }
@@ -121,9 +109,9 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
         notifyDataSetChanged()
     }
 
-    fun addUid(uid: String?) {
-        uidActing = uid
-        notifyDataSetChanged()
-    }
+//    fun addUid(uid: String?) {
+//        uidActing = uid
+//        notifyDataSetChanged()
+//    }
 }
 

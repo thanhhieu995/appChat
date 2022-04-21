@@ -28,8 +28,8 @@ class ChatActivity : AppCompatActivity() {
     private var statusMessage: String = ""
 
 
-    private var roomTwo: String? = null
-    private var roomOne: String? = null
+    private var roomSender: String? = null
+    private var roomReceiver: String? = null
 
     var hasMore: Boolean? = false
 
@@ -38,10 +38,12 @@ class ChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
 
         val name = intent.getSerializableExtra("name")
-        val profileUid = intent.getSerializableExtra("uid")
+        val friendUid = intent.getSerializableExtra("uidFriend")
 
-        val loginUid = FirebaseAuth.getInstance().currentUser?.uid // lay uid tu account???
-        //???????????????
+        val loginUid = intent.getSerializableExtra("uidLogin")
+
+//        val loginUid = FirebaseAuth.getInstance().currentUser?.uid // lay uid tu account???
+//        //???????????????
 
 
         mDbRef = FirebaseDatabase.getInstance().reference
@@ -49,8 +51,8 @@ class ChatActivity : AppCompatActivity() {
 //        roomSent = senderUid + receiverUid
 //        romReceive = receiverUid.toString() + senderUid
 
-        roomOne = "loginUid" + "profileUid"
-        roomTwo = profileUid.toString() + loginUid
+        roomReceiver = loginUid.toString() + friendUid
+        roomSender = friendUid.toString() + loginUid
 
         supportActionBar?.title = name.toString()
 
@@ -65,7 +67,7 @@ class ChatActivity : AppCompatActivity() {
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
 
 
-        chatAdapter.addUid(profileUid.toString())
+        //chatAdapter.addUid(friendUid.toString())
 
         chatRecyclerView.adapter = chatAdapter
 
@@ -73,39 +75,19 @@ class ChatActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat("dd/M/yyyy  hh:mm:ss aaa")
         val currentDate = sdf.format(Date())
 
-        mDbRef.child("chats").child(roomOne!!).child("message_sent")
+        mDbRef.child("chats").child(roomSender!!).child("messages")
             .addValueEventListener(object : ValueEventListener {
                 @SuppressLint("SetTextI18n")
                 override fun onDataChange(snapshot: DataSnapshot) {
+
+                    messageList.clear()
+
                     for (postSnapshot in snapshot.children) {
 
                         val message = postSnapshot.getValue(Message::class.java)
 
                         messageList.add(message!!)
-
-                        chatAdapter.notifyDataSetChanged()
                     }
-                    hasMore = true
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-
-            })
-
-        mDbRef.child("chats").child(roomOne!!).child("message_receive")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    for (postSnapshot in snapshot.children) {
-                        val message = postSnapshot.getValue(Message::class.java)
-
-                        messageList.add(message!!)
-
-                    }
-
-                    chatRecyclerView.scrollToPosition(messageList.size - 1)
-
                     chatAdapter.notifyDataSetChanged()
                 }
 
@@ -115,13 +97,34 @@ class ChatActivity : AppCompatActivity() {
 
             })
 
+//        mDbRef.child("chats").child(roomReceiver!!).child("messages")
+//            .addValueEventListener(object : ValueEventListener {
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    for (postSnapshot in snapshot.children) {
+//                        val message = postSnapshot.getValue(Message::class.java)
+//
+//                        messageList.add(message!!)
+//
+//                    }
+//
+//                    chatRecyclerView.scrollToPosition(messageList.size - 1)
+//
+//                    chatAdapter.notifyDataSetChanged()
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//
+//                }
+//
+//            })
+
         sentButton.setOnClickListener {
             sendChatMessage(
-                loginUid,
+                loginUid.toString(),
                 currentDate,
                 statusMessage,
                 hasMore!!,
-                profileUid.toString()
+                friendUid as String?
             )
 
             chatRecyclerView.scrollToPosition(messageList.size - 1)
@@ -131,24 +134,24 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun sendChatMessage(
-        senderUid: String?,
+        loginUid: String?,
         currenDate: String?,
         statusMessage: String,
         hasMore: Boolean,
-        receiveUid: String?
+        friendUid: String?
     ) {
         val message = messageBox.text.toString()
-        val messageObject = Message(message, senderUid, currenDate, statusMessage)
-        if (senderUid != null && message.trim().isNotEmpty()) {
-            chatAdapter.addMessage(messageObject, senderUid, hasMore)
+        val messageObject = Message(message, loginUid, currenDate, statusMessage)
+        if (loginUid != null && message.trim().isNotEmpty()) {
+            if (friendUid != null) {
+                chatAdapter.addMessage(messageObject, loginUid, friendUid)
+            }
+            mDbRef.child("chats").child(roomSender!!).child("messages").push()
+                .setValue(messageObject).addOnSuccessListener{
+                    mDbRef.child("chats").child(roomReceiver!!).child("messages").push()
+                        .setValue(messageObject)
+                }
 
-
-            mDbRef.child("chats").child(roomOne!!).child("message_sent").push()
-                .setValue(messageObject)
-
-
-            mDbRef.child("chats").child(roomOne!!).child("message_receive").push()
-                .setValue(messageObject)
 
         } else {
             Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG)
