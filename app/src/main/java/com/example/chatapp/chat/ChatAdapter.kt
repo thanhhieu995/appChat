@@ -83,8 +83,8 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 
         val currentMessage = messageList[position]
 
-        if (FirebaseAuth.getInstance().currentUser?.uid == senderUid) {
-                hasMore = true
+        if (hasMore) {
+                //hasMore = true
             return ITEM_SENT
         } else {
             return ITEM_RECEIVE
@@ -109,7 +109,8 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
         val status_Sent = itemView.findViewById<TextView>(R.id.status_messageSent)
     }
 
-    fun addMessage(messageObject: Message, senderUid: String) {
+    fun addMessage(messageObject: Message, senderUid: String, hasMore: Boolean) {
+        this.hasMore = hasMore
         this.senderUid = senderUid
         messageList.add(messageObject)
         notifyDataSetChanged()
