@@ -71,6 +71,7 @@ class ChatActivity : AppCompatActivity() {
 
         chatRecyclerView.adapter = chatAdapter
 
+        chatRecyclerView.scrollToPosition(messageList.size - 1)
 
         val sdf = SimpleDateFormat("dd/M/yyyy  hh:mm:ss aaa")
         val currentDate = sdf.format(Date())
@@ -173,11 +174,13 @@ class ChatActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         chatAdapter.addStastus("online")
+        chatRecyclerView.scrollToPosition(messageList.size - 1)
         chatAdapter.notifyDataSetChanged()
     }
 
     override fun onPause() {
         super.onPause()
+        chatRecyclerView.scrollToPosition(messageList.size - 1)
         chatAdapter.addStastus("offline")
         chatAdapter.notifyDataSetChanged()
     }
