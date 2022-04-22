@@ -104,7 +104,7 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
         notifyDataSetChanged()
     }
 
-    fun addStastus(status: String?) {
+    fun addStatus(status: String?) {
         this.status = status
         notifyDataSetChanged()
     }

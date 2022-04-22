@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
 import com.example.chatapp.R
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -87,9 +86,14 @@ class ChatActivity : AppCompatActivity() {
 
                         val message = postSnapshot.getValue(Message::class.java)
 
-                        messageList.add(message!!)
+                        //messageList.add(message!!)
+                        if (message != null) {
+                            chatAdapter.addMessage(message, loginUid as String, friendUid as String)
+                        }
+                        chatAdapter.notifyDataSetChanged()
                     }
-                    chatAdapter.notifyDataSetChanged()
+                    //chatAdapter.notifyDataSetChanged()
+                    chatRecyclerView.scrollToPosition(messageList.size - 1)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -136,13 +140,13 @@ class ChatActivity : AppCompatActivity() {
 
     private fun sendChatMessage(
         loginUid: String?,
-        currenDate: String?,
+        currentDate: String?,
         statusMessage: String,
         hasMore: Boolean,
         friendUid: String?
     ) {
         val message = messageBox.text.toString()
-        val messageObject = Message(message, loginUid, currenDate, statusMessage)
+        val messageObject = Message(message, loginUid, currentDate, statusMessage)
         if (loginUid != null && message.trim().isNotEmpty()) {
             if (friendUid != null) {
                 chatAdapter.addMessage(messageObject, loginUid, friendUid)
@@ -159,6 +163,7 @@ class ChatActivity : AppCompatActivity() {
                 .show()
         }
         messageBox.setText("")
+        chatRecyclerView.scrollToPosition(messageList.size - 1)
     }
 
     private fun seeMessage(receiveUid: String?) {
@@ -168,12 +173,12 @@ class ChatActivity : AppCompatActivity() {
 
     private fun status(chatRecentUid: String?) {
         val chatRecentUid = chatRecentUid
-        chatAdapter.addStastus(chatRecentUid)
+        chatAdapter.addStatus(chatRecentUid)
     }
 
     override fun onResume() {
         super.onResume()
-        chatAdapter.addStastus("online")
+        chatAdapter.addStatus("online")
         chatRecyclerView.scrollToPosition(messageList.size - 1)
         chatAdapter.notifyDataSetChanged()
     }
@@ -181,7 +186,7 @@ class ChatActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         chatRecyclerView.scrollToPosition(messageList.size - 1)
-        chatAdapter.addStastus("offline")
+        chatAdapter.addStatus("offline")
         chatAdapter.notifyDataSetChanged()
     }
 }
