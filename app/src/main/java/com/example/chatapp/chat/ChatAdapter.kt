@@ -38,10 +38,22 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 
         //uidActing = currentMessage.senderId
 
-        if (position == messageList.size - 1 && FirebaseAuth.getInstance().uid != currentMessage.senderId && status == "online") {
+//        if (position == messageList.size - 1 && FirebaseAuth.getInstance().uid != currentMessage.senderId && status == "online") {
+//            currentMessage.status_message = "seen"
+//        } else {
+//
+//            currentMessage.status_message = ""
+//        }
+
+//        if (status == "online" && loginUid == currentMessage.senderId) {
+//            currentMessage.status_message = "seen"
+//        } else {
+//            currentMessage.status_message = ""
+//        }
+
+        if (loginUid == currentMessage.senderId && status == "online") {
             currentMessage.status_message = "seen"
         } else {
-
             currentMessage.status_message = ""
         }
 
@@ -54,7 +66,6 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
             if (currentMessage.time != null) {
                 viewHolder.time_sent.text = currentMessage.time
             }
-
             viewHolder.status_Sent.text = currentMessage.status_message
 
         } else {

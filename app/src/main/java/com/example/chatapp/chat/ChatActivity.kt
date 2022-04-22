@@ -1,19 +1,20 @@
 package com.example.chatapp.chat
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
 import com.example.chatapp.R
+import com.example.chatapp.Student
 import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class ChatActivity : AppCompatActivity() {
 
@@ -30,7 +31,9 @@ class ChatActivity : AppCompatActivity() {
     private var roomSender: String? = null
     private var roomReceiver: String? = null
 
-    var hasMore: Boolean? = false
+    private var loginUidSt: String? = null
+    private var friendUidSt: String? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +41,10 @@ class ChatActivity : AppCompatActivity() {
 
         val name = intent.getSerializableExtra("name")
         val friendUid = intent.getSerializableExtra("uidFriend")
+        friendUidSt = friendUid as String?
 
         val loginUid = intent.getSerializableExtra("uidLogin")
+        loginUidSt = loginUid as String?
 
 //        val loginUid = FirebaseAuth.getInstance().currentUser?.uid // lay uid tu account???
 //        //???????????????
@@ -47,13 +52,11 @@ class ChatActivity : AppCompatActivity() {
 
         mDbRef = FirebaseDatabase.getInstance().reference
 
-//        roomSent = senderUid + receiverUid
-//        romReceive = receiverUid.toString() + senderUid
 
         roomReceiver = loginUid.toString() + friendUid
         roomSender = friendUid.toString() + loginUid
 
-        supportActionBar?.title = name.toString()
+        supportActionBar?.title = name.toString() + " " + statusMessage
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
         messageBox = findViewById(R.id.messageBox)
@@ -65,8 +68,6 @@ class ChatActivity : AppCompatActivity() {
 
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
 
-
-        //chatAdapter.addUid(friendUid.toString())
 
         chatRecyclerView.adapter = chatAdapter
 
@@ -92,7 +93,6 @@ class ChatActivity : AppCompatActivity() {
                         }
                         chatAdapter.notifyDataSetChanged()
                     }
-                    //chatAdapter.notifyDataSetChanged()
                     chatRecyclerView.scrollToPosition(messageList.size - 1)
                 }
 
@@ -102,33 +102,35 @@ class ChatActivity : AppCompatActivity() {
 
             })
 
-//        mDbRef.child("chats").child(roomReceiver!!).child("messages")
-//            .addValueEventListener(object : ValueEventListener {
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    for (postSnapshot in snapshot.children) {
-//                        val message = postSnapshot.getValue(Message::class.java)
-//
-//                        messageList.add(message!!)
-//
-//                    }
-//
-//                    chatRecyclerView.scrollToPosition(messageList.size - 1)
-//
-//                    chatAdapter.notifyDataSetChanged()
-//                }
-//
-//                override fun onCancelled(error: DatabaseError) {
-//
-//                }
-//
-//            })
+
+
+        var studentRef = FirebaseDatabase.getInstance().getReference("student").child(loginUid!!)
+        var connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
+
+        connectedRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val connected = snapshot.getValue(Boolean::class.java)!!
+                if (connected) {
+                    studentRef.child("status").onDisconnect().setValue("offline")
+                    studentRef.child("status").setValue("Online")
+                } else {
+                    studentRef.child("status").setValue("offline")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+
+        chatAdapter.addStatus(statusMessage)
+
 
         sentButton.setOnClickListener {
             sendChatMessage(
                 loginUid.toString(),
                 currentDate,
                 statusMessage,
-                hasMore!!,
                 friendUid as String?
             )
 
@@ -142,7 +144,6 @@ class ChatActivity : AppCompatActivity() {
         loginUid: String?,
         currentDate: String?,
         statusMessage: String,
-        hasMore: Boolean,
         friendUid: String?
     ) {
         val message = messageBox.text.toString()
@@ -164,29 +165,5 @@ class ChatActivity : AppCompatActivity() {
         }
         messageBox.setText("")
         chatRecyclerView.scrollToPosition(messageList.size - 1)
-    }
-
-    private fun seeMessage(receiveUid: String?) {
-        val reference = FirebaseDatabase.getInstance().getReference("chats")
-
-    }
-
-    private fun status(chatRecentUid: String?) {
-        val chatRecentUid = chatRecentUid
-        chatAdapter.addStatus(chatRecentUid)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        chatAdapter.addStatus("online")
-        chatRecyclerView.scrollToPosition(messageList.size - 1)
-        chatAdapter.notifyDataSetChanged()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        chatRecyclerView.scrollToPosition(messageList.size - 1)
-        chatAdapter.addStatus("offline")
-        chatAdapter.notifyDataSetChanged()
     }
 }
