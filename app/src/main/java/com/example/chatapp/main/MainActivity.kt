@@ -83,17 +83,27 @@ class MainActivity : AppCompatActivity() {
         return false
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        hasMore = false
+        statusAccount(mAuth.uid)
+    }
+
     override fun onPause() {
+//        var logIn = LogIn()
+//        if (logIn.hasMore) {
+//            hasMore = true
+//        }
         hasMore = true
         super.onPause()
         statusAccount(mAuth.uid)
     }
 
-    override fun onStop() {
-        //hasMore = true
-        super.onStop()
-        statusAccount(mAuth.uid)
-    }
+//    override fun onStop() {
+//        hasMore = true
+//        super.onStop()
+//        statusAccount(mAuth.uid)
+//    }
 
 
     private fun statusAccount(loginUid: String? ) {

@@ -11,9 +11,15 @@ import com.example.chatapp.main.MainActivity
 import com.example.chatapp.R
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_log_in.*
 
 class LogIn : AppCompatActivity() {
+
+    var hasMore : Boolean = false
 
     private lateinit var edtEmail: EditText
     private lateinit var edtPassword: EditText
@@ -44,7 +50,44 @@ class LogIn : AppCompatActivity() {
 
             login(email, password)
         }
+
+        hasMore = true
     }
+
+    override fun onResume() {
+        super.onResume()
+        hasMore = true
+        statusAccount(mAuth.uid)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        hasMore = true
+        statusAccount(mAuth.uid)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        hasMore = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        hasMore = true
+        statusAccount(mAuth.uid)
+    }
+
+//    override fun onStop() {
+//        super.onStop()
+//        hasMore = true
+//        statusAccount(mAuth.uid)
+//    }
+
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        hasMore = true
+//        statusAccount(mAuth.uid)
+//    }
 
     private fun login(email: String, password: String) {
 
@@ -63,5 +106,30 @@ class LogIn : AppCompatActivity() {
                     }
                 })
         }
+    }
+
+    private fun statusAccount(loginUid: String? ) {
+        val studentRef = FirebaseDatabase.getInstance().getReference("student").child(loginUid!!)
+        val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
+
+        connectedRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val connected = snapshot.getValue(Boolean::class.java)!!
+                if (connected) {
+                    if (hasMore) {
+                        studentRef.child("status").setValue("offline!!!")
+                    } else {
+                        studentRef.child("status").onDisconnect().setValue("Offline!")
+                        studentRef.child("status").setValue("Online")
+                    }
+                } else {
+                    studentRef.child("status").setValue("offline")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
     }
 }
