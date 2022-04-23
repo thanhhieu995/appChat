@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbRef: DatabaseReference
 
+    private var hasMore: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -37,6 +39,8 @@ class MainActivity : AppCompatActivity() {
         userRecyclerView.layoutManager = LinearLayoutManager(this)
         userRecyclerView.adapter = adapter
 
+        statusAccount(mAuth.uid)
+
         mDbRef.child("user").addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
 
@@ -45,14 +49,6 @@ class MainActivity : AppCompatActivity() {
 
                     val currentUser = postSnapshot.getValue(User::class.java)
 
-//                    if (mAuth.currentUser?.uid == currentUser?.uid) {
-//
-//                        userList.add(currentUser!!)
-//                        adapter.addItems(currentUser)
-//
-//                    }
-
-                    //userList.add(currentUser!!)
                     if (currentUser != null && mAuth.uid != currentUser.uid) {
                         adapter.addItems(currentUser)
                     }
@@ -68,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -80,8 +77,48 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, LogIn::class.java)
             startActivity(intent)
             finish()
+            statusAccount(mAuth.uid)
             return true
         }
         return false
     }
+
+    override fun onPause() {
+        hasMore = true
+        super.onPause()
+        statusAccount(mAuth.uid)
+    }
+
+    override fun onStop() {
+        //hasMore = true
+        super.onStop()
+        statusAccount(mAuth.uid)
+    }
+
+
+    private fun statusAccount(loginUid: String? ) {
+        val studentRef = FirebaseDatabase.getInstance().getReference("student").child(loginUid!!)
+        val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
+
+        connectedRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val connected = snapshot.getValue(Boolean::class.java)!!
+                if (connected) {
+                    if (hasMore) {
+                        studentRef.child("status").setValue("offline!!!")
+                    } else {
+                        studentRef.child("status").onDisconnect().setValue("Offline!")
+                        studentRef.child("status").setValue("Online")
+                    }
+                } else {
+                    studentRef.child("status").setValue("offline")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
 }

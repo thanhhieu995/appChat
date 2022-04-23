@@ -102,26 +102,7 @@ class ChatActivity : AppCompatActivity() {
 
             })
 
-
-
-        var studentRef = FirebaseDatabase.getInstance().getReference("student").child(loginUid!!)
-        var connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
-
-        connectedRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val connected = snapshot.getValue(Boolean::class.java)!!
-                if (connected) {
-                    studentRef.child("status").onDisconnect().setValue("offline")
-                    studentRef.child("status").setValue("Online")
-                } else {
-                    studentRef.child("status").setValue("offline")
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-        })
+        statusAccount(loginUid)
 
         chatAdapter.addStatus(statusMessage)
 
@@ -133,7 +114,7 @@ class ChatActivity : AppCompatActivity() {
                 statusMessage,
                 friendUid as String?
             )
-
+            statusAccount(loginUid)
             chatRecyclerView.scrollToPosition(messageList.size - 1)
 
             chatAdapter.notifyDataSetChanged()
@@ -165,5 +146,26 @@ class ChatActivity : AppCompatActivity() {
         }
         messageBox.setText("")
         chatRecyclerView.scrollToPosition(messageList.size - 1)
+    }
+
+    private fun statusAccount(loginUid: String?) {
+        val studentRef = FirebaseDatabase.getInstance().getReference("student").child(loginUid!!)
+        val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
+
+        connectedRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val connected = snapshot.getValue(Boolean::class.java)!!
+                if (connected) {
+                    studentRef.child("status").onDisconnect().setValue("offline")
+                    studentRef.child("status").setValue("Online")
+                } else {
+                    studentRef.child("status").setValue("offline")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
     }
 }
