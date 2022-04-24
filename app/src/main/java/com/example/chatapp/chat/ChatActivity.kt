@@ -31,8 +31,7 @@ class ChatActivity : AppCompatActivity() {
     private var roomSender: String? = null
     private var roomReceiver: String? = null
 
-    private var loginUidSt: String? = null
-    private var friendUidSt: String? = null
+    private var status: String? = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,10 +40,11 @@ class ChatActivity : AppCompatActivity() {
 
         val name = intent.getSerializableExtra("name")
         val friendUid = intent.getSerializableExtra("uidFriend")
-        friendUidSt = friendUid as String?
 
         val loginUid = intent.getSerializableExtra("uidLogin")
-        loginUidSt = loginUid as String?
+
+        status = intent.getSerializableExtra("status").toString()
+
 
 //        val loginUid = FirebaseAuth.getInstance().currentUser?.uid // lay uid tu account???
 //        //???????????????
@@ -56,7 +56,7 @@ class ChatActivity : AppCompatActivity() {
         roomReceiver = loginUid.toString() + friendUid
         roomSender = friendUid.toString() + loginUid
 
-        supportActionBar?.title = name.toString()
+        supportActionBar?.title = name.toString() + " " +  status
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
         messageBox = findViewById(R.id.messageBox)
@@ -102,24 +102,24 @@ class ChatActivity : AppCompatActivity() {
 
             })
 
-        statusAccount(loginUid)
+        statusAccount(loginUid as String?)
 
 
-        if (loginUid != null) {
-            mDbRef.child("student").child(loginUid)
-                .addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        for (postSnapshot in snapshot.children) {
-                            statusMessage = postSnapshot.getValue(String::class.java).toString()
-                        }
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-
-                    }
-
-                })
-        }
+//        if (loginUid != null) {
+//            mDbRef.child("student").child(loginUid)
+//                .addValueEventListener(object : ValueEventListener {
+//                    override fun onDataChange(snapshot: DataSnapshot) {
+//                        for (postSnapshot in snapshot.children) {
+//                            statusMessage = postSnapshot.getValue(String::class.java).toString()
+//                        }
+//                    }
+//
+//                    override fun onCancelled(error: DatabaseError) {
+//
+//                    }
+//
+//                })
+//        }
 
         //chatAdapter.addStatus(statusMessage)
 
@@ -128,9 +128,9 @@ class ChatActivity : AppCompatActivity() {
             sendChatMessage(
                 loginUid.toString(),
                 currentDate,
-                friendUid
+                friendUid as String?
             )
-            statusAccount(loginUid)
+            //statusAccount(loginUid as String?)
             chatRecyclerView.scrollToPosition(messageList.size - 1)
 
             chatAdapter.notifyDataSetChanged()

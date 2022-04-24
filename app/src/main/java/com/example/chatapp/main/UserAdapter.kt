@@ -10,13 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.chat.ChatActivity
 import com.example.chatapp.R
 import com.example.chatapp.User
-import com.google.firebase.auth.FirebaseAuth
 
 class UserAdapter(val context: Context, val userList: ArrayList<User>): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
-      val dataList = ArrayList<User>(userList)
+    private val dataList = ArrayList<User>(userList)
 
-    var UidLogin: String? = null
+    var uidLogin: String? = null
+
+    var status: String? = ""
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.user_layout, parent, false)
@@ -34,7 +35,10 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
                 intent.putExtra("name", currentUser.name)
                 intent.putExtra("uidFriend", currentUser.uid)
 
-                intent.putExtra("uidLogin", UidLogin)
+                intent.putExtra("uidLogin", uidLogin)
+
+                intent.putExtra("status", status)
+
                 context.startActivity(intent)
                 notifyDataSetChanged()
             }
@@ -55,7 +59,12 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
     }
 
     fun addUidLogin(Uid: String?) {
-        this.UidLogin = Uid
+        this.uidLogin = Uid
+        notifyDataSetChanged()
+    }
+
+    fun addStatusUser(status: String?) {
+        this.status = status
         notifyDataSetChanged()
     }
 }

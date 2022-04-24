@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity() {
 
     private var hasMore: Boolean = false
 
+    var statusUser: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -62,6 +64,24 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
+        mDbRef.child("student").child(mAuth.uid.toString())
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (postSnapshot in snapshot.children) {
+                        statusUser = postSnapshot.getValue(String:: class.java).toString()
+                    }
+                    adapter.addStatusUser(statusUser)
+                    adapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+
+        //mDbRef.child("student").child()
     }
 
 
@@ -74,13 +94,13 @@ class MainActivity : AppCompatActivity() {
 
         if(item.itemId == R.id.logout) {
             hasMore = true
+            if (mAuth.uid != null) {
+                statusAccount(mAuth.uid)
+            }
             mAuth.signOut()
             val intent = Intent(this@MainActivity, LogIn::class.java)
             startActivity(intent)
             finish()
-            if (mAuth.uid != null) {
-                statusAccount(mAuth.uid)
-            }
             return true
         }
         return false
