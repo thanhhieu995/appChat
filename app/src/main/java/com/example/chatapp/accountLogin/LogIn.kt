@@ -57,13 +57,17 @@ class LogIn : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         hasMore = true
-        statusAccount(mAuth.uid)
+        if (mAuth.uid != null) {
+            statusAccount(mAuth.uid)
+        }
     }
 
     override fun onRestart() {
         super.onRestart()
         hasMore = true
-        statusAccount(mAuth.uid)
+        if (mAuth.uid != null) {
+            statusAccount(mAuth.uid)
+        }
     }
 
     override fun onStart() {
@@ -74,7 +78,9 @@ class LogIn : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         hasMore = true
-        statusAccount(mAuth.uid)
+        if (mAuth.uid != null) {
+            statusAccount(mAuth.uid!!)
+        }
     }
 
 //    override fun onStop() {

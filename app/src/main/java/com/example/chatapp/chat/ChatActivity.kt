@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
 import com.example.chatapp.R
-import com.example.chatapp.Student
+import com.example.chatapp.Status
 import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -25,7 +25,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
 
-    private var statusMessage: String = ""
+    private lateinit var statusMessage: String
 
 
     private var roomSender: String? = null
@@ -56,7 +56,7 @@ class ChatActivity : AppCompatActivity() {
         roomReceiver = loginUid.toString() + friendUid
         roomSender = friendUid.toString() + loginUid
 
-        supportActionBar?.title = name.toString() + " " + statusMessage
+        supportActionBar?.title = name.toString()
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
         messageBox = findViewById(R.id.messageBox)
@@ -104,15 +104,31 @@ class ChatActivity : AppCompatActivity() {
 
         statusAccount(loginUid)
 
-        chatAdapter.addStatus(statusMessage)
+
+        if (loginUid != null) {
+            mDbRef.child("student").child(loginUid)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (postSnapshot in snapshot.children) {
+                            statusMessage = postSnapshot.getValue(String::class.java).toString()
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+
+                    }
+
+                })
+        }
+
+        //chatAdapter.addStatus(statusMessage)
 
 
         sentButton.setOnClickListener {
             sendChatMessage(
                 loginUid.toString(),
                 currentDate,
-                statusMessage,
-                friendUid as String?
+                friendUid
             )
             statusAccount(loginUid)
             chatRecyclerView.scrollToPosition(messageList.size - 1)
@@ -124,11 +140,10 @@ class ChatActivity : AppCompatActivity() {
     private fun sendChatMessage(
         loginUid: String?,
         currentDate: String?,
-        statusMessage: String,
         friendUid: String?
     ) {
         val message = messageBox.text.toString()
-        val messageObject = Message(message, loginUid, currentDate, statusMessage)
+        val messageObject = Message(message, loginUid, currentDate)
         if (loginUid != null && message.trim().isNotEmpty()) {
             if (friendUid != null) {
                 chatAdapter.addMessage(messageObject, loginUid, friendUid)

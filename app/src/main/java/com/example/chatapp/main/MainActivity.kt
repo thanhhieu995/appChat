@@ -73,11 +73,14 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         if(item.itemId == R.id.logout) {
+            hasMore = true
             mAuth.signOut()
             val intent = Intent(this@MainActivity, LogIn::class.java)
             startActivity(intent)
             finish()
-            statusAccount(mAuth.uid)
+            if (mAuth.uid != null) {
+                statusAccount(mAuth.uid)
+            }
             return true
         }
         return false
@@ -96,7 +99,9 @@ class MainActivity : AppCompatActivity() {
 //        }
         hasMore = true
         super.onPause()
-        statusAccount(mAuth.uid)
+        if (mAuth.uid != null) {
+            statusAccount(mAuth.uid)
+        }
     }
 
 //    override fun onStop() {

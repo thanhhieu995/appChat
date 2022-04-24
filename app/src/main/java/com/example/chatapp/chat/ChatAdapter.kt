@@ -51,11 +51,11 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 //            currentMessage.status_message = ""
 //        }
 
-        if (loginUid == currentMessage.senderId && status == "online") {
-            currentMessage.status_message = "seen"
-        } else {
-            currentMessage.status_message = ""
-        }
+//        if (loginUid == currentMessage.senderId && status == "online") {
+//            currentMessage.status_message = "seen"
+//        } else {
+//            currentMessage.status_message = ""
+//        }
 
 
         if (holder.javaClass == SentViewHolder::class.java) {
@@ -66,7 +66,7 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
             if (currentMessage.time != null) {
                 viewHolder.time_sent.text = currentMessage.time
             }
-            viewHolder.status_Sent.text = currentMessage.status_message
+            //viewHolder.status_Sent.text = currentMessage.status_message
 
         } else {
             val viewHolder = holder as ReceiveViewHolder
@@ -75,7 +75,7 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
             if (currentMessage.time != null) {
                 viewHolder.time_receive.text = currentMessage.time
             }
-            viewHolder.status_receive.text = currentMessage.status_message
+            //viewHolder.status_receive.text = currentMessage.status_message
         }
     }
 
