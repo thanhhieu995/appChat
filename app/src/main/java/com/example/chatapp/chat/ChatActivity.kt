@@ -102,7 +102,7 @@ class ChatActivity : AppCompatActivity() {
 
             })
 
-        statusAccount(loginUid as String?)
+        //statusAccount(loginUid as String?)
 
 
 //        if (loginUid != null) {

@@ -48,6 +48,8 @@ class LogIn : AppCompatActivity() {
             val email = edtEmail.text.toString().trim()
             val password = edtPassword.text.toString()
 
+            //hasMore = false
+
             login(email, password)
         }
 
@@ -58,28 +60,32 @@ class LogIn : AppCompatActivity() {
         super.onResume()
         hasMore = true
         if (mAuth.uid != null) {
-            statusAccount(mAuth.uid)
+            //statusAccount(mAuth.uid)
+            FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid!!).child("status").setValue("offline")
         }
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        hasMore = true
-        if (mAuth.uid != null) {
-            statusAccount(mAuth.uid)
-        }
-    }
+//    override fun onRestart() {
+//        super.onRestart()
+//        hasMore = true
+//        if (mAuth.uid != null) {
+//            //statusAccount(mAuth.uid)
+//            FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString()).child("status").setValue("offline")
+//        }
+//    }
 
-    override fun onStart() {
-        super.onStart()
-        hasMore = true
-    }
+//    override fun onStart() {
+//        super.onStart()
+//        hasMore = true
+//        //statusAccount(mAuth.uid)
+//    }
 
     override fun onPause() {
         super.onPause()
         hasMore = true
         if (mAuth.uid != null) {
-            statusAccount(mAuth.uid!!)
+            //statusAccount(mAuth.uid!!)
+            //FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid!!).child("status").setValue("offline")
         }
     }
 
@@ -112,10 +118,15 @@ class LogIn : AppCompatActivity() {
                     }
                 })
         }
+
+        FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString())
+            .child("status").setValue("online")
+
+        //statusAccount(mAuth.uid)
     }
 
     private fun statusAccount(loginUid: String? ) {
-        val studentRef = FirebaseDatabase.getInstance().getReference("student").child(loginUid!!)
+        val studentRef = FirebaseDatabase.getInstance().getReference("user").child(loginUid!!)
         val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
 
         connectedRef.addValueEventListener(object : ValueEventListener {

@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.chat.ChatActivity
 import com.example.chatapp.R
+import com.example.chatapp.Status
 import com.example.chatapp.User
 
 class UserAdapter(val context: Context, val userList: ArrayList<User>): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
@@ -17,7 +18,9 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
 
     var uidLogin: String? = null
 
-    var status: String? = ""
+    var statusLogin: String? = ""
+
+    var statusFriend: String? = ""
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.user_layout, parent, false)
@@ -26,8 +29,11 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val currentUser = dataList[position]
+        //val statusList = statusList[position]
        // if (FirebaseAuth.getInstance().currentUser?.uid != currentUser.uid ) {
             holder.textName.text = currentUser.name
+        holder.textStatus.text = currentUser.status
+
         holder.itemView.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
                 val intent = Intent(context, ChatActivity::class.java)
@@ -37,7 +43,7 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
 
                 intent.putExtra("uidLogin", uidLogin)
 
-                intent.putExtra("status", status)
+                intent.putExtra("status", statusLogin)
 
                 context.startActivity(intent)
                 notifyDataSetChanged()
@@ -51,10 +57,13 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
 
     class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textName = itemView.findViewById<TextView>(R.id.txt_name)
+        val textStatus = itemView.findViewById<TextView>(R.id.txt_statusMain)
     }
 
-    fun addItems(item: User) {
-        dataList.add(item)
+    fun addItems(item: User?) {
+        if (item != null) {
+            dataList.add(item)
+        }
         notifyDataSetChanged()
     }
 
@@ -63,8 +72,13 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
         notifyDataSetChanged()
     }
 
-    fun addStatusUser(status: String?) {
-        this.status = status
+    fun addStatusAccountLogin(status: String?) {
+        this.statusLogin = status
+        notifyDataSetChanged()
+    }
+
+    fun addStatusFriend(status: String?) {
+        this.statusFriend = status
         notifyDataSetChanged()
     }
 }

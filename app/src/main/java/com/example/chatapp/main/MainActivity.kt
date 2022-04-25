@@ -24,7 +24,9 @@ class MainActivity : AppCompatActivity() {
 
     private var hasMore: Boolean = false
 
-    var statusUser: String = ""
+    var statusUserLogin: String = ""
+
+    var statusFriend: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,22 +43,26 @@ class MainActivity : AppCompatActivity() {
         userRecyclerView.layoutManager = LinearLayoutManager(this)
         userRecyclerView.adapter = adapter
 
-        statusAccount(mAuth.uid)
 
         mDbRef.child("user").addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                userList.clear()
                 for (postSnapshot in snapshot.children) {
 
-                    val currentUser = postSnapshot.getValue(User::class.java)
+//                        val currentUser = postSnapshot.getValue(User::class.java)
+//
+//                        if (currentUser?.uid != null && mAuth.uid != currentUser.uid) {
+//                                if (currentUser.uid != null) {
+//                                    //statusAccount(currentUser.uid)
+//                                }
+//                            adapter.addItems(currentUser)
+//                        }
 
-                    if (currentUser != null && mAuth.uid != currentUser.uid) {
-                        adapter.addItems(currentUser)
+                    if (postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
+                        //statusAccount(postSnapshot.getValue(User::class.java)?.uid)
+                        adapter.addItems(postSnapshot.getValue(User::class.java))
                     }
                 }
-                adapter.addUidLogin(mAuth.uid)
-                adapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -64,24 +70,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-
-        mDbRef.child("student").child(mAuth.uid.toString())
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    for (postSnapshot in snapshot.children) {
-                        statusUser = postSnapshot.getValue(String:: class.java).toString()
-                    }
-                    adapter.addStatusUser(statusUser)
-                    adapter.notifyDataSetChanged()
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-
-            })
-
-        //mDbRef.child("student").child()
     }
 
 
@@ -93,9 +81,10 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         if(item.itemId == R.id.logout) {
-            hasMore = true
+            //hasMore = true
             if (mAuth.uid != null) {
-                statusAccount(mAuth.uid)
+                FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString())
+                    .child("status").setValue("offline")
             }
             mAuth.signOut()
             val intent = Intent(this@MainActivity, LogIn::class.java)
@@ -106,23 +95,23 @@ class MainActivity : AppCompatActivity() {
         return false
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        hasMore = false
-        statusAccount(mAuth.uid)
-    }
-
-    override fun onPause() {
-//        var logIn = LogIn()
-//        if (logIn.hasMore) {
-//            hasMore = true
+//    override fun onRestart() {
+//        super.onRestart()
+//        hasMore = false
+//        //statusAccount(mAuth.uid)
+//    }
+//
+//    override fun onPause() {
+////        var logIn = LogIn()
+////        if (logIn.hasMore) {
+////            hasMore = true
+////        }
+//        hasMore = true
+//        super.onPause()
+//        if (mAuth.uid != null) {
+//            //statusAccount(mAuth.uid)
 //        }
-        hasMore = true
-        super.onPause()
-        if (mAuth.uid != null) {
-            statusAccount(mAuth.uid)
-        }
-    }
+//    }
 
 //    override fun onStop() {
 //        hasMore = true
@@ -131,23 +120,19 @@ class MainActivity : AppCompatActivity() {
 //    }
 
 
-    private fun statusAccount(loginUid: String? ) {
-        val studentRef = FirebaseDatabase.getInstance().getReference("student").child(loginUid!!)
+    private fun statusAccount(Uid: String? ) {
+        val studentRef = FirebaseDatabase.getInstance().getReference("user").child(Uid!!)
         val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
 
         connectedRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val connected = snapshot.getValue(Boolean::class.java)!!
                 if (connected) {
-                    if (hasMore) {
-                        studentRef.child("status").setValue("offline!!!")
-                    } else {
-                        studentRef.child("status").onDisconnect().setValue("Offline!")
-                        studentRef.child("status").setValue("Online")
+                    studentRef.child("status").onDisconnect().setValue("Offline!")
+                    studentRef.child("status").setValue("Online")
+                }else {
+                    studentRef.child("status").setValue("offline!!!")
                     }
-                } else {
-                    studentRef.child("status").setValue("offline")
-                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -155,5 +140,35 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
+
+//    private fun getStatusFriend(uidFriend: String?) {
+//        mDbRef.child("user").child(uidFriend.toString())
+//            .addValueEventListener(object : ValueEventListener {
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    for (postSnapshot in snapshot.children) {
+//                        statusFriend = postSnapshot.getValue(String:: class.java).toString()
+//                    }
+//                    adapter.addStatusAccountLogin(statusFriend)
+//                    adapter.notifyDataSetChanged()
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//
+//                }
+//
+//            })
+//    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this, LogIn::class.java)
+        startActivity(intent)
+    }
+
+//    fun onBackPress() {
+//        super.onBackPressed()
+//        FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString()).child("status").setValue("offline")
+//    }
 
 }
