@@ -43,12 +43,18 @@ class MainActivity : AppCompatActivity() {
         userRecyclerView.layoutManager = LinearLayoutManager(this)
         userRecyclerView.adapter = adapter
 
+        userList.clear()
+
 
         mDbRef.child("user").addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                for (postSnapshot in snapshot.children) {
+                userList.clear()
 
+                statusAccount(mAuth.uid)
+
+                for (postSnapshot in snapshot.children) {
+                    //userList.clear()
 //                        val currentUser = postSnapshot.getValue(User::class.java)
 //
 //                        if (currentUser?.uid != null && mAuth.uid != currentUser.uid) {
@@ -58,9 +64,12 @@ class MainActivity : AppCompatActivity() {
 //                            adapter.addItems(currentUser)
 //                        }
 
-                    if (postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
+
+                    if (postSnapshot.getValue(User::class.java)?.uid != null && postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
                         //statusAccount(postSnapshot.getValue(User::class.java)?.uid)
-                        adapter.addItems(postSnapshot.getValue(User::class.java))
+                            userList.add(postSnapshot.getValue(User::class.java)!!)
+                       // adapter.addItems(postSnapshot.getValue(User::class.java))
+                        adapter.notifyDataSetChanged()
                     }
                 }
             }
@@ -70,6 +79,10 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
 

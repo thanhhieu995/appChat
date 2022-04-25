@@ -109,6 +109,10 @@ class LogIn : AppCompatActivity() {
             mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, OnCompleteListener { task ->
                     if (task.isSuccessful) {
+
+                        FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString())
+                            .child("status").setValue("online")
+
                         Toast.makeText(this, "Successfully Logged In", Toast.LENGTH_LONG).show()
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
@@ -118,9 +122,6 @@ class LogIn : AppCompatActivity() {
                     }
                 })
         }
-
-        FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString())
-            .child("status").setValue("online")
 
         //statusAccount(mAuth.uid)
     }

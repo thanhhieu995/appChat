@@ -12,7 +12,7 @@ import com.example.chatapp.R
 import com.example.chatapp.Status
 import com.example.chatapp.User
 
-class UserAdapter(val context: Context, val userList: ArrayList<User>): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class UserAdapter(val context: Context, private val userList: ArrayList<User>): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     private val dataList = ArrayList<User>(userList)
 
@@ -28,7 +28,8 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        val currentUser = dataList[position]
+        //val currentUser = dataList[position]
+        val currentUser = userList[position]
         //val statusList = statusList[position]
        // if (FirebaseAuth.getInstance().currentUser?.uid != currentUser.uid ) {
             holder.textName.text = currentUser.name
@@ -52,7 +53,8 @@ class UserAdapter(val context: Context, val userList: ArrayList<User>): Recycler
     }
 
     override fun getItemCount(): Int {
-        return dataList.size
+        //return dataList.size
+        return userList.size
     }
 
     class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
