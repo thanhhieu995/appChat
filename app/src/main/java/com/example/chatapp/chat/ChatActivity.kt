@@ -56,7 +56,7 @@ class ChatActivity : AppCompatActivity() {
         roomReceiver = loginUid.toString() + friendUid
         roomSender = friendUid.toString() + loginUid
 
-        supportActionBar?.title = name.toString() + " " +  status
+        supportActionBar?.title = name.toString()
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
         messageBox = findViewById(R.id.messageBox)
@@ -81,13 +81,13 @@ class ChatActivity : AppCompatActivity() {
                 @SuppressLint("SetTextI18n")
                 override fun onDataChange(snapshot: DataSnapshot) {
 
-                    messageList.clear()
+                    //messageList.clear()
 
                     for (postSnapshot in snapshot.children) {
 
                         val message = postSnapshot.getValue(Message::class.java)
 
-                        //messageList.add(message!!)
+//                        messageList.add(message!!)
                         if (message != null) {
                             chatAdapter.addMessage(message, loginUid as String, friendUid as String)
                         }

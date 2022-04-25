@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 userList.clear()
-
+                adapter.addUidLogin(mAuth.uid)
 
                 for (postSnapshot in snapshot.children) {
                     //userList.clear()
