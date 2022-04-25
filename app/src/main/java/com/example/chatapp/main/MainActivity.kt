@@ -45,13 +45,13 @@ class MainActivity : AppCompatActivity() {
 
         userList.clear()
 
+        statusAccount(mAuth.uid)
 
         mDbRef.child("user").addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 userList.clear()
 
-                statusAccount(mAuth.uid)
 
                 for (postSnapshot in snapshot.children) {
                     //userList.clear()
