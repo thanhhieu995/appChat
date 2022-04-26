@@ -8,7 +8,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
 import com.example.chatapp.R
+import com.example.chatapp.Status
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -56,6 +61,8 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 //        } else {
 //            currentMessage.status_message = ""
 //        }
+
+        //val status : Task<DataSnapshot> = FirebaseDatabase.getInstance().getReference("user").child(friendUid.toString()).child("status").get()
 
 
         if (holder.javaClass == SentViewHolder::class.java) {

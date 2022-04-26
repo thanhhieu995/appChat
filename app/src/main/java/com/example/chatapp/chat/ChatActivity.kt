@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
 import com.example.chatapp.R
-import com.example.chatapp.Status
+import com.example.chatapp.User
 import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,7 +31,8 @@ class ChatActivity : AppCompatActivity() {
     private var roomSender: String? = null
     private var roomReceiver: String? = null
 
-    private var status: String? = ""
+    private var statusFriend: String? = "1"
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +44,9 @@ class ChatActivity : AppCompatActivity() {
 
         val loginUid = intent.getSerializableExtra("uidLogin")
 
-        status = intent.getSerializableExtra("status").toString()
+       // val statusFriend = intent.getSerializableExtra("statusFriend")
+
+        //status = intent.getSerializableExtra("status").toString()
 
 
 //        val loginUid = FirebaseAuth.getInstance().currentUser?.uid // lay uid tu account???
@@ -56,7 +59,7 @@ class ChatActivity : AppCompatActivity() {
         roomReceiver = loginUid.toString() + friendUid
         roomSender = friendUid.toString() + loginUid
 
-        supportActionBar?.title = name.toString()
+        //supportActionBar?.title = name.toString()  + " " + statusFriend
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
         messageBox = findViewById(R.id.messageBox)
@@ -102,6 +105,26 @@ class ChatActivity : AppCompatActivity() {
 
             })
 
+        //lam ham lay hoat dong cua user tai chatActivity
+        mDbRef.child("user").child(friendUid.toString()).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                    val user: User? = snapshot.getValue(User::class.java)
+                    if (user != null && user.uid == friendUid) {
+                        //statusFriend = user.status
+                            addStatusFriend(user.status)
+                        chatAdapter.notifyDataSetChanged()
+                    }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+
+       // supportActionBar?.title = name.toString()  + " " + status
+
         //statusAccount(loginUid as String?)
 
 
@@ -135,6 +158,11 @@ class ChatActivity : AppCompatActivity() {
 
             chatAdapter.notifyDataSetChanged()
         }
+    }
+
+    private fun addStatusFriend(status: String?) {
+        this.statusFriend = status
+        supportActionBar?.title = intent.getSerializableExtra("name").toString()  + " " + statusFriend
     }
 
     private fun sendChatMessage(

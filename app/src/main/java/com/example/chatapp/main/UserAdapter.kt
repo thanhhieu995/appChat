@@ -42,6 +42,8 @@ class UserAdapter(val context: Context, private val userList: ArrayList<User>): 
                 intent.putExtra("name", currentUser.name)
                 intent.putExtra("uidFriend", currentUser.uid)
 
+                //intent.putExtra("statusFriend", currentUser.status.toString())
+
                 intent.putExtra("uidLogin", uidLogin)
 
                 intent.putExtra("status", statusLogin)
