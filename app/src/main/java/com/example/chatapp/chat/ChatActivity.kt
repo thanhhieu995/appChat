@@ -95,13 +95,13 @@ class ChatActivity : AppCompatActivity() {
 
 //                        messageList.add(message!!)
 
-                        if (message != null) {
+                        if (message != null && statusFriend == "Online") {
                             if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("seen", true)
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
                                 //chatAdapter.addSeen(message.seen)
-                               //chatRecyclerView.adapter = chatAdapter
+                               chatRecyclerView.adapter = chatAdapter
                             }
                         }
                         if (message != null) {
@@ -126,13 +126,13 @@ class ChatActivity : AppCompatActivity() {
                     for (postSnapshot in snapshot.children) {
                         val message = postSnapshot.getValue(Message::class.java)
 
-                        if (message != null) {
+                        if (message != null && statusFriend == "Online") {
                             if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("seen", true)
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
                                 //chatAdapter.addSeen(message.seen)
-                               //chatRecyclerView.adapter = chatAdapter
+                               chatRecyclerView.adapter = chatAdapter
                             }
                         }
                     }

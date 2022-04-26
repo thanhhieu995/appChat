@@ -46,8 +46,6 @@ class UserAdapter(val context: Context, private val userList: ArrayList<User>): 
 
                 intent.putExtra("uidLogin", uidLogin)
 
-                intent.putExtra("status", statusLogin)
-
                 context.startActivity(intent)
                 notifyDataSetChanged()
             }
