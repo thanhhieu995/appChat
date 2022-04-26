@@ -12,8 +12,10 @@ import com.example.chatapp.Message
 import com.example.chatapp.R
 import com.example.chatapp.User
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.sent.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 
 class ChatActivity : AppCompatActivity() {
@@ -34,6 +36,7 @@ class ChatActivity : AppCompatActivity() {
     private var statusFriend: String? = "1"
 
 
+    var seen: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,11 +94,49 @@ class ChatActivity : AppCompatActivity() {
                         val message = postSnapshot.getValue(Message::class.java)
 
 //                        messageList.add(message!!)
+
+                        if (message != null) {
+                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
+                                var hashMap: HashMap<String, Boolean> = HashMap()
+                                hashMap.put("seen", true)
+                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+                                //chatAdapter.addSeen(message.seen)
+                               //chatRecyclerView.adapter = chatAdapter
+                            }
+                        }
                         if (message != null) {
                             chatAdapter.addMessage(message, loginUid as String, friendUid as String)
                         }
-                        chatAdapter.notifyDataSetChanged()
                     }
+                    chatAdapter.notifyDataSetChanged()
+                    chatRecyclerView.scrollToPosition(messageList.size - 1)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+
+        mDbRef.child("chats").child(roomReceiver!!).child("messages")
+            .addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+
+                    for (postSnapshot in snapshot.children) {
+                        val message = postSnapshot.getValue(Message::class.java)
+
+                        if (message != null) {
+                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
+                                var hashMap: HashMap<String, Boolean> = HashMap()
+                                hashMap.put("seen", true)
+                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+                                //chatAdapter.addSeen(message.seen)
+                               //chatRecyclerView.adapter = chatAdapter
+                            }
+                        }
+                    }
+                    chatAdapter.notifyDataSetChanged()
                     chatRecyclerView.scrollToPosition(messageList.size - 1)
                 }
 
@@ -151,7 +192,8 @@ class ChatActivity : AppCompatActivity() {
             sendChatMessage(
                 loginUid.toString(),
                 currentDate,
-                friendUid as String?
+                friendUid as String?,
+                seen
             )
             //statusAccount(loginUid as String?)
             chatRecyclerView.scrollToPosition(messageList.size - 1)
@@ -168,10 +210,11 @@ class ChatActivity : AppCompatActivity() {
     private fun sendChatMessage(
         loginUid: String?,
         currentDate: String?,
-        friendUid: String?
+        friendUid: String?,
+        seen: Boolean
     ) {
         val message = messageBox.text.toString()
-        val messageObject = Message(message, loginUid, currentDate)
+        val messageObject = Message(message, loginUid, friendUid, currentDate, seen)
         if (loginUid != null && message.trim().isNotEmpty()) {
             if (friendUid != null) {
                 chatAdapter.addMessage(messageObject, loginUid, friendUid)

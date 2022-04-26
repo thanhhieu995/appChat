@@ -26,6 +26,8 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 
     private var friendUid: String? = ""
 
+    var tmpSeen: Boolean = false
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         if(viewType == 1) {
@@ -73,6 +75,18 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
             if (currentMessage.time != null) {
                 viewHolder.time_sent.text = currentMessage.time
             }
+
+            if (position == messageList.size - 1) {
+                //currentMessage.seen = tmpSeen
+                if (currentMessage.seen) {
+                    viewHolder.status_Sent.text = "Seen"
+                } else {
+                    viewHolder.status_Sent.text = "Delivered"
+                }
+            } else {
+                viewHolder.status_Sent.visibility = View.GONE
+            }
+
             //viewHolder.status_Sent.text = currentMessage.status_message
 
         } else {
@@ -124,6 +138,11 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 
     fun addStatus(status: String?) {
         this.status = status
+        notifyDataSetChanged()
+    }
+
+    fun addSeen(seen: Boolean) {
+        this.tmpSeen = seen
         notifyDataSetChanged()
     }
 
