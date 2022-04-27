@@ -39,6 +39,8 @@ class UserAdapter(val context: Context, private val userList: ArrayList<User>): 
         holder.textStatus.text = currentUser.status
         if (holder.textStatus.text == "online") {
             holder.textStatus.setTextColor(Color.GREEN)
+        } else {
+            holder.textStatus.setTextColor(Color.BLACK)
         }
 
         holder.itemView.setOnClickListener(object : View.OnClickListener{
