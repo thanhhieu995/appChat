@@ -22,6 +22,8 @@ class UserAdapter(val context: Context, private val userList: ArrayList<User>): 
 
     var statusFriend: String? = ""
 
+    var hasMore: Boolean = false
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.user_layout, parent, false)
         return UserViewHolder(view)
@@ -42,6 +44,8 @@ class UserAdapter(val context: Context, private val userList: ArrayList<User>): 
                 intent.putExtra("name", currentUser.name)
                 intent.putExtra("uidFriend", currentUser.uid)
 
+                hasMore = true
+                intent.putExtra("hasMore", hasMore)
                 //intent.putExtra("statusFriend", currentUser.status.toString())
 
                 intent.putExtra("uidLogin", uidLogin)

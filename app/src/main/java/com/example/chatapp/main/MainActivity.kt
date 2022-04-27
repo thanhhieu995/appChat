@@ -83,6 +83,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        hasMore = intent.getBooleanExtra("hasMore", false)
     }
 
 
@@ -183,5 +184,4 @@ class MainActivity : AppCompatActivity() {
 //        super.onBackPressed()
 //        FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString()).child("status").setValue("offline")
 //    }
-
 }

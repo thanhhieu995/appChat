@@ -1,6 +1,7 @@
 package com.example.chatapp.chat
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageView
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
 import com.example.chatapp.R
 import com.example.chatapp.User
+import com.example.chatapp.main.MainActivity
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.sent.*
 import java.text.SimpleDateFormat
@@ -38,6 +40,8 @@ class ChatActivity : AppCompatActivity() {
 
     var seen: Boolean = false
 
+    var hasMore: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -46,6 +50,8 @@ class ChatActivity : AppCompatActivity() {
         val friendUid = intent.getSerializableExtra("uidFriend")
 
         val loginUid = intent.getSerializableExtra("uidLogin")
+
+        hasMore = intent.getBooleanExtra("hasMore", false)
 
        // val statusFriend = intent.getSerializableExtra("statusFriend")
 
@@ -95,7 +101,7 @@ class ChatActivity : AppCompatActivity() {
 
 //                        messageList.add(message!!)
 
-                        if (message != null && statusFriend == "Online") {
+                        if (message != null && statusFriend == "Online" && hasMore) {
                             if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("seen", true)
@@ -125,7 +131,7 @@ class ChatActivity : AppCompatActivity() {
                     for (postSnapshot in snapshot.children) {
                         val message = postSnapshot.getValue(Message::class.java)
 
-                        if (message != null && statusFriend == "Online") {
+                        if (message != null && statusFriend == "Online" && hasMore) {
                             if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("seen", true)
@@ -252,5 +258,12 @@ class ChatActivity : AppCompatActivity() {
 
             }
         })
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        hasMore = false
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("hasMore", hasMore)
     }
 }
