@@ -142,10 +142,10 @@ class MainActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val connected = snapshot.getValue(Boolean::class.java)!!
                 if (connected) {
-                    studentRef.child("status").onDisconnect().setValue("Offline!")
-                    studentRef.child("status").setValue("Online")
+                    studentRef.child("status").onDisconnect().setValue("offline")
+                    studentRef.child("status").setValue("online")
                 }else {
-                    studentRef.child("status").setValue("offline!!!")
+                    studentRef.child("status").setValue("offline")
                     }
             }
 

@@ -137,8 +137,8 @@ class LogIn : AppCompatActivity() {
                     if (hasMore) {
                         studentRef.child("status").setValue("offline!!!")
                     } else {
-                        studentRef.child("status").onDisconnect().setValue("Offline!")
-                        studentRef.child("status").setValue("Online")
+                        studentRef.child("status").onDisconnect().setValue("offline!")
+                        studentRef.child("status").setValue("online")
                     }
                 } else {
                     studentRef.child("status").setValue("offline")

@@ -106,7 +106,7 @@ class ChatActivity : AppCompatActivity() {
 
 //                        messageList.add(message!!)
 
-                        if (message != null && statusFriend == "Online" && hasMore) {
+                        if (message != null && statusFriend == "online" && hasMore) {
                             if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("seen", true)
@@ -136,7 +136,7 @@ class ChatActivity : AppCompatActivity() {
                     for (postSnapshot in snapshot.children) {
                         val message = postSnapshot.getValue(Message::class.java)
 
-                        if (message != null && statusFriend == "Online" && hasMore) {
+                        if (message != null && statusFriend == "online" && hasMore) {
                             if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("seen", true)
@@ -223,7 +223,7 @@ class ChatActivity : AppCompatActivity() {
                     for (postSnapshot in snapshot.children) {
                         val message = postSnapshot.getValue(Message::class.java)
 
-                        if (message != null && statusFriend == "Online" && hasMore) {
+                        if (message != null && statusFriend == "online" && hasMore) {
                             if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("seen", true)
@@ -250,7 +250,7 @@ class ChatActivity : AppCompatActivity() {
                     for (postSnapshot in snapshot.children) {
                         val message = postSnapshot.getValue(Message::class.java)
 
-                        if (message != null && statusFriend == "Online" && hasMore) {
+                        if (message != null && statusFriend == "online" && hasMore) {
                             if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("seen", true)
@@ -312,7 +312,7 @@ class ChatActivity : AppCompatActivity() {
                 val connected = snapshot.getValue(Boolean::class.java)!!
                 if (connected) {
                     studentRef.child("status").onDisconnect().setValue("offline")
-                    studentRef.child("status").setValue("Online")
+                    studentRef.child("status").setValue("online")
                 } else {
                     studentRef.child("status").setValue("offline")
                 }

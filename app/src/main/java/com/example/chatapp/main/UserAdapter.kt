@@ -37,7 +37,7 @@ class UserAdapter(val context: Context, private val userList: ArrayList<User>): 
        // if (FirebaseAuth.getInstance().currentUser?.uid != currentUser.uid ) {
             holder.textName.text = currentUser.name
         holder.textStatus.text = currentUser.status
-        if (holder.textStatus.text == "Online") {
+        if (holder.textStatus.text == "online") {
             holder.textStatus.setTextColor(Color.GREEN)
         }
 
