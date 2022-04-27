@@ -87,7 +87,7 @@ class ChatActivity : AppCompatActivity() {
                 @SuppressLint("SetTextI18n")
                 override fun onDataChange(snapshot: DataSnapshot) {
 
-                    //messageList.clear()
+                    messageList.clear()
 
                     for (postSnapshot in snapshot.children) {
 
@@ -121,7 +121,6 @@ class ChatActivity : AppCompatActivity() {
         mDbRef.child("chats").child(roomReceiver!!).child("messages")
             .addValueEventListener(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
-
 
                     for (postSnapshot in snapshot.children) {
                         val message = postSnapshot.getValue(Message::class.java)

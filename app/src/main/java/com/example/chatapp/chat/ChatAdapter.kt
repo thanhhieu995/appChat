@@ -96,7 +96,7 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
             if (currentMessage.time != null) {
                 viewHolder.time_receive.text = currentMessage.time
             }
-            //viewHolder.status_receive.text = currentMessage.status_message
+            viewHolder.status_receive.text = ""
         }
     }
 
