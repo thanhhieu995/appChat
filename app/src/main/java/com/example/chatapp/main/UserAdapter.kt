@@ -2,6 +2,7 @@ package com.example.chatapp.main
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +37,9 @@ class UserAdapter(val context: Context, private val userList: ArrayList<User>): 
        // if (FirebaseAuth.getInstance().currentUser?.uid != currentUser.uid ) {
             holder.textName.text = currentUser.name
         holder.textStatus.text = currentUser.status
+        if (holder.textStatus.text == "Online") {
+            holder.textStatus.setTextColor(Color.GREEN)
+        }
 
         holder.itemView.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
