@@ -1,14 +1,15 @@
 package com.example.chatapp.chat
 
 import android.annotation.SuppressLint
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
@@ -16,7 +17,6 @@ import com.example.chatapp.R
 import com.example.chatapp.User
 import com.example.chatapp.main.MainActivity
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.sent.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -91,22 +91,23 @@ class ChatActivity : AppCompatActivity() {
         statusRoomReceive()
 
         //lam ham lay hoat dong cua user tai chatActivity
-        mDbRef.child("user").child(friendUid.toString()).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
+        mDbRef.child("user").child(friendUid.toString())
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
 
                     val user: User? = snapshot.getValue(User::class.java)
                     if (user != null && user.uid == friendUid) {
                         //statusFriend = user.status
-                            addStatusFriend(user.status)
+                        addStatusFriend(user.status)
                         chatAdapter.notifyDataSetChanged()
                     }
-            }
+                }
 
-            override fun onCancelled(error: DatabaseError) {
+                override fun onCancelled(error: DatabaseError) {
 
-            }
+                }
 
-        })
+            })
 
         sentButton.setOnClickListener {
             sendChatMessage(
@@ -134,7 +135,8 @@ class ChatActivity : AppCompatActivity() {
 
     private fun addStatusFriend(status: String?) {
         this.statusFriend = status
-        supportActionBar?.title = intent.getSerializableExtra("name").toString()  + " " + statusFriend
+        supportActionBar?.title =
+            intent.getSerializableExtra("name").toString() + " " + statusFriend
     }
 
     private fun sendChatMessage(
@@ -150,7 +152,7 @@ class ChatActivity : AppCompatActivity() {
                 chatAdapter.addMessage(messageObject, loginUid, friendUid)
             }
             mDbRef.child("chats").child(roomSender!!).child("messages").push()
-                .setValue(messageObject).addOnSuccessListener{
+                .setValue(messageObject).addOnSuccessListener {
                     mDbRef.child("chats").child(roomReceiver!!).child("messages").push()
                         .setValue(messageObject)
                 }
@@ -186,7 +188,10 @@ class ChatActivity : AppCompatActivity() {
 //                        messageList.add(message!!)
 
                         if (message != null && statusFriend == "online" && hasMore) {
-                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
+                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(
+                                    friendUid
+                                ) == true
+                            ) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("seen", true)
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
@@ -211,14 +216,17 @@ class ChatActivity : AppCompatActivity() {
 
     private fun statusRoomReceive() {
         mDbRef.child("chats").child(roomReceiver!!).child("messages")
-            .addValueEventListener(object : ValueEventListener{
+            .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
                     for (postSnapshot in snapshot.children) {
                         val message = postSnapshot.getValue(Message::class.java)
 
                         if (message != null && statusFriend == "online" && hasMore) {
-                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
+                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(
+                                    friendUid
+                                ) == true
+                            ) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("seen", true)
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
@@ -236,5 +244,59 @@ class ChatActivity : AppCompatActivity() {
                 }
 
             })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.chatbar, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.phone_bar) {
+            Toast.makeText(this, "ready phone call", Toast.LENGTH_SHORT).show()
+            makePhoneCall("0944346483")
+            return true
+        }
+
+        if (item.itemId == R.id.videoCall_bar) {
+            Toast.makeText(this, "video call is ready", Toast.LENGTH_SHORT).show()
+            return true
+        }
+        return false
+    }
+
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.dashboard, menu)
+//        val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
+//        val searchManager: SearchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//        val searchView: androidx.appcompat.widget.SearchView = searchItem?.actionView as androidx.appcompat.widget.SearchView
+//
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+//            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//
+//               return true
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                return true
+//            }
+//
+//        })
+//
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+//        return super.onCreateOptionsMenu(menu)
+//    }
+
+    fun makePhoneCall(number: String) : Boolean {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setData(Uri.parse("tel:$number"))
+            startActivity(intent)
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
+        }
     }
 }

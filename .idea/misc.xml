@@ -16,8 +16,10 @@
         <entry key="app/src/main/res/layout/searchable.xml" value="0.25092592592592594" />
         <entry key="app/src/main/res/layout/sent.xml" value="0.335" />
         <entry key="app/src/main/res/layout/user_layout.xml" value="0.335" />
+        <entry key="app/src/main/res/menu/chatbar.xml" value="0.21388888888888888" />
         <entry key="app/src/main/res/menu/dashboard.xml" value="0.22962962962962963" />
         <entry key="app/src/main/res/menu/menu.xml" value="0.21666666666666667" />
+        <entry key="app/src/main/res/menu/search_chat.xml" value="0.21388888888888888" />
       </map>
     </option>
   </component>
