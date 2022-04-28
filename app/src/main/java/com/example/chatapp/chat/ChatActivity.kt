@@ -59,17 +59,10 @@ class ChatActivity : AppCompatActivity() {
 
         hasMore = intent.getBooleanExtra("hasMore", false)
 
-       // val statusFriend = intent.getSerializableExtra("statusFriend")
-
-        //status = intent.getSerializableExtra("status").toString()
-
-
 //        val loginUid = FirebaseAuth.getInstance().currentUser?.uid // lay uid tu account???
 //        //???????????????
 
-
         mDbRef = FirebaseDatabase.getInstance().reference
-
 
         roomReceiver = loginUid.toString() + friendUid
         roomSender = friendUid.toString() + loginUid
@@ -94,68 +87,8 @@ class ChatActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat("dd/M/yyyy  hh:mm:ss aaa")
         val currentDate = sdf.format(Date())
 
-        mDbRef.child("chats").child(roomSender!!).child("messages")
-            .addValueEventListener(object : ValueEventListener {
-                @SuppressLint("SetTextI18n")
-                override fun onDataChange(snapshot: DataSnapshot) {
-
-                    messageList.clear()
-
-                    for (postSnapshot in snapshot.children) {
-
-                        val message = postSnapshot.getValue(Message::class.java)
-
-//                        messageList.add(message!!)
-
-                        if (message != null && statusFriend == "online" && hasMore) {
-                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
-                                var hashMap: HashMap<String, Boolean> = HashMap()
-                                hashMap.put("seen", true)
-                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-                                //chatAdapter.addSeen(message.seen)
-                               chatRecyclerView.adapter = chatAdapter
-                            }
-                        }
-                        if (message != null) {
-                            chatAdapter.addMessage(message, loginUid as String, friendUid as String)
-                        }
-                    }
-                    chatAdapter.notifyDataSetChanged()
-                    chatRecyclerView.scrollToPosition(messageList.size - 1)
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-
-            })
-
-        mDbRef.child("chats").child(roomReceiver!!).child("messages")
-            .addValueEventListener(object : ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-
-                    for (postSnapshot in snapshot.children) {
-                        val message = postSnapshot.getValue(Message::class.java)
-
-                        if (message != null && statusFriend == "online" && hasMore) {
-                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
-                                var hashMap: HashMap<String, Boolean> = HashMap()
-                                hashMap.put("seen", true)
-                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-                                //chatAdapter.addSeen(message.seen)
-                               chatRecyclerView.adapter = chatAdapter
-                            }
-                        }
-                    }
-                    chatAdapter.notifyDataSetChanged()
-                    chatRecyclerView.scrollToPosition(messageList.size - 1)
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-
-            })
+        statusRoomSend()
+        statusRoomReceive()
 
         //lam ham lay hoat dong cua user tai chatActivity
         mDbRef.child("user").child(friendUid.toString()).addValueEventListener(object : ValueEventListener {
@@ -175,30 +108,6 @@ class ChatActivity : AppCompatActivity() {
 
         })
 
-       // supportActionBar?.title = name.toString()  + " " + status
-
-        //statusAccount(loginUid as String?)
-
-
-//        if (loginUid != null) {
-//            mDbRef.child("student").child(loginUid)
-//                .addValueEventListener(object : ValueEventListener {
-//                    override fun onDataChange(snapshot: DataSnapshot) {
-//                        for (postSnapshot in snapshot.children) {
-//                            statusMessage = postSnapshot.getValue(String::class.java).toString()
-//                        }
-//                    }
-//
-//                    override fun onCancelled(error: DatabaseError) {
-//
-//                    }
-//
-//                })
-//        }
-
-        //chatAdapter.addStatus(statusMessage)
-
-
         sentButton.setOnClickListener {
             sendChatMessage(
                 loginUid.toString(),
@@ -217,59 +126,10 @@ class ChatActivity : AppCompatActivity() {
         super.onResume()
         hasMore = intent.getBooleanExtra("hasMore", false)
 
-        mDbRef.child("chats").child(roomSender!!).child("messages")
-            .addValueEventListener(object : ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-
-                    for (postSnapshot in snapshot.children) {
-                        val message = postSnapshot.getValue(Message::class.java)
-
-                        if (message != null && statusFriend == "online" && hasMore) {
-                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
-                                var hashMap: HashMap<String, Boolean> = HashMap()
-                                hashMap.put("seen", true)
-                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-                                //chatAdapter.addSeen(message.seen)
-                                chatRecyclerView.adapter = chatAdapter
-                            }
-                        }
-                    }
-                    chatAdapter.notifyDataSetChanged()
-                    chatRecyclerView.scrollToPosition(messageList.size - 1)
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-
-            })
-
-        mDbRef.child("chats").child(roomReceiver!!).child("messages")
-            .addValueEventListener(object : ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-
-                    for (postSnapshot in snapshot.children) {
-                        val message = postSnapshot.getValue(Message::class.java)
-
-                        if (message != null && statusFriend == "online" && hasMore) {
-                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
-                                var hashMap: HashMap<String, Boolean> = HashMap()
-                                hashMap.put("seen", true)
-                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-                                //chatAdapter.addSeen(message.seen)
-                                chatRecyclerView.adapter = chatAdapter
-                            }
-                        }
-                    }
-                    chatAdapter.notifyDataSetChanged()
-                    chatRecyclerView.scrollToPosition(messageList.size - 1)
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-
-            })
+        if (hasMore) {
+            statusRoomSend()
+            statusRoomReceive()
+        }
     }
 
     private fun addStatusFriend(status: String?) {
@@ -304,31 +164,77 @@ class ChatActivity : AppCompatActivity() {
         chatRecyclerView.scrollToPosition(messageList.size - 1)
     }
 
-    private fun statusAccount(loginUid: String?) {
-        val studentRef = FirebaseDatabase.getInstance().getReference("student").child(loginUid!!)
-        val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
-
-        connectedRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val connected = snapshot.getValue(Boolean::class.java)!!
-                if (connected) {
-                    studentRef.child("status").onDisconnect().setValue("offline")
-                    studentRef.child("status").setValue("online")
-                } else {
-                    studentRef.child("status").setValue("offline")
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-        })
-    }
-
     override fun onBackPressed() {
         super.onBackPressed()
         hasMore = false
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("hasMore", hasMore)
+    }
+
+    private fun statusRoomSend() {
+        mDbRef.child("chats").child(roomSender!!).child("messages")
+            .addValueEventListener(object : ValueEventListener {
+                @SuppressLint("SetTextI18n")
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    messageList.clear()
+
+                    for (postSnapshot in snapshot.children) {
+
+                        val message = postSnapshot.getValue(Message::class.java)
+
+//                        messageList.add(message!!)
+
+                        if (message != null && statusFriend == "online" && hasMore) {
+                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
+                                var hashMap: HashMap<String, Boolean> = HashMap()
+                                hashMap.put("seen", true)
+                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+                                //chatAdapter.addSeen(message.seen)
+                                chatRecyclerView.adapter = chatAdapter
+                            }
+                        }
+                        if (message != null) {
+                            chatAdapter.addMessage(message, loginUid as String, friendUid as String)
+                        }
+                    }
+                    chatAdapter.notifyDataSetChanged()
+                    chatRecyclerView.scrollToPosition(messageList.size - 1)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+    }
+
+    private fun statusRoomReceive() {
+        mDbRef.child("chats").child(roomReceiver!!).child("messages")
+            .addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    for (postSnapshot in snapshot.children) {
+                        val message = postSnapshot.getValue(Message::class.java)
+
+                        if (message != null && statusFriend == "online" && hasMore) {
+                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
+                                var hashMap: HashMap<String, Boolean> = HashMap()
+                                hashMap.put("seen", true)
+                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+                                //chatAdapter.addSeen(message.seen)
+                                chatRecyclerView.adapter = chatAdapter
+                            }
+                        }
+                    }
+                    chatAdapter.notifyDataSetChanged()
+                    chatRecyclerView.scrollToPosition(messageList.size - 1)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
     }
 }
