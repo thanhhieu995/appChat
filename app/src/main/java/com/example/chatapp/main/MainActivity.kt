@@ -1,10 +1,13 @@
 package com.example.chatapp.main
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.R
@@ -89,6 +92,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
+        menuInflater.inflate(R.menu.dashboard, menu)
+        val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView: SearchView = searchItem?.actionView as SearchView
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -183,5 +192,16 @@ class MainActivity : AppCompatActivity() {
 //    fun onBackPress() {
 //        super.onBackPressed()
 //        FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString()).child("status").setValue("offline")
+//    }
+
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.dashboard, menu)
+//
+//        val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
+//        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//        val searchView: SearchView = searchItem?.actionView as SearchView
+//
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+//        return  super.onCreateOptionsMenu(menu)
 //    }
 }

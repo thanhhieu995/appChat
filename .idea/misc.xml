@@ -13,8 +13,10 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22685185185185186" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.375" />
         <entry key="app/src/main/res/layout/receive.xml" value="0.45" />
+        <entry key="app/src/main/res/layout/searchable.xml" value="0.25092592592592594" />
         <entry key="app/src/main/res/layout/sent.xml" value="0.335" />
         <entry key="app/src/main/res/layout/user_layout.xml" value="0.335" />
+        <entry key="app/src/main/res/menu/dashboard.xml" value="0.22962962962962963" />
         <entry key="app/src/main/res/menu/menu.xml" value="0.21666666666666667" />
       </map>
     </option>
