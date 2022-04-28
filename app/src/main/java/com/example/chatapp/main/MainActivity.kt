@@ -79,6 +79,10 @@ class MainActivity : AppCompatActivity() {
                 if (TextUtils.isEmpty(newText)) {
                     addFriendUser()
                     adapter.notifyDataSetChanged()
+                } else {
+                    if (newText != null) {
+                        addSearchCharacter(newText)
+                    }
                 }
                 return true
             }
@@ -177,6 +181,33 @@ class MainActivity : AppCompatActivity() {
                 for (postSnapshot in snapshot.children) {
                     if (postSnapshot.getValue(User::class.java)?.uid != null && postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
                         if (query == postSnapshot.getValue(User::class.java)!!.name.toString().toLowerCase()) {
+                            userList.add(postSnapshot.getValue(User::class.java)!!)
+                        }
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
+    fun addSearchCharacter(query: String) {
+        mDbRef.child("user").addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                userList.clear()
+                adapter.addUidLogin(mAuth.uid)
+
+                for (postSnapshot in snapshot.children) {
+                    if (postSnapshot.getValue(User::class.java)?.uid != null && postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
+//                        if (postSnapshot.getValue(User::class.java)!!.name?.toLowerCase().contentEquals(query.toLowerCase())) {
+//                            userList.add(postSnapshot.getValue(User::class.java)!!)
+//                        }
+                        if (postSnapshot.getValue(User::class.java)!!.name?.toLowerCase()!!.startsWith(query.toLowerCase())) {
                             userList.add(postSnapshot.getValue(User::class.java)!!)
                         }
                         adapter.notifyDataSetChanged()
