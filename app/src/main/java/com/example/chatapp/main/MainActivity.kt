@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
@@ -49,39 +50,7 @@ class MainActivity : AppCompatActivity() {
         userList.clear()
 
         statusAccount(mAuth.uid)
-
-        mDbRef.child("user").addValueEventListener(object: ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-
-                userList.clear()
-                adapter.addUidLogin(mAuth.uid)
-
-                for (postSnapshot in snapshot.children) {
-                    //userList.clear()
-//                        val currentUser = postSnapshot.getValue(User::class.java)
-//
-//                        if (currentUser?.uid != null && mAuth.uid != currentUser.uid) {
-//                                if (currentUser.uid != null) {
-//                                    //statusAccount(currentUser.uid)
-//                                }
-//                            adapter.addItems(currentUser)
-//                        }
-
-
-                    if (postSnapshot.getValue(User::class.java)?.uid != null && postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
-                        //statusAccount(postSnapshot.getValue(User::class.java)?.uid)
-                            userList.add(postSnapshot.getValue(User::class.java)!!)
-                       // adapter.addItems(postSnapshot.getValue(User::class.java))
-                        adapter.notifyDataSetChanged()
-                    }
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
+        addFriendUser()
     }
 
     override fun onResume() {
@@ -96,6 +65,24 @@ class MainActivity : AppCompatActivity() {
         val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchView: SearchView = searchItem?.actionView as SearchView
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                userList.clear()
+                if (query != null) {
+                    addSearchFriend(query.toLowerCase())
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (TextUtils.isEmpty(newText)) {
+                    addFriendUser()
+                    adapter.notifyDataSetChanged()
+                }
+                return true
+            }
+        })
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         return super.onCreateOptionsMenu(menu)
@@ -118,31 +105,6 @@ class MainActivity : AppCompatActivity() {
         return false
     }
 
-//    override fun onRestart() {
-//        super.onRestart()
-//        hasMore = false
-//        //statusAccount(mAuth.uid)
-//    }
-//
-//    override fun onPause() {
-////        var logIn = LogIn()
-////        if (logIn.hasMore) {
-////            hasMore = true
-////        }
-//        hasMore = true
-//        super.onPause()
-//        if (mAuth.uid != null) {
-//            //statusAccount(mAuth.uid)
-//        }
-//    }
-
-//    override fun onStop() {
-//        hasMore = true
-//        super.onStop()
-//        statusAccount(mAuth.uid)
-//    }
-
-
     private fun statusAccount(Uid: String? ) {
         val studentRef = FirebaseDatabase.getInstance().getReference("user").child(Uid!!)
         val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
@@ -164,44 +126,68 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-
-//    private fun getStatusFriend(uidFriend: String?) {
-//        mDbRef.child("user").child(uidFriend.toString())
-//            .addValueEventListener(object : ValueEventListener {
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    for (postSnapshot in snapshot.children) {
-//                        statusFriend = postSnapshot.getValue(String:: class.java).toString()
-//                    }
-//                    adapter.addStatusAccountLogin(statusFriend)
-//                    adapter.notifyDataSetChanged()
-//                }
-//
-//                override fun onCancelled(error: DatabaseError) {
-//
-//                }
-//
-//            })
-//    }
-
     override fun onBackPressed() {
         super.onBackPressed()
         val intent = Intent(this, LogIn::class.java)
         startActivity(intent)
     }
 
-//    fun onBackPress() {
-//        super.onBackPressed()
-//        FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString()).child("status").setValue("offline")
-//    }
+    private fun addFriendUser() {
+        mDbRef.child("user").addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.dashboard, menu)
+                userList.clear()
+                adapter.addUidLogin(mAuth.uid)
+
+                for (postSnapshot in snapshot.children) {
+                    //userList.clear()
+//                        val currentUser = postSnapshot.getValue(User::class.java)
 //
-//        val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
-//        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-//        val searchView: SearchView = searchItem?.actionView as SearchView
-//
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-//        return  super.onCreateOptionsMenu(menu)
-//    }
+//                        if (currentUser?.uid != null && mAuth.uid != currentUser.uid) {
+//                                if (currentUser.uid != null) {
+//                                    //statusAccount(currentUser.uid)
+//                                }
+//                            adapter.addItems(currentUser)
+//                        }
+
+
+                    if (postSnapshot.getValue(User::class.java)?.uid != null && postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
+                        //statusAccount(postSnapshot.getValue(User::class.java)?.uid)
+                        userList.add(postSnapshot.getValue(User::class.java)!!)
+                        // adapter.addItems(postSnapshot.getValue(User::class.java))
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
+    fun addSearchFriend(query: String) {
+        mDbRef.child("user").addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                userList.clear()
+                adapter.addUidLogin(mAuth.uid)
+
+                for (postSnapshot in snapshot.children) {
+                    if (postSnapshot.getValue(User::class.java)?.uid != null && postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
+                        if (query == postSnapshot.getValue(User::class.java)!!.name.toString().toLowerCase()) {
+                            userList.add(postSnapshot.getValue(User::class.java)!!)
+                        }
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
 }

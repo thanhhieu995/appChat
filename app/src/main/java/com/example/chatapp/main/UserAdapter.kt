@@ -7,15 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.chat.ChatActivity
 import com.example.chatapp.R
 import com.example.chatapp.Status
 import com.example.chatapp.User
 
-class UserAdapter(val context: Context, private val userList: ArrayList<User>): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class UserAdapter(val context: Context, private var userList: ArrayList<User>): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
-    private val dataList = ArrayList<User>(userList)
+    private var dataList = ArrayList<User>(userList)
 
     var uidLogin: String? = null
 
@@ -91,6 +92,21 @@ class UserAdapter(val context: Context, private val userList: ArrayList<User>): 
 
     fun addStatusFriend(status: String?) {
         this.statusFriend = status
+        notifyDataSetChanged()
+    }
+
+    fun filter(text: String) {
+        var filterList = ArrayList<User>()
+        if (text.isEmpty()) {
+            filterList = userList
+        } else {
+            for (data in userList) {
+                if (data.name?.toLowerCase()?.contains(text.toLowerCase()) == true) {
+
+                }
+            }
+            //userList = filterList
+        }
         notifyDataSetChanged()
     }
 }
