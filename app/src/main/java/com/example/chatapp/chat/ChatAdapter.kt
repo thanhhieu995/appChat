@@ -1,5 +1,6 @@
 package com.example.chatapp.chat
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -39,6 +40,7 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         val currentMessage = messageList[position]

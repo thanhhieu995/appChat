@@ -133,6 +133,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         val intent = Intent(this, LogIn::class.java)
+        mAuth.signOut()
         startActivity(intent)
     }
 
