@@ -1,8 +1,6 @@
 package com.example.chatapp.chat
 
 import android.annotation.SuppressLint
-import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -87,8 +85,8 @@ class ChatActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat("dd/M/yyyy  hh:mm:ss aaa")
         val currentDate = sdf.format(Date())
 
-        statusRoomSend()
-        statusRoomReceive()
+        loadDataRoomSend()
+        loadDataRoomReceive()
 
         //lam ham lay hoat dong cua user tai chatActivity
         mDbRef.child("user").child(friendUid.toString())
@@ -128,8 +126,8 @@ class ChatActivity : AppCompatActivity() {
         hasMore = intent.getBooleanExtra("hasMore", false)
 
         if (hasMore) {
-            statusRoomSend()
-            statusRoomReceive()
+            loadDataRoomSend()
+            loadDataRoomReceive()
         }
     }
 
@@ -173,7 +171,7 @@ class ChatActivity : AppCompatActivity() {
         intent.putExtra("hasMore", hasMore)
     }
 
-    private fun statusRoomSend() {
+    private fun loadDataRoomSend() {
         mDbRef.child("chats").child(roomSender!!).child("messages")
             .addValueEventListener(object : ValueEventListener {
                 @SuppressLint("SetTextI18n")
@@ -196,12 +194,12 @@ class ChatActivity : AppCompatActivity() {
                                 hashMap.put("seen", true)
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
                                 //chatAdapter.addSeen(message.seen)
-                                chatRecyclerView.adapter = chatAdapter
                             }
                         }
                         if (message != null) {
                             chatAdapter.addMessage(message, loginUid as String, friendUid as String)
                         }
+                        chatRecyclerView.adapter = chatAdapter
                     }
                     chatAdapter.notifyDataSetChanged()
                     chatRecyclerView.scrollToPosition(messageList.size - 1)
@@ -214,7 +212,7 @@ class ChatActivity : AppCompatActivity() {
             })
     }
 
-    private fun statusRoomReceive() {
+    private fun loadDataRoomReceive() {
         mDbRef.child("chats").child(roomReceiver!!).child("messages")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -231,9 +229,9 @@ class ChatActivity : AppCompatActivity() {
                                 hashMap.put("seen", true)
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
                                 //chatAdapter.addSeen(message.seen)
-                                chatRecyclerView.adapter = chatAdapter
                             }
                         }
+                        chatRecyclerView.adapter = chatAdapter
                     }
                     chatAdapter.notifyDataSetChanged()
                     chatRecyclerView.scrollToPosition(messageList.size - 1)
