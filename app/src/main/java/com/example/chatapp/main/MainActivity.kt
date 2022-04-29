@@ -155,7 +155,7 @@ class MainActivity : AppCompatActivity() {
 //                        }
 
 
-                    if (postSnapshot.getValue(User::class.java)?.uid != null && postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
+                    if (postSnapshot.getValue(User::class.java)?.uid != null && mAuth.uid != null && postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
                         //statusAccount(postSnapshot.getValue(User::class.java)?.uid)
                         userList.add(postSnapshot.getValue(User::class.java)!!)
                         // adapter.addItems(postSnapshot.getValue(User::class.java))

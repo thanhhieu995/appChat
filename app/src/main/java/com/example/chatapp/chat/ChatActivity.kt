@@ -254,7 +254,7 @@ class ChatActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.phone_bar) {
             Toast.makeText(this, "ready phone call", Toast.LENGTH_SHORT).show()
-            makePhoneCall("0944346483")
+            makePhoneCall()
             return true
         }
 
@@ -265,38 +265,16 @@ class ChatActivity : AppCompatActivity() {
         return false
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.dashboard, menu)
-//        val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
-//        val searchManager: SearchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-//        val searchView: androidx.appcompat.widget.SearchView = searchItem?.actionView as androidx.appcompat.widget.SearchView
-//
-//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
-//            androidx.appcompat.widget.SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//
-//               return true
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                return true
-//            }
-//
-//        })
-//
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-//        return super.onCreateOptionsMenu(menu)
-//    }
 
-    fun makePhoneCall(number: String) : Boolean {
-        try {
+    private fun makePhoneCall() : Boolean {
+        return try {
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.setData(Uri.parse("tel:$number"))
+            intent.data = Uri.parse("tel: ")
             startActivity(intent)
-            return true
+            true
         } catch (e: Exception) {
             e.printStackTrace()
-            return false
+            false
         }
     }
 }
