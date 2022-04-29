@@ -2,12 +2,18 @@ package com.example.chatapp.chat
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.green
+import androidx.core.graphics.red
+import androidx.core.graphics.toColor
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
@@ -15,6 +21,7 @@ import com.example.chatapp.R
 import com.example.chatapp.User
 import com.example.chatapp.main.MainActivity
 import com.google.firebase.database.*
+import com.google.type.ColorOrBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -119,6 +126,26 @@ class ChatActivity : AppCompatActivity() {
 
             chatAdapter.notifyDataSetChanged()
         }
+
+
+//        val ab: android.app.ActionBar? = actionBar
+//
+//        val tv: TextView = TextView(this)
+//
+//        val lp: android.app.ActionBar.LayoutParams = android.app.ActionBar.LayoutParams(
+//            android.app.ActionBar.LayoutParams.MATCH_PARENT,
+//            android.app.ActionBar.LayoutParams.WRAP_CONTENT
+//        )
+//
+//        tv.layoutParams = lp
+//
+//        tv.text = statusFriend
+//
+//        tv.setTextColor(Color.GREEN)
+//
+//        ab?.displayOptions = android.app.ActionBar.DISPLAY_SHOW_CUSTOM
+//
+//        ab?.customView = tv
     }
 
     override fun onResume() {
@@ -133,8 +160,9 @@ class ChatActivity : AppCompatActivity() {
 
     private fun addStatusFriend(status: String?) {
         this.statusFriend = status
-        supportActionBar?.title =
-            intent.getSerializableExtra("name").toString() + " " + statusFriend
+        supportActionBar?.title = intent.getSerializableExtra("name").toString()
+
+        supportActionBar?.subtitle = statusFriend
     }
 
     private fun sendChatMessage(
@@ -276,3 +304,4 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 }
+

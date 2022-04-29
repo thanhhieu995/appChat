@@ -48,8 +48,6 @@ class LogIn : AppCompatActivity() {
             val email = edtEmail.text.toString().trim()
             val password = edtPassword.text.toString()
 
-            //hasMore = false
-
             login(email, password)
         }
 
@@ -59,47 +57,7 @@ class LogIn : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         hasMore = true
-//        if (mAuth.uid != null) {
-//            //statusAccount(mAuth.uid)
-//            FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid!!).child("status").setValue("offline")
-//        }
     }
-
-//    override fun onRestart() {
-//        super.onRestart()
-//        hasMore = true
-//        if (mAuth.uid != null) {
-//            //statusAccount(mAuth.uid)
-//            FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString()).child("status").setValue("offline")
-//        }
-//    }
-
-//    override fun onStart() {
-//        super.onStart()
-//        hasMore = true
-//        //statusAccount(mAuth.uid)
-//    }
-
-    override fun onPause() {
-        super.onPause()
-        hasMore = true
-        if (mAuth.uid != null) {
-            //statusAccount(mAuth.uid!!)
-            //FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid!!).child("status").setValue("offline")
-        }
-    }
-
-//    override fun onStop() {
-//        super.onStop()
-//        hasMore = true
-//        statusAccount(mAuth.uid)
-//    }
-
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        hasMore = true
-//        statusAccount(mAuth.uid)
-//    }
 
     private fun login(email: String, password: String) {
 
@@ -122,8 +80,6 @@ class LogIn : AppCompatActivity() {
                     }
                 })
         }
-
-        //statusAccount(mAuth.uid)
     }
 
     private fun statusAccount(loginUid: String? ) {

@@ -146,16 +146,6 @@ class MainActivity : AppCompatActivity() {
                 adapter.addUidLogin(mAuth.uid)
 
                 for (postSnapshot in snapshot.children) {
-                    //userList.clear()
-//                        val currentUser = postSnapshot.getValue(User::class.java)
-//
-//                        if (currentUser?.uid != null && mAuth.uid != currentUser.uid) {
-//                                if (currentUser.uid != null) {
-//                                    //statusAccount(currentUser.uid)
-//                                }
-//                            adapter.addItems(currentUser)
-//                        }
-
 
                     if (postSnapshot.getValue(User::class.java)?.uid != null && mAuth.uid != null && postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
                         //statusAccount(postSnapshot.getValue(User::class.java)?.uid)
