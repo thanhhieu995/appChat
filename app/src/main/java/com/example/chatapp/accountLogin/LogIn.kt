@@ -59,10 +59,10 @@ class LogIn : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         hasMore = true
-        if (mAuth.uid != null) {
-            //statusAccount(mAuth.uid)
-            FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid!!).child("status").setValue("offline")
-        }
+//        if (mAuth.uid != null) {
+//            //statusAccount(mAuth.uid)
+//            FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid!!).child("status").setValue("offline")
+//        }
     }
 
 //    override fun onRestart() {

@@ -133,6 +133,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         val intent = Intent(this, LogIn::class.java)
+        FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid!!).child("status").setValue("offline")
         mAuth.signOut()
         startActivity(intent)
     }
