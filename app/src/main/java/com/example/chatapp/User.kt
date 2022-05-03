@@ -13,4 +13,6 @@ class User {
         this.uid = uid
         this.status = status
     }
+
+
 }

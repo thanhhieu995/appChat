@@ -152,6 +152,8 @@ class MainActivity : AppCompatActivity() {
                         userList.add(postSnapshot.getValue(User::class.java)!!)
                         // adapter.addItems(postSnapshot.getValue(User::class.java))
                         adapter.notifyDataSetChanged()
+                    } else {
+                        supportActionBar?.title = postSnapshot.getValue(User::class.java)?.name
                     }
                 }
             }
