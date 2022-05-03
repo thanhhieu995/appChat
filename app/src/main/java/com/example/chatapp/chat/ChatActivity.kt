@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
@@ -163,6 +164,8 @@ class ChatActivity : AppCompatActivity() {
         supportActionBar?.title = intent.getSerializableExtra("name").toString()
 
         supportActionBar?.subtitle = statusFriend
+
+
     }
 
     private fun sendChatMessage(
