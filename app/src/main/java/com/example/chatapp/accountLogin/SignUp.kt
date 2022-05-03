@@ -11,8 +11,7 @@ import com.example.chatapp.main.MainActivity
 import com.example.chatapp.R
 import com.example.chatapp.User
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_log_in.*
 
 class SignUp : AppCompatActivity() {
@@ -49,6 +48,7 @@ class SignUp : AppCompatActivity() {
             val name = edtName.text.toString().trim()
 
             signUp(email, password, name, status.toString(), avatar)
+            checkUserExist(mAuth.uid, email)
         }
     }
 
@@ -69,8 +69,30 @@ class SignUp : AppCompatActivity() {
     }
 
     private fun addUserToDatabase(name: String, email: String, uid: String, status: String, avatar: String?) {
-        mDbRef = FirebaseDatabase.getInstance().getReference()
+        mDbRef = FirebaseDatabase.getInstance().reference
 
         mDbRef.child("user").child(uid).setValue(User(name, email, uid, status, avatar))
+    }
+
+    private fun checkUserExist(uid: String?, email: String?) {
+        mDbRef = FirebaseDatabase.getInstance().reference
+
+        mDbRef.child("user").addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (postSnapshot in snapshot.children) {
+                    val user = postSnapshot.getValue(User::class.java)
+                    if (user != null) {
+                        if (user.email == email) {
+                            Toast.makeText(this@SignUp, "Registered account, please login!!!", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 }

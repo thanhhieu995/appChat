@@ -12,7 +12,8 @@
         android:theme="@style/Theme.ChatApp">
         <activity
             android:name=".accountLogin.SetUpActivity"
-            android:exported="false" />
+            android:exported="true">
+        </activity>
         <activity
             android:name=".chat.ChatActivity"
             android:exported="true"

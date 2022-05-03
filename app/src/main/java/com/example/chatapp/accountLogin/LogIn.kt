@@ -9,12 +9,10 @@ import android.widget.EditText
 import android.widget.Toast
 import com.example.chatapp.main.MainActivity
 import com.example.chatapp.R
+import com.example.chatapp.User
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_log_in.*
 
 class LogIn : AppCompatActivity() {
@@ -27,6 +25,8 @@ class LogIn : AppCompatActivity() {
     private lateinit var btnSigUp: Button
 
     private lateinit var mAuth: FirebaseAuth
+
+    private lateinit var mDbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +62,7 @@ class LogIn : AppCompatActivity() {
     private fun login(email: String, password: String) {
 
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            Toast.makeText(this@LogIn, "please fill all the fields", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@LogIn, "Please enter your name and password!!!", Toast.LENGTH_LONG).show()
         } else {
             mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, OnCompleteListener { task ->

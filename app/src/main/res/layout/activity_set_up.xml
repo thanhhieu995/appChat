@@ -8,22 +8,22 @@
 
     <ImageView
         android:id="@+id/img_setUpAvatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:background="@color/green"
+        tools:srcCompat="@drawable/profile1" />
 
     <Button
         android:id="@+id/btn_AddPicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="10dp"
-        android:text="Add a Picture"
         android:background="@color/green"
+        android:text="Add a Picture"
         app:layout_constraintStart_toEndOf="@+id/img_setUpAvatar"
         app:layout_constraintTop_toTopOf="@+id/img_setUpAvatar" />
 
