@@ -29,6 +29,8 @@ class SignUp : AppCompatActivity() {
 
     var avatar: String? = null
 
+    var hasMore: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -48,8 +50,14 @@ class SignUp : AppCompatActivity() {
             val name = edtName.text.toString().trim()
 
             signUp(email, password, name, status.toString(), avatar)
-            checkUserExist(mAuth.uid, email)
+            hasMore = true
+            checkUserExist(email)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        hasMore = true
     }
 
     private fun signUp(email: String, password: String, name: String, status: String, avatar: String?) {
@@ -60,7 +68,7 @@ class SignUp : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         addUserToDatabase(name, email, mAuth.currentUser?.uid!!, status, avatar)
-                        val intent = Intent(this@SignUp, MainActivity::class.java)
+                        val intent = Intent(this@SignUp, SetUpActivity::class.java)
                         startActivity(intent)
                         finish()
                     }
@@ -74,7 +82,7 @@ class SignUp : AppCompatActivity() {
         mDbRef.child("user").child(uid).setValue(User(name, email, uid, status, avatar))
     }
 
-    private fun checkUserExist(uid: String?, email: String?) {
+    private fun checkUserExist(email: String?) {
         mDbRef = FirebaseDatabase.getInstance().reference
 
         mDbRef.child("user").addValueEventListener(object : ValueEventListener{
@@ -82,8 +90,9 @@ class SignUp : AppCompatActivity() {
                 for (postSnapshot in snapshot.children) {
                     val user = postSnapshot.getValue(User::class.java)
                     if (user != null) {
-                        if (user.email == email) {
+                        if (user.email == email && hasMore) {
                             Toast.makeText(this@SignUp, "Registered account, please login!!!", Toast.LENGTH_LONG).show()
+                            hasMore = false
                         }
                     }
                 }
@@ -92,7 +101,6 @@ class SignUp : AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {
 
             }
-
         })
     }
 }
