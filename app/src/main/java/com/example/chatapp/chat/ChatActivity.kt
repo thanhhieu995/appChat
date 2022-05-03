@@ -165,7 +165,6 @@ class ChatActivity : AppCompatActivity() {
 
         supportActionBar?.subtitle = statusFriend
 
-
     }
 
     private fun sendChatMessage(

@@ -138,6 +138,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+
     private fun addFriendUser() {
         mDbRef.child("user").addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -146,7 +147,6 @@ class MainActivity : AppCompatActivity() {
                 adapter.addUidLogin(mAuth.uid)
 
                 for (postSnapshot in snapshot.children) {
-
                     if (postSnapshot.getValue(User::class.java)?.uid != null && mAuth.uid != null && postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
                         //statusAccount(postSnapshot.getValue(User::class.java)?.uid)
                         userList.add(postSnapshot.getValue(User::class.java)!!)

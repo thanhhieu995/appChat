@@ -20,8 +20,8 @@
         android:layout_height="50dp"
         android:layout_below="@+id/edt_name"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
         android:background="@drawable/edt_background"
         android:hint="Email"
         android:paddingLeft="13dp"
@@ -47,9 +47,9 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
-        android:inputType="textPassword"
         android:background="@drawable/edt_background"
         android:hint="Password"
+        android:inputType="textPassword"
         android:paddingLeft="13dp"
         android:textSize="16sp" />
 
