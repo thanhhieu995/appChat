@@ -1,11 +1,17 @@
 package com.example.chatapp.accountLogin
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Binder
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Button
 import android.widget.ImageView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatapp.R
 import com.example.chatapp.main.MainActivity
@@ -24,6 +30,7 @@ class SetUpActivity : AppCompatActivity() {
 
     private lateinit var selectedImg: Uri
 
+    lateinit var resultLauncher: ActivityResultLauncher<Intent>
     //private lateinit var binding: ActivityProfileBinding
     //private lateinit var binding: Binder
     private val PICK_IMAGE: Int = 1
@@ -49,22 +56,37 @@ class SetUpActivity : AppCompatActivity() {
             intent.action = Intent.ACTION_GET_CONTENT
             startActivityForResult(Intent.createChooser(intent, "Select picture"), 1)
         }
+
+
+        btn_TakePhoto.setOnClickListener {
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(intent, 2)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        val uid = intent.getStringExtra("uid")
+        mDbRef = FirebaseDatabase.getInstance().reference
         if (data != null) {
             if (data.data != null) {
                 selectedImg = data.data!!
 
                 img_Avatar.setImageURI(selectedImg)
-
-                val uid = intent.getStringExtra("uid")
-                mDbRef = FirebaseDatabase.getInstance().reference
                 if (uid != null) {
                    // mDbRef.child("user").child(uid).child("avatar").setValue(img_Avatar.toString())
                     mDbRef.child("user").child(uid).child("avatar").setValue(selectedImg.toString())
                 }
+            }
+        }
+
+//        resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+//        }
+        if (resultCode == Activity.RESULT_OK && requestCode == 2 && data != null) {
+            img_Avatar.setImageBitmap(data.extras?.get("data") as Bitmap?)
+
+            if (uid != null) {
+                mDbRef.child("user").child(uid).child("avatar").setValue(data.extras?.get("data").toString())
             }
         }
     }
