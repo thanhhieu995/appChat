@@ -5,7 +5,7 @@ class User {
     var email: String? = null
     var uid: String? = null
     var status: String? = ""
-    var avatar: String? = null
+    var avatar: String? = ""
 
     constructor() {}
     constructor(name: String?, email: String?, uid: String?, status: String?, avatar: String?) {

@@ -69,6 +69,7 @@ class SignUp : AppCompatActivity() {
                     if (task.isSuccessful) {
                         addUserToDatabase(name, email, mAuth.currentUser?.uid!!, status, avatar)
                         val intent = Intent(this@SignUp, SetUpActivity::class.java)
+                        intent.putExtra("uid", mAuth.currentUser?.uid)
                         startActivity(intent)
                         finish()
                     }
@@ -91,7 +92,7 @@ class SignUp : AppCompatActivity() {
                     val user = postSnapshot.getValue(User::class.java)
                     if (user != null) {
                         if (user.email == email && hasMore) {
-                            Toast.makeText(this@SignUp, "Registered account, please login!!!", Toast.LENGTH_LONG).show()
+                            Toast.makeText(this@SignUp, "Registered account", Toast.LENGTH_LONG).show()
                             hasMore = false
                         }
                     }
