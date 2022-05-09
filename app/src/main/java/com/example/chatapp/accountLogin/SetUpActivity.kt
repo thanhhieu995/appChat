@@ -15,8 +15,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatapp.R
 import com.example.chatapp.main.MainActivity
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
+import java.net.URI
+import java.util.*
 
 
 class SetUpActivity : AppCompatActivity() {
@@ -75,19 +81,38 @@ class SetUpActivity : AppCompatActivity() {
                 img_Avatar.setImageURI(selectedImg)
                 if (uid != null) {
                    // mDbRef.child("user").child(uid).child("avatar").setValue(img_Avatar.toString())
-                    mDbRef.child("user").child(uid).child("avatar").setValue(selectedImg.toString())
+                    //mDbRef.child("user").child(uid).child("avatar").setValue(selectedImg.toString())
                 }
+                //uploadImageToFirebase(selectedImg)
             }
         }
 
-//        resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-//        }
-        if (resultCode == Activity.RESULT_OK && requestCode == 2 && data != null) {
+        if (resultCode == Activity.RESULT_OK && requestCode == 2 && data?.data != null) {
             img_Avatar.setImageBitmap(data.extras?.get("data") as Bitmap?)
 
             if (uid != null) {
                 mDbRef.child("user").child(uid).child("avatar").setValue(data.extras?.get("data").toString())
             }
+            selectedImg = data.data!!
+            uploadImageToFirebase(selectedImg)
+        }
+    }
+
+    fun uploadImageToFirebase(fileUri: Uri) {
+        if (fileUri != null) {
+            val fileName = UUID.randomUUID().toString() + ".jpg"
+            val database = FirebaseDatabase.getInstance()
+            val refStorage = FirebaseStorage.getInstance().reference.child("images/$fileName")
+
+            refStorage.putFile(fileUri)
+                .addOnSuccessListener(OnSuccessListener<UploadTask.TaskSnapshot> { taskSnapshot ->
+                    taskSnapshot.storage.downloadUrl.addOnSuccessListener {
+                        val imageUrl = it.toString()
+                    }
+                })
+                .addOnFailureListener(OnFailureListener { e->
+                    print(e.message)
+                })
         }
     }
 }
