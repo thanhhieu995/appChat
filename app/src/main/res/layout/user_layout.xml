@@ -10,13 +10,13 @@
             android:id="@+id/txt_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:text="Abhay"
             android:textSize="30sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/imgAva_main"
-            app:layout_constraintStart_toEndOf="@+id/imgAva_main"
-            app:layout_constraintTop_toTopOf="@+id/imgAva_main" />
+            app:layout_constraintBottom_toBottomOf="@+id/cardImageView"
+            app:layout_constraintStart_toEndOf="@+id/cardImageView"
+            app:layout_constraintTop_toTopOf="@+id/cardImageView" />
 
         <TextView
             android:id="@+id/txt_statusMain"
@@ -34,22 +34,38 @@
             android:layout_height="1dp"
             android:layout_below="@id/txt_name"
             android:layout_marginTop="8dp"
-            android:background="@color/black"
+            android:background="@color/green"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imgAva_main" />
+            app:layout_constraintTop_toBottomOf="@+id/cardImageView" />
 
-        <ImageView
-            android:id="@+id/imgAva_main"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="16dp"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/img_avatar_background"
+            app:cardCornerRadius="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            tools:ignore="MissingConstraints">
+
+                <ImageView
+                    android:id="@+id/imgAva_main"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="0dp"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+        </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

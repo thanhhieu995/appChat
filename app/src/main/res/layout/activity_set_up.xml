@@ -6,16 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".accountLogin.SetUpActivity">
 
-    <ImageView
-        android:id="@+id/img_setUpAvatar"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:src="@drawable/ic_baseline_account_circle_24"
-        android:background="@drawable/img_avatar_setup"
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardSetupAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/img_setUpAvatar"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/img_avatar_setup"
+            android:src="@drawable/ic_baseline_account_circle_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/btn_AddPicture"
@@ -24,8 +37,8 @@
         android:layout_marginStart="50dp"
         android:background="@drawable/btn_setup_addphoto_background"
         android:text="Add a Picture"
-        app:layout_constraintStart_toEndOf="@+id/img_setUpAvatar"
-        app:layout_constraintTop_toTopOf="@+id/img_setUpAvatar" />
+        app:layout_constraintStart_toEndOf="@+id/cardSetupAvatar"
+        app:layout_constraintTop_toTopOf="@+id/cardSetupAvatar" />
 
     <Button
         android:id="@+id/btn_TakePhoto"
@@ -34,8 +47,8 @@
         android:layout_marginStart="50dp"
         android:text="Take a Photo"
         android:background="@drawable/btn_setup_takephoto_background"
-        app:layout_constraintBottom_toBottomOf="@+id/img_setUpAvatar"
-        app:layout_constraintStart_toEndOf="@+id/img_setUpAvatar" />
+        app:layout_constraintBottom_toBottomOf="@+id/cardSetupAvatar"
+        app:layout_constraintStart_toEndOf="@+id/cardSetupAvatar" />
 
     <Button
         android:id="@+id/btn_Continue_Setup"
