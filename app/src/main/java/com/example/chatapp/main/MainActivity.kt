@@ -49,6 +49,8 @@ class MainActivity : AppCompatActivity() {
 
         userList.clear()
 
+        supportActionBar?.title = mAuth.currentUser?.displayName
+
         statusAccount(mAuth.uid)
         addFriendUser()
     }

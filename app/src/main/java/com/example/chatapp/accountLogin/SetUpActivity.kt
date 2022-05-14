@@ -14,7 +14,9 @@ import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatapp.R
+import com.example.chatapp.User
 import com.example.chatapp.main.MainActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
@@ -35,9 +37,13 @@ class SetUpActivity : AppCompatActivity() {
 
     private lateinit var selectedImg: Uri
 
+    private lateinit var user: User
+
+    private lateinit var mAuth: FirebaseAuth
+
+    private lateinit var uid: String
+
     lateinit var resultLauncher: ActivityResultLauncher<Intent>
-    //private lateinit var binding: ActivityProfileBinding
-    //private lateinit var binding: Binder
     private val PICK_IMAGE: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,8 +56,11 @@ class SetUpActivity : AppCompatActivity() {
         btn_Continue = findViewById(R.id.btn_Continue_Setup)
         img_Avatar = findViewById(R.id.img_setUpAvatar)
 
+        uid = intent.getStringExtra("uid").toString()
+
         btn_Continue.setOnClickListener {
             val intent = Intent(this@SetUpActivity, MainActivity::class.java)
+            //intent.putExtra("name", mAuth.currentUser?.displayName)
             startActivity(intent)
         }
 
@@ -61,7 +70,6 @@ class SetUpActivity : AppCompatActivity() {
             intent.action = Intent.ACTION_GET_CONTENT
             startActivityForResult(Intent.createChooser(intent, "Select picture"), 1)
         }
-
 
         btn_TakePhoto.setOnClickListener {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -80,41 +88,18 @@ class SetUpActivity : AppCompatActivity() {
                 img_Avatar.setImageURI(selectedImg)
 
                 uploadImageTest(selectedImg)
-//                if (uid != null) {
-//                   // mDbRef.child("user").child(uid).child("avatar").setValue(img_Avatar.toString())
-//                    //mDbRef.child("user").child(uid).child("avatar").setValue(selectedImg.toString())
-//                }
-                //uploadImageToFirebase(selectedImg)
             }
         }
 
         if (resultCode == Activity.RESULT_OK && requestCode == 2 && data != null) {
             img_Avatar.setImageBitmap(data.extras?.get("data") as Bitmap?)
 
-//            if (uid != null) {
-//                //mDbRef.child("user").child(uid).child("avatar").setValue(data.extras?.get("data").toString())
-//            }
-//            if (data.data != null) {
-//                selectedImg = data.data!!
-//                uploadImageTest(selectedImg)
-//                //img_Avatar.setImageBitmap(data.data)
-//            } else {
-//                Toast.makeText(this, "No record", Toast.LENGTH_LONG).show()
-//            }
             val takePhoto: Bitmap? = data.extras?.get("data") as Bitmap?
-
-//            if (takePhoto != null) {
-//                upImageTakeToFirebase(takePhoto)
-//            }
 
             if (takePhoto != null) {
                 onCaptureImageResult(takePhoto)
             }
-            //uploadImageToFirebase(selectedImg)
-
-            //uploadImageTest(selectedImg)
         }
-        //uploadImageTest(selectedImg)
     }
 
     fun onCaptureImageResult(takePhoto: Bitmap) {
@@ -124,28 +109,17 @@ class SetUpActivity : AppCompatActivity() {
         val file: String = Base64.encodeToString(bb, Base64.DEFAULT)
 
         val storageRef: StorageReference = storage.reference
-        val imagesRef = storageRef.child("images/${UUID.randomUUID()}")
+        val imagesRef = storageRef.child("images")
+            .child(uid)
         imagesRef.putBytes(bb)
     }
-
-//    fun upImageTakeToFirebase(takePhoto: Bitmap) {
-//        val baos : ByteArrayOutputStream = ByteArrayOutputStream()
-//        takePhoto.compress(Bitmap.CompressFormat.PNG, 100, baos)
-//        //val imageEncoded: String = Base64.(baos.toByteArray(), Base64.DEFAULT)
-//        //val imageEncode: String =
-//    }
-
-//    fun upLoadImageCapture(takePhoto: Bitmap) {
-//        val storageRef = storage.reference
-//        val imagesRef = storageRef.child("images/${UUID.randomUUID()}")
-//        //val uploadTask = imagesRef.putBytes(takePhoto.compress())
-//    }
 
 
     val storage = Firebase.storage
     private fun uploadImageTest(imageURI: Uri) {
         val storageRef = storage.reference
-        val imagesRef = storageRef.child("images/${UUID.randomUUID()}")
+        val imagesRef = storageRef.child("images")
+            .child(uid)
         val uploadTask = imagesRef.putFile(imageURI)
 
         uploadTask.addOnFailureListener {
@@ -164,24 +138,4 @@ class SetUpActivity : AppCompatActivity() {
         val baos: ByteArrayOutputStream = ByteArrayOutputStream()
         bitmap1.setHasMipMap(true)
     }
-
-
-
-//    fun uploadImageToFirebase(fileUri: Uri) {
-//        if (fileUri != null) {
-//            val fileName = UUID.randomUUID().toString() + ".jpg"
-//            val database = FirebaseDatabase.getInstance()
-//            val refStorage = FirebaseStorage.getInstance().reference.child("images/$fileName")
-//
-//            refStorage.putFile(fileUri)
-//                .addOnSuccessListener(OnSuccessListener<UploadTask.TaskSnapshot> { taskSnapshot ->
-//                    taskSnapshot.storage.downloadUrl.addOnSuccessListener {
-//                        //val imageUrl = it.toString()
-//                    }
-//                })
-//                .addOnFailureListener(OnFailureListener { e->
-//                    print(e.message)
-//                })
-//        }
-//    }
 }
