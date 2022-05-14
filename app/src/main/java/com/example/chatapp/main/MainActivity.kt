@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,9 @@ import com.example.chatapp.User
 import com.example.chatapp.accountLogin.LogIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import java.io.File
+import java.net.URI
 
 class MainActivity : AppCompatActivity() {
 
@@ -53,6 +57,8 @@ class MainActivity : AppCompatActivity() {
 
         statusAccount(mAuth.uid)
         addFriendUser()
+
+       // addAvatar()
     }
 
     override fun onResume() {
@@ -153,6 +159,8 @@ class MainActivity : AppCompatActivity() {
                         //statusAccount(postSnapshot.getValue(User::class.java)?.uid)
                         userList.add(postSnapshot.getValue(User::class.java)!!)
                         // adapter.addItems(postSnapshot.getValue(User::class.java))
+                        //addAvatar()
+                        //adapter.addAvatar()
                         adapter.notifyDataSetChanged()
                     } else {
                         supportActionBar?.title = postSnapshot.getValue(User::class.java)?.name
