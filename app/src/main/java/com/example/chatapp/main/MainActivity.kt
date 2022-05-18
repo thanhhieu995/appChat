@@ -1,23 +1,36 @@
 package com.example.chatapp.main
 
+import android.annotation.SuppressLint
+import android.app.ActionBar
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import android.widget.Toolbar
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.R
 import com.example.chatapp.User
 import com.example.chatapp.accountLogin.LogIn
+import com.example.chatapp.chat.ChatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.android.synthetic.main.actionbar_title.*
+import kotlinx.android.synthetic.main.actionbar_title.view.*
 import java.io.File
 import java.net.URI
 
@@ -36,6 +49,10 @@ class MainActivity : AppCompatActivity() {
 
     var statusFriend: String = ""
 
+    lateinit var actionTitle: TextView
+
+    var title: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -53,12 +70,49 @@ class MainActivity : AppCompatActivity() {
 
         userList.clear()
 
-        supportActionBar?.title = mAuth.currentUser?.displayName
+        //var customView: View = LayoutInflater.from(this).inflate(R.layout.actionbar_title, null, false)
+        //actionTitle.text = mAuth.currentUser?.displayName
+        //supportActionBar?.title = mAuth.currentUser?.displayName
+//        actionTitle.setOnClickListener {
+//            Toast.makeText(this, "title clicked", Toast.LENGTH_LONG).show()
+
+        //actionbar_title.actionbarTitle.text = mAuth.currentUser?.displayName
+        //actionbar_title.actionbarTitle.text = mAuth.currentUser?.displayName ?:
+//        if (actionbar != null) {
+//
+//            actionBar?.setDisplayShowTitleEnabled(false)
+//            actionBar?.setDisplayShowCustomEnabled(true)
+////            customTitle.setTypeface(Typeface.MONOSPACE);
+//            val customView: View = layoutInflater.inflate(R.layout.actionbar_title, null)
+//            actionTitle = customView.findViewById(R.id.actionbarTitle)
+//            actionTitle.typeface = Typeface.MONOSPACE
+//
+//            actionTitle.setOnClickListener(object : View.OnClickListener{
+//                override fun onClick(v: View?) {
+//                    Log.d("MainActivity", "success")
+//                }
+//
+//            })
+//
+//            actionbar.customView = customView
+//        }
+        //actionbar.title = findViewById<>()
+
+       // supportActionBar.title = findViewById<TextView>(R.id.actionbarTitle)
+
+//        supportActionBar?.customView?.actionbarTitle?.setOnClickListener(object : View.OnClickListener{
+//            override fun onClick(v: View?) {
+//                val intent = Intent(this@MainActivity, ChatActivity::class.java)
+//                startActivity(intent)
+//            }
+//
+//        })
 
         statusAccount(mAuth.uid)
         addFriendUser()
 
        // addAvatar()
+        //supportActionBar?.title = findViewById<Toolbar>(androidx.appcompat.R.id.action_bar).toString()
     }
 
     override fun onResume() {
@@ -68,8 +122,11 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.actionbar_title, menu)
         menuInflater.inflate(R.menu.menu, menu)
         menuInflater.inflate(R.menu.dashboard, menu)
+        //menuInflater.inflate(R.layout.actionbar_title, menu)
+
         val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchView: SearchView = searchItem?.actionView as SearchView
@@ -100,6 +157,14 @@ class MainActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        var menuItem: MenuItem = menu!!.findItem(R.id.action_name_title)
+        //menuItem.title = mAuth.currentUser!!.displayName
+        //val user: FirebaseUser? = mAuth.currentUser
+        menuItem.title = title
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         if(item.itemId == R.id.logout) {
@@ -114,6 +179,13 @@ class MainActivity : AppCompatActivity() {
             finish()
             return true
         }
+//        if (item.itemId == com.google.android.material.R.id.action_bar_title) {
+//            val intent : Intent = Intent()
+//            startActivity(intent)
+//        }
+//        if (item.itemId == androidx.appcompat.R.id.action_bar_title) {
+//            Toast.makeText(this, "success actionbar", Toast.LENGTH_LONG).show()
+//        }
         return false
     }
 
@@ -164,6 +236,9 @@ class MainActivity : AppCompatActivity() {
                         adapter.notifyDataSetChanged()
                     } else {
                         supportActionBar?.title = postSnapshot.getValue(User::class.java)?.name
+                        title = postSnapshot.getValue(User::class.java)?.name.toString()
+                        //getTitle(title)
+                        //onMenuItemSelected(title, R.id.action_name_title)
                     }
                 }
             }
@@ -224,5 +299,9 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    fun getTitle(title: String) {
+        this.title = title
     }
 }
