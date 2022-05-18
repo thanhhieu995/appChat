@@ -28,6 +28,7 @@ import com.example.chatapp.chat.ChatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.actionbar_title.*
 import kotlinx.android.synthetic.main.actionbar_title.view.*
@@ -52,6 +53,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var actionTitle: TextView
 
     var title: String = ""
+
+    var user: User = User()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,7 +166,22 @@ class MainActivity : AppCompatActivity() {
         var menuItem: MenuItem = menu!!.findItem(R.id.action_name_title)
         //menuItem.title = mAuth.currentUser!!.displayName
         //val user: FirebaseUser? = mAuth.currentUser
-        menuItem.title = title
+       // menuItem.title = user.name
+        mDbRef.child("user").addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (postSnapshot in snapshot.children) {
+                    if (postSnapshot.getValue(User::class.java)?.uid == mAuth.currentUser?.uid) {
+                        menuItem.title = user.name
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -235,10 +255,13 @@ class MainActivity : AppCompatActivity() {
                         //adapter.addAvatar()
                         adapter.notifyDataSetChanged()
                     } else {
+                        user = postSnapshot.getValue(User::class.java)!!
                         supportActionBar?.title = postSnapshot.getValue(User::class.java)?.name
-                        title = postSnapshot.getValue(User::class.java)?.name.toString()
+                        //title = postSnapshot.getValue(User::class.java)?.name.toString()
                         //getTitle(title)
                         //onMenuItemSelected(title, R.id.action_name_title)
+                        //onPrepareOptionsMenu(menu)
+                        //val menuItem: MenuItem = menu.findItem(R.id.action_name_title)
                     }
                 }
             }
