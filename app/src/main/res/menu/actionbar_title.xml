@@ -5,9 +5,8 @@
     <item
         android:id="@+id/action_name_title"
         app:showAsAction="always|collapseActionView"
-        android:title="@string/app_name">
-
+        android:title="@string/app_name"
+        app:theme="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
     </item>
-
 
 </menu>

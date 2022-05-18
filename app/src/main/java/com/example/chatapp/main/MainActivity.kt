@@ -19,6 +19,9 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.widget.SearchView
+import androidx.core.graphics.green
+import androidx.core.graphics.red
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.R
@@ -172,6 +175,7 @@ class MainActivity : AppCompatActivity() {
                 for (postSnapshot in snapshot.children) {
                     if (postSnapshot.getValue(User::class.java)?.uid == mAuth.currentUser?.uid) {
                         menuItem.title = user.name
+                        //menuItem.setTitle(titleColor.red)
                     }
                 }
             }
@@ -322,9 +326,5 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-    }
-
-    fun getTitle(title: String) {
-        this.title = title
     }
 }
