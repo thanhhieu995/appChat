@@ -24,6 +24,7 @@ import androidx.core.graphics.red
 import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.chatapp.ProfileActivity
 import com.example.chatapp.R
 import com.example.chatapp.User
 import com.example.chatapp.accountLogin.LogIn
@@ -202,6 +203,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
             return true
+        } else if (item.itemId == R.id.action_name_title) {
+            val intent = Intent(this@MainActivity, ProfileActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 //        if (item.itemId == com.google.android.material.R.id.action_bar_title) {
 //            val intent : Intent = Intent()
