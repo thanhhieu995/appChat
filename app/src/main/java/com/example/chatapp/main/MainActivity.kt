@@ -265,7 +265,7 @@ class MainActivity : AppCompatActivity() {
                         adapter.notifyDataSetChanged()
                     } else {
                         user = postSnapshot.getValue(User::class.java)!!
-                        supportActionBar?.title = postSnapshot.getValue(User::class.java)?.name
+                        //supportActionBar?.title = postSnapshot.getValue(User::class.java)?.name
                         //title = postSnapshot.getValue(User::class.java)?.name.toString()
                         //getTitle(title)
                         //onMenuItemSelected(title, R.id.action_name_title)

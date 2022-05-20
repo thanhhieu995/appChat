@@ -7,6 +7,7 @@
         <entry key="app/src/main/res/drawable/btn_setup_addphoto_background.xml" value="0.123" />
         <entry key="app/src/main/res/drawable/btn_setup_takephoto_background.xml" value="0.123" />
         <entry key="app/src/main/res/drawable/edt_background.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_menu_search.xml" value="0.106" />
         <entry key="app/src/main/res/drawable/img_avatar_background.xml" value="0.123" />
         <entry key="app/src/main/res/drawable/img_avatar_setup.xml" value="0.123" />
         <entry key="app/src/main/res/drawable/imt_avatar_background.xml" value="0.123" />
@@ -27,7 +28,7 @@
         <entry key="app/src/main/res/layout/user_layout.xml" value="0.375" />
         <entry key="app/src/main/res/menu/actionbar_title.xml" value="0.1" />
         <entry key="app/src/main/res/menu/chatbar.xml" value="0.21388888888888888" />
-        <entry key="app/src/main/res/menu/dashboard.xml" value="0.22962962962962963" />
+        <entry key="app/src/main/res/menu/dashboard.xml" value="0.1" />
         <entry key="app/src/main/res/menu/menu.xml" value="0.1" />
         <entry key="app/src/main/res/menu/search_chat.xml" value="0.21388888888888888" />
       </map>
