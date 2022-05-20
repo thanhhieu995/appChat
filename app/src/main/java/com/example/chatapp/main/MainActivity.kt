@@ -205,6 +205,8 @@ class MainActivity : AppCompatActivity() {
             return true
         } else if (item.itemId == R.id.action_name_title) {
             val intent = Intent(this@MainActivity, ProfileActivity::class.java)
+            //intent.putExtra("user", user)
+            intent.putExtra("uid", user.uid)
             startActivity(intent)
             finish()
         }
