@@ -14,11 +14,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatApp">
         <activity
+            android:name=".ViewProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".accountLogin.SetUpActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".chat.ChatActivity"
             android:exported="true"

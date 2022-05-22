@@ -24,11 +24,13 @@
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.2953125" />
         <entry key="app/src/main/res/layout/activity_set_up.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/activity_view_profile.xml" value="0.30512820512820515" />
         <entry key="app/src/main/res/layout/popup.xml" value="0.28974358974358977" />
         <entry key="app/src/main/res/layout/receive.xml" value="0.45" />
         <entry key="app/src/main/res/layout/searchable.xml" value="0.25092592592592594" />
         <entry key="app/src/main/res/layout/sent.xml" value="0.335" />
         <entry key="app/src/main/res/layout/user_layout.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/view_profile.xml" value="0.30885416666666665" />
         <entry key="app/src/main/res/menu/actionbar_title.xml" value="0.1" />
         <entry key="app/src/main/res/menu/chatbar.xml" value="0.21388888888888888" />
         <entry key="app/src/main/res/menu/dashboard.xml" value="0.1" />
