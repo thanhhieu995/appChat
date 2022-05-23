@@ -36,7 +36,7 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
     var hasMore: Boolean = false
     //private lateinit var mAuth: FirebaseAuth
 
-    val storageRef = FirebaseStorage.getInstance().reference
+    private val storageRef = FirebaseStorage.getInstance().reference
 //    val islandRef = storageRef.child("images").child(mAuth.uid.toString())
 
 

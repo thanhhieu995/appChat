@@ -13,12 +13,14 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
+import com.example.chatapp.ProfileActivity
 import com.example.chatapp.R
 import com.example.chatapp.User
 import com.example.chatapp.main.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
@@ -59,8 +61,9 @@ class SetUpActivity : AppCompatActivity() {
         uid = intent.getStringExtra("uid").toString()
 
         btn_Continue.setOnClickListener {
-            val intent = Intent(this@SetUpActivity, MainActivity::class.java)
+            val intent = Intent(this@SetUpActivity, ProfileActivity::class.java)
             //intent.putExtra("name", mAuth.currentUser?.displayName)
+            intent.putExtra("uid", uid)
             startActivity(intent)
         }
 
@@ -115,7 +118,7 @@ class SetUpActivity : AppCompatActivity() {
     }
 
 
-    val storage = Firebase.storage
+    private val storage = Firebase.storage
     private fun uploadImageTest(imageURI: Uri) {
         val storageRef = storage.reference
         val imagesRef = storageRef.child("images")

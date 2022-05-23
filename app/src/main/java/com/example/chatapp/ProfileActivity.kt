@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.toColorInt
+import com.example.chatapp.accountLogin.SetUpActivity
 import com.example.chatapp.main.MainActivity
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
@@ -43,6 +44,13 @@ class ProfileActivity : AppCompatActivity() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        storeRef.child("images").child(uid!!).downloadUrl.addOnSuccessListener {
+            Picasso.get().load(it).into(imgProfile)
+        }
+    }
+
     private fun popUp() {
         imageDialog = AlertDialog.Builder(this@ProfileActivity)
         val layout: View = View.inflate(this, R.layout.popup, null)
@@ -61,7 +69,10 @@ class ProfileActivity : AppCompatActivity() {
         })
 
         imageDialog.setNegativeButton("Edit image profile", DialogInterface.OnClickListener { dialog, which ->
-            Toast.makeText(this, "edit", Toast.LENGTH_LONG).show()
+            //Toast.makeText(this, "edit", Toast.LENGTH_LONG).show()
+            val intent = Intent(this@ProfileActivity, SetUpActivity::class.java)
+            intent.putExtra("uid", uid)
+            startActivity(intent)
         })
 
         //imageDialog.create()
