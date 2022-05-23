@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
@@ -15,6 +16,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 
 class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -99,6 +102,9 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
                 viewHolder.time_receive.text = currentMessage.time
             }
             viewHolder.status_receive.text = ""
+            FirebaseStorage.getInstance().reference.child("images").child(friendUid!!).downloadUrl.addOnSuccessListener {
+                Picasso.get().load(it).into(viewHolder.img_avatar)
+            }
         }
     }
 
@@ -112,7 +118,6 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
             ITEM_RECEIVE
         }
         notifyDataSetChanged()
-
     }
 
     override fun getItemCount(): Int {
@@ -123,6 +128,7 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
         val receiveMessage = itemView.findViewById<TextView>(R.id.txt_receive_message)
         val time_receive = itemView.findViewById<TextView>(R.id.time_receive)
         val status_receive = itemView.findViewById<TextView>(R.id.status_messageReceive)
+        val img_avatar = itemView.findViewById<ImageView>(R.id.img_receiveProfile)
     }
 
     class SentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
