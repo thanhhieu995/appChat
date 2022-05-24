@@ -207,6 +207,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, ProfileActivity::class.java)
             //intent.putExtra("user", user)
             intent.putExtra("uid", user.uid)
+            intent.putExtra("name", user.name)
             startActivity(intent)
             finish()
         }

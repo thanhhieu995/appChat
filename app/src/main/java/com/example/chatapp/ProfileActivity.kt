@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.toColorInt
@@ -17,6 +18,7 @@ import com.example.chatapp.main.MainActivity
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.popup.*
+import org.w3c.dom.Text
 import java.io.Serializable
 
 class ProfileActivity : AppCompatActivity() {
@@ -26,14 +28,22 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var imgProfile: ImageView
     private var uid: String? = ""
 
+    var nameFriend: String? = ""
+    lateinit var userName: TextView
+
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
         imgProfile = findViewById(R.id.profile_image)
+        userName = findViewById(R.id.username)
         //val user: Serializable? = intent.getSerializableExtra("user")
         uid = intent.getSerializableExtra("uid") as String?
+        nameFriend = intent.getStringExtra("name")
+
+        userName.text = nameFriend
+
         if (uid != null) {
             storeRef.child("images").child(uid!!).downloadUrl.addOnSuccessListener {
                 Picasso.get().load(it).into(imgProfile)

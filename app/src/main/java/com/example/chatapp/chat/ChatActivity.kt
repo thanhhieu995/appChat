@@ -18,6 +18,7 @@ import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
+import com.example.chatapp.ProfileActivity
 import com.example.chatapp.R
 import com.example.chatapp.User
 import com.example.chatapp.main.MainActivity
@@ -53,6 +54,8 @@ class ChatActivity : AppCompatActivity() {
     var friendUid: String? = ""
 
     var loginUid: String? = ""
+
+    var nameFriend: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,7 +164,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun addStatusFriend(status: String?) {
         this.statusFriend = status
-        supportActionBar?.title = intent.getSerializableExtra("name").toString()
+        //supportActionBar?.title = intent.getSerializableExtra("name").toString()
 
         supportActionBar?.subtitle = statusFriend
 
@@ -276,8 +279,31 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.chatbar, menu)
+        menuInflater.inflate(R.menu.actionbar_title, menu)
+        var menuItem = menu?.findItem(R.id.action_name_title)
+        mDbRef.child("user").addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (postSnapshot in snapshot.children) {
+                    if (postSnapshot.getValue(User::class.java)?.uid == friendUid) {
+                        if (menuItem != null) {
+                            menuItem.title = postSnapshot.getValue(User::class.java)!!.name
+                            nameFriend = postSnapshot.getValue(User::class.java)!!.name.toString()
+                        }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+//        if (statusFriend == "online") {
+//            menuInflater.inflate(R.menu.icon_status, menu)
+//        }
         return super.onCreateOptionsMenu(menu)
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.phone_bar) {
@@ -289,6 +315,13 @@ class ChatActivity : AppCompatActivity() {
         if (item.itemId == R.id.videoCall_bar) {
             Toast.makeText(this, "video call is ready", Toast.LENGTH_SHORT).show()
             return true
+        }
+
+        if (item.itemId == R.id.action_name_title) {
+            val intent = Intent(this@ChatActivity, ProfileActivity::class.java)
+            intent.putExtra("uid", friendUid)
+            intent.putExtra("name", nameFriend)
+            startActivity(intent)
         }
         return false
     }
