@@ -34,12 +34,12 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        if(viewType == 1) {
+        return if(viewType == 1) {
             val view: View = LayoutInflater.from(context).inflate(R.layout.receive, parent, false)
-            return ReceiveViewHolder(view)
+            ReceiveViewHolder(view)
         } else {
             val view: View = LayoutInflater.from(context).inflate(R.layout.sent, parent, false)
-            return SentViewHolder(view)
+            SentViewHolder(view)
         }
     }
 
@@ -102,6 +102,7 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
                 viewHolder.time_receive.text = currentMessage.time
             }
             viewHolder.status_receive.text = ""
+            viewHolder.status_receive.visibility = View.GONE
             FirebaseStorage.getInstance().reference.child("images").child(friendUid!!).downloadUrl.addOnSuccessListener {
                 Picasso.get().load(it).into(viewHolder.img_avatar)
             }

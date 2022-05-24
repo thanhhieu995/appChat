@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="5dp">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/RL_sentLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,7 +14,7 @@
         android:background="@drawable/text_sent_background"
         android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_sent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
         <TextView
@@ -25,17 +24,19 @@
             android:padding="10dp"
             android:text="This is sent message"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/time_sent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="time message sent"
+            app:layout_constraintStart_toStartOf="@+id/txt_sent_message"
+            app:layout_constraintTop_toBottomOf="@+id/txt_sent_message" />
 
-    <TextView
-        android:id="@+id/time_sent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="time message sent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/status_messageSent"
@@ -44,5 +45,6 @@
         android:text="status message sent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/RL_sentLayout" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="15dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_receive">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/img_receiveProfile"
@@ -23,15 +23,14 @@
 
     </androidx.cardview.widget.CardView>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/RL_receiveLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:background="@drawable/text_receive_background"
         android:padding="5dp"
         app:layout_constraintStart_toEndOf="@+id/card_receive_img"
-        app:layout_constraintTop_toBottomOf="@+id/time_receive"
+        app:layout_constraintTop_toTopOf="@+id/card_receive_img"
         tools:ignore="MissingConstraints">
 
         <TextView
@@ -40,24 +39,27 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="This is receive message"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/time_receive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="time receive message"
+            app:layout_constraintStart_toStartOf="@+id/txt_receive_message"
+            app:layout_constraintTop_toBottomOf="@+id/txt_receive_message" />
 
-    <TextView
-        android:id="@+id/time_receive"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="time receive message"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/status_messageReceive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="4sp"
         android:text="status message receive"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/RL_receiveLayout"
         app:layout_constraintTop_toBottomOf="@+id/RL_receiveLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
