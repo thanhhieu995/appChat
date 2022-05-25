@@ -2,19 +2,12 @@ package com.example.chatapp.chat
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.green
-import androidx.core.graphics.red
-import androidx.core.graphics.toColor
-import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
@@ -23,7 +16,6 @@ import com.example.chatapp.R
 import com.example.chatapp.User
 import com.example.chatapp.main.MainActivity
 import com.google.firebase.database.*
-import com.google.type.ColorOrBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -56,6 +48,8 @@ class ChatActivity : AppCompatActivity() {
     var loginUid: String? = ""
 
     var nameFriend: String = ""
+
+    lateinit var date: Date
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,6 +90,16 @@ class ChatActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat("dd/M/yyyy  hh:mm:ss aaa")
         val currentDate = sdf.format(Date())
 
+        date = Calendar.getInstance().time
+//        val inputTime = sdf.parse(sdf.toString())
+//        val convertDateMonth = sdf.format(inputTime!!)
+//        val timeInMilliseconds = sdf.parse(convertDateMonth)!!
+//        val mTime: Calendar = Calendar.getInstance()
+//        mTime.timeInMillis = timeInMilliseconds.time
+//        val now = Calendar.getInstance()
+
+        //val now = Calendar.getInstance()
+
         loadDataRoomSend()
         loadDataRoomReceive()
 
@@ -123,7 +127,8 @@ class ChatActivity : AppCompatActivity() {
                 loginUid.toString(),
                 currentDate,
                 friendUid as String?,
-                seen
+                seen,
+                date
             )
             //statusAccount(loginUid as String?)
             chatRecyclerView.scrollToPosition(messageList.size - 1)
@@ -174,10 +179,11 @@ class ChatActivity : AppCompatActivity() {
         loginUid: String?,
         currentDate: String?,
         friendUid: String?,
-        seen: Boolean
+        seen: Boolean,
+        date: Date
     ) {
         val message = messageBox.text.toString()
-        val messageObject = Message(message, loginUid, friendUid, currentDate, seen)
+        val messageObject = Message(message, loginUid, friendUid, currentDate, seen, date)
         if (loginUid != null && message.trim().isNotEmpty()) {
             if (friendUid != null) {
                 chatAdapter.addMessage(messageObject, loginUid, friendUid)
