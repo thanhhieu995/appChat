@@ -1,6 +1,8 @@
 package com.example.chatapp
 
 import android.widget.TextView
+import java.time.Month
+import java.time.Year
 import java.util.*
 
 class Message {
@@ -12,6 +14,9 @@ class Message {
     var seen: Boolean = false
     lateinit var date: Date
 
+    var month: Int = 0
+    var year: Int = 0
+
     constructor() { }
     constructor(
         message: String?,
@@ -19,7 +24,9 @@ class Message {
         receiveId: String?,
         time: String?,
         seen: Boolean,
-        date: Date
+        date: Date,
+        month: Int,
+        year: Int
     ) {
         this.message = message
         this.senderId = senderId
@@ -27,5 +34,7 @@ class Message {
         this.time = time
         this.seen = seen
         this.date = date
+        this.month = month
+        this.year = year
     }
 }
