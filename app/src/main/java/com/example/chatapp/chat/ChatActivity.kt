@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.format.Time
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
@@ -19,6 +20,10 @@ import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 
 class ChatActivity : AppCompatActivity() {
@@ -123,6 +128,16 @@ class ChatActivity : AppCompatActivity() {
             })
 
         sentButton.setOnClickListener {
+            date = Calendar.getInstance().time
+            //val hour1 = date.hours
+            //val mills = date.time.milliseconds
+            val day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+            val hour = Calendar.getInstance().get(Calendar.HOUR)
+            val minute = Calendar.getInstance().get(Calendar.MINUTE)
+            val second = Calendar.getInstance().get(Calendar.SECOND)
+            //val seconds = date.time.seconds
+            //val min = date.time.minutes
+            //val hours = date.time.hours
             sendChatMessage(
                 loginUid.toString(),
                 currentDate,
