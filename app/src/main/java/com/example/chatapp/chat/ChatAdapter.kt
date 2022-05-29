@@ -101,8 +101,6 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
             if (currentMessage.time != null) {
                 viewHolder.time_receive.text = currentMessage.time
             }
-            viewHolder.status_receive.text = ""
-            viewHolder.status_receive.visibility = View.GONE
             FirebaseStorage.getInstance().reference.child("images").child(friendUid!!).downloadUrl.addOnSuccessListener {
                 Picasso.get().load(it).into(viewHolder.img_avatar)
             }
@@ -128,7 +126,6 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
     class ReceiveViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val receiveMessage = itemView.findViewById<TextView>(R.id.txt_receive_message)
         val time_receive = itemView.findViewById<TextView>(R.id.time_receive)
-        val status_receive = itemView.findViewById<TextView>(R.id.status_messageReceive)
         val img_avatar = itemView.findViewById<ImageView>(R.id.img_receiveProfile)
     }
 
