@@ -72,8 +72,12 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
             if (currentMessage.time != null) {
                 viewHolder.time_receive.text = currentMessage.time
             }
-            FirebaseStorage.getInstance().reference.child("images").child(friendUid!!).downloadUrl.addOnSuccessListener {
-                Picasso.get().load(it).into(viewHolder.img_avatar)
+            if (currentMessage.hasAvatar) {
+                FirebaseStorage.getInstance().reference.child("images").child(friendUid!!).downloadUrl.addOnSuccessListener {
+                    Picasso.get().load(it).into(viewHolder.img_avatar)
+                }
+            } else {
+                viewHolder.img_avatar.visibility = View.GONE
             }
         }
     }
