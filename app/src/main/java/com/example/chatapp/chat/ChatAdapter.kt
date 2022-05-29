@@ -48,41 +48,15 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 
         val currentMessage = messageList[position]
 
-        //uidActing = currentMessage.senderId
-
-//        if (position == messageList.size - 1 && FirebaseAuth.getInstance().uid != currentMessage.senderId && status == "online") {
-//            currentMessage.status_message = "seen"
-//        } else {
-//
-//            currentMessage.status_message = ""
-//        }
-
-//        if (status == "online" && loginUid == currentMessage.senderId) {
-//            currentMessage.status_message = "seen"
-//        } else {
-//            currentMessage.status_message = ""
-//        }
-
-//        if (loginUid == currentMessage.senderId && status == "online") {
-//            currentMessage.status_message = "seen"
-//        } else {
-//            currentMessage.status_message = ""
-//        }
-
-        //val status : Task<DataSnapshot> = FirebaseDatabase.getInstance().getReference("user").child(friendUid.toString()).child("status").get()
-
-
         if (holder.javaClass == SentViewHolder::class.java) {
 
             val viewHolder = holder as SentViewHolder
-            //holder.sentMessage.text = currentMessage.message
             viewHolder.sentMessage.text = currentMessage.message
             if (currentMessage.time != null) {
                 viewHolder.time_sent.text = currentMessage.time
             }
 
             if (position == messageList.size - 1) {
-                //currentMessage.seen = tmpSeen
                 if (currentMessage.seen) {
                     viewHolder.status_Sent.text = "Seen"
                 } else {
@@ -92,11 +66,8 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
                 viewHolder.status_Sent.visibility = View.GONE
             }
 
-            //viewHolder.status_Sent.text = currentMessage.status_message
-
         } else {
             val viewHolder = holder as ReceiveViewHolder
-            //holder.receiveMessage.text = currentMessage.message
             viewHolder.receiveMessage.text = currentMessage.message
             if (currentMessage.time != null) {
                 viewHolder.time_receive.text = currentMessage.time
