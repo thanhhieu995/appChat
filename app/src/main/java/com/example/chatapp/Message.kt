@@ -10,12 +10,12 @@ class Message {
     var senderId: String? = null
     var receiveId: String? = null
     var time: String?= null
-    //var status_message: String? = null
     var seen: Boolean = false
     lateinit var date: Date
 
     var month: Int = 0
     var year: Int = 0
+    var hasAvatar: Boolean = false
 
     constructor() { }
     constructor(
@@ -26,7 +26,8 @@ class Message {
         seen: Boolean,
         date: Date,
         month: Int,
-        year: Int
+        year: Int,
+        hasAvatar: Boolean
     ) {
         this.message = message
         this.senderId = senderId
@@ -36,5 +37,6 @@ class Message {
         this.date = date
         this.month = month
         this.year = year
+        this.hasAvatar = hasAvatar
     }
 }

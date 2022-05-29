@@ -59,6 +59,10 @@ class ChatActivity : AppCompatActivity() {
 
     lateinit var date: Date
 
+    var hasAvatar: Boolean = false
+
+    var timeExam: Int = -2
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -95,16 +99,8 @@ class ChatActivity : AppCompatActivity() {
 
         chatRecyclerView.scrollToPosition(messageList.size - 1)
 
-        val sdf = SimpleDateFormat("dd/M/yyyy  hh:mm:ss aaa")
-        val currentDate = sdf.format(Date())
 
         date = Calendar.getInstance().time
-//        val inputTime = sdf.parse(sdf.toString())
-//        val convertDateMonth = sdf.format(inputTime!!)
-//        val timeInMilliseconds = sdf.parse(convertDateMonth)!!
-//        val mTime: Calendar = Calendar.getInstance()
-//        mTime.timeInMillis = timeInMilliseconds.time
-//        val now = Calendar.getInstance()
 
         //val now = Calendar.getInstance()
 
@@ -132,19 +128,13 @@ class ChatActivity : AppCompatActivity() {
 
         sentButton.setOnClickListener {
             date = Calendar.getInstance().time
-            //val hour1 = date.hours
-            //val mills = date.time.milliseconds
             val calender = Calendar.getInstance()
             val year = calender.get(Calendar.YEAR)
-            //val month = calender.get(Calendar.MONTH)
             val month = SimpleDateFormat("MM").format(Date()).toInt()
-//            val day = calender.get(Calendar.DAY_OF_MONTH)
-//            val hour = calender.get(Calendar.HOUR)
-//            val minute = calender.get(Calendar.MINUTE)
-//            val second = calender.get(Calendar.SECOND)
-            //val seconds = date.time.seconds
-            //val min = date.time.minutes
-            //val hours = date.time.hours
+
+            val sdf = SimpleDateFormat("dd/M/yyyy  hh:mm:ss aaa")
+            val currentDate = sdf.format(Date())
+
             sendChatMessage(
                 loginUid.toString(),
                 currentDate,
@@ -152,33 +142,13 @@ class ChatActivity : AppCompatActivity() {
                 seen,
                 date,
                 month,
-                year
+                year,
+                hasAvatar
             )
-            //statusAccount(loginUid as String?)
             chatRecyclerView.scrollToPosition(messageList.size - 1)
 
             chatAdapter.notifyDataSetChanged()
         }
-
-
-//        val ab: android.app.ActionBar? = actionBar
-//
-//        val tv: TextView = TextView(this)
-//
-//        val lp: android.app.ActionBar.LayoutParams = android.app.ActionBar.LayoutParams(
-//            android.app.ActionBar.LayoutParams.MATCH_PARENT,
-//            android.app.ActionBar.LayoutParams.WRAP_CONTENT
-//        )
-//
-//        tv.layoutParams = lp
-//
-//        tv.text = statusFriend
-//
-//        tv.setTextColor(Color.GREEN)
-//
-//        ab?.displayOptions = android.app.ActionBar.DISPLAY_SHOW_CUSTOM
-//
-//        ab?.customView = tv
     }
 
     override fun onResume() {
@@ -206,10 +176,11 @@ class ChatActivity : AppCompatActivity() {
         seen: Boolean,
         date: Date,
         month: Int,
-        year: Int
+        year: Int,
+        hasAvatar: Boolean
     ) {
         val message = messageBox.text.toString()
-        val messageObject = Message(message, loginUid, friendUid, currentDate, seen, date, month, year)
+        val messageObject = Message(message, loginUid, friendUid, currentDate, seen, date, month, year, hasAvatar)
         if (loginUid != null && message.trim().isNotEmpty()) {
             if (friendUid != null) {
                 chatAdapter.addMessage(messageObject, loginUid, friendUid)
@@ -261,9 +232,22 @@ class ChatActivity : AppCompatActivity() {
                                 //chatAdapter.addSeen(message.seen)
                             }
                         }
-                        if (message != null) {
-                            chatAdapter.addMessage(message, loginUid as String, friendUid as String)
+
+                        if (message != null && message.date.minutes - timeExam >= 1) {
+                            var hashMap: HashMap<String, Boolean> = HashMap()
+                            hashMap.put("hasAvatar", true)
+                            postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
                         }
+                        timeExam = message!!.date.minutes
+
+//                        if (message != null) {
+//                            hasAvatar = message.date.minutes - timeExam >= 1
+//                            message.hasAvatar = hasAvatar
+//                            chatAdapter.addMessage(message, loginUid as String, friendUid as String)
+//                        }
+//                        hasAvatar = false
+//                        timeExam = message!!.date.minutes
+                        chatAdapter.addMessage(message, loginUid!!, friendUid!!)
                         chatRecyclerView.adapter = chatAdapter
                     }
                     chatAdapter.notifyDataSetChanged()
