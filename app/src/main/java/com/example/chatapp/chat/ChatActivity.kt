@@ -138,6 +138,8 @@ class ChatActivity : AppCompatActivity() {
             val sdf = SimpleDateFormat("dd/M/yyyy  hh:mm:ss aaa")
             val currentDate = sdf.format(Date())
 
+            timeExam = -2
+
             sendChatMessage(
                 loginUid.toString(),
                 currentDate,
@@ -159,8 +161,8 @@ class ChatActivity : AppCompatActivity() {
         hasMore = intent.getBooleanExtra("hasMore", false)
 
         if (hasMore) {
-
             loadDataRoomSend()
+            timeExam = -2
             loadDataRoomReceive()
 
         }
@@ -231,16 +233,15 @@ class ChatActivity : AppCompatActivity() {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("seen", true)
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-                                //chatAdapter.addSeen(message.seen)
-//                                mDbRef.child("chats").child(roomReceiver!!).child("messages").child(message.seen.toString())
-//                                    .updateChildren(hashMap as Map<String, Any>)
                             }
                         }
 
-                        if (message != null && message.date.minutes - timeExam <= 1) {
-                            var hashMap: HashMap<String, Boolean> = HashMap()
-                            hashMap.put("noAvatarMessage", true)
-                            postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+                        if (message != null && message.receiveId == loginUid) {
+                            if (message.date.minutes - timeExam <= 1) {
+                                var hashMap: HashMap<String, Boolean> = HashMap()
+                                hashMap.put("noAvatarMessage", true)
+                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+                            }
                         }
                         timeExam = message!!.date.minutes
                         chatAdapter.addMessage(message, loginUid!!, friendUid!!)
@@ -277,10 +278,12 @@ class ChatActivity : AppCompatActivity() {
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
                             }
                         }
-                        if (message != null && message.date.minutes - timeExam <= 1) {
-                            var hashMap: HashMap<String, Boolean> = HashMap()
-                            hashMap.put("noAvatarMessage", true)
-                            postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+                        if (message != null && message.receiveId == loginUid) {
+                            if (message.date.minutes - timeExam <= 1) {
+                                var hashMap: HashMap<String, Boolean> = HashMap()
+                                hashMap.put("noAvatarMessage", true)
+                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+                            }
                         }
                         timeExam = message!!.date.minutes
                         chatAdapter.addMessage(message, loginUid!!, friendUid!!)

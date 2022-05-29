@@ -66,8 +66,12 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
             if (currentMessage.time != null) {
                 viewHolder.time_receive.text = currentMessage.time
             }
-            if (currentMessage.noAvatarMessage) {
-                viewHolder.img_avatar.visibility = View.GONE
+            if (currentMessage.noAvatarMessage && position != 0) {
+                if (currentMessage.year == messageList[position -1].year && currentMessage.month == messageList[position -1].month
+                    && currentMessage.date.date == messageList[position - 1].date.date
+                    && currentMessage.date.hours == messageList[position -1].date.hours) {
+                    viewHolder.img_avatar.visibility = View.GONE
+                }
             } else {
                 FirebaseStorage.getInstance().reference.child("images").child(friendUid!!).downloadUrl.addOnSuccessListener {
                     Picasso.get().load(it).into(viewHolder.img_avatar)
