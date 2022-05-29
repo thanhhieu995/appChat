@@ -10,12 +10,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
 import com.example.chatapp.R
-import com.example.chatapp.Status
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 
@@ -72,12 +66,12 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
             if (currentMessage.time != null) {
                 viewHolder.time_receive.text = currentMessage.time
             }
-            if (currentMessage.hasAvatar) {
+            if (currentMessage.noAvatarMessage) {
+                viewHolder.img_avatar.visibility = View.GONE
+            } else {
                 FirebaseStorage.getInstance().reference.child("images").child(friendUid!!).downloadUrl.addOnSuccessListener {
                     Picasso.get().load(it).into(viewHolder.img_avatar)
                 }
-            } else {
-                viewHolder.img_avatar.visibility = View.GONE
             }
         }
     }

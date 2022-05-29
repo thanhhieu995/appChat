@@ -2,10 +2,8 @@ package com.example.chatapp.chat
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.media.midi.MidiOutputPort
 import android.net.Uri
 import android.os.Bundle
-import android.text.format.Time
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
@@ -17,16 +15,12 @@ import com.example.chatapp.ProfileActivity
 import com.example.chatapp.R
 import com.example.chatapp.User
 import com.example.chatapp.main.MainActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.rpc.context.AttributeContext
 import java.text.SimpleDateFormat
-import java.time.Month
-import java.time.Year
 import java.util.*
 import kotlin.collections.HashMap
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 
 class ChatActivity : AppCompatActivity() {
@@ -37,6 +31,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
+    lateinit var mAuth: FirebaseAuth
 
     private lateinit var statusMessage: String
 
@@ -45,6 +40,10 @@ class ChatActivity : AppCompatActivity() {
     private var roomReceiver: String? = null
 
     private var statusFriend: String? = "1"
+
+    private lateinit var userLogin: User
+
+    private lateinit var userFriend: User
 
 
     var seen: Boolean = false
@@ -59,7 +58,7 @@ class ChatActivity : AppCompatActivity() {
 
     lateinit var date: Date
 
-    var hasAvatar: Boolean = false
+    var noAvatarMessage: Boolean = false
 
     var timeExam: Int = -2
 
@@ -74,13 +73,17 @@ class ChatActivity : AppCompatActivity() {
 
         hasMore = intent.getBooleanExtra("hasMore", false)
 
+        userLogin = intent.getSerializableExtra("userLogin") as User
+
+        userFriend = intent.getSerializableExtra("userFriend") as User
+
 //        val loginUid = FirebaseAuth.getInstance().currentUser?.uid // lay uid tu account???
 //        //???????????????
 
         mDbRef = FirebaseDatabase.getInstance().reference
 
-        roomReceiver = loginUid.toString() + friendUid
-        roomSender = friendUid.toString() + loginUid
+        roomReceiver = friendUid.toString() + loginUid
+        roomSender =  loginUid.toString() + friendUid
 
         //supportActionBar?.title = name.toString()  + " " + statusFriend
 
@@ -104,8 +107,8 @@ class ChatActivity : AppCompatActivity() {
 
         //val now = Calendar.getInstance()
 
-        loadDataRoomSend()
-        loadDataRoomReceive()
+        //loadDataRoomSend()
+        //loadDataRoomReceive()
 
         //lam ham lay hoat dong cua user tai chatActivity
         mDbRef.child("user").child(friendUid.toString())
@@ -143,7 +146,7 @@ class ChatActivity : AppCompatActivity() {
                 date,
                 month,
                 year,
-                hasAvatar
+                noAvatarMessage
             )
             chatRecyclerView.scrollToPosition(messageList.size - 1)
 
@@ -156,8 +159,10 @@ class ChatActivity : AppCompatActivity() {
         hasMore = intent.getBooleanExtra("hasMore", false)
 
         if (hasMore) {
+
             loadDataRoomSend()
             loadDataRoomReceive()
+
         }
     }
 
@@ -177,10 +182,10 @@ class ChatActivity : AppCompatActivity() {
         date: Date,
         month: Int,
         year: Int,
-        hasAvatar: Boolean
+        noAvatarMessage: Boolean
     ) {
         val message = messageBox.text.toString()
-        val messageObject = Message(message, loginUid, friendUid, currentDate, seen, date, month, year, hasAvatar)
+        val messageObject = Message(message, loginUid, friendUid, currentDate, seen, date, month, year, noAvatarMessage)
         if (loginUid != null && message.trim().isNotEmpty()) {
             if (friendUid != null) {
                 chatAdapter.addMessage(messageObject, loginUid, friendUid)
@@ -188,10 +193,7 @@ class ChatActivity : AppCompatActivity() {
             mDbRef.child("chats").child(roomSender!!).child("messages").push()
                 .setValue(messageObject).addOnSuccessListener {
                     mDbRef.child("chats").child(roomReceiver!!).child("messages").push()
-                        .setValue(messageObject)
-                }
-
-
+                        .setValue(messageObject) }
         } else {
             Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG)
                 .show()
@@ -221,32 +223,26 @@ class ChatActivity : AppCompatActivity() {
 
 //                        messageList.add(message!!)
 
-                        if (message != null && statusFriend == "online" && hasMore) {
-                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(
+                        if (message != null && hasMore) {
+                            if ((message.receiveId?.equals(loginUid) == true) && (message.senderId?.equals(
                                     friendUid
-                                ) == true
+                                ) == true)
                             ) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("seen", true)
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
                                 //chatAdapter.addSeen(message.seen)
+//                                mDbRef.child("chats").child(roomReceiver!!).child("messages").child(message.seen.toString())
+//                                    .updateChildren(hashMap as Map<String, Any>)
                             }
                         }
 
-                        if (message != null && message.date.minutes - timeExam >= 1) {
+                        if (message != null && message.date.minutes - timeExam <= 1) {
                             var hashMap: HashMap<String, Boolean> = HashMap()
-                            hashMap.put("hasAvatar", true)
+                            hashMap.put("noAvatarMessage", true)
                             postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
                         }
                         timeExam = message!!.date.minutes
-
-//                        if (message != null) {
-//                            hasAvatar = message.date.minutes - timeExam >= 1
-//                            message.hasAvatar = hasAvatar
-//                            chatAdapter.addMessage(message, loginUid as String, friendUid as String)
-//                        }
-//                        hasAvatar = false
-//                        timeExam = message!!.date.minutes
                         chatAdapter.addMessage(message, loginUid!!, friendUid!!)
                         chatRecyclerView.adapter = chatAdapter
                     }
@@ -266,10 +262,12 @@ class ChatActivity : AppCompatActivity() {
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
+                    messageList.clear()
+
                     for (postSnapshot in snapshot.children) {
                         val message = postSnapshot.getValue(Message::class.java)
 
-                        if (message != null && statusFriend == "online" && hasMore) {
+                        if (message != null  && hasMore) {
                             if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(
                                     friendUid
                                 ) == true
@@ -277,9 +275,15 @@ class ChatActivity : AppCompatActivity() {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("seen", true)
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-                                //chatAdapter.addSeen(message.seen)
                             }
                         }
+                        if (message != null && message.date.minutes - timeExam <= 1) {
+                            var hashMap: HashMap<String, Boolean> = HashMap()
+                            hashMap.put("noAvatarMessage", true)
+                            postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+                        }
+                        timeExam = message!!.date.minutes
+                        chatAdapter.addMessage(message, loginUid!!, friendUid!!)
                         chatRecyclerView.adapter = chatAdapter
                     }
                     chatAdapter.notifyDataSetChanged()

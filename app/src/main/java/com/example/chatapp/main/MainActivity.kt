@@ -268,6 +268,7 @@ class MainActivity : AppCompatActivity() {
                         adapter.notifyDataSetChanged()
                     } else {
                         user = postSnapshot.getValue(User::class.java)!!
+                        adapter.addUserLogin(user)
                         //supportActionBar?.title = postSnapshot.getValue(User::class.java)?.name
                         //title = postSnapshot.getValue(User::class.java)?.name.toString()
                         //getTitle(title)

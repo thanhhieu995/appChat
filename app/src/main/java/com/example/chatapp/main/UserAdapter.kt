@@ -34,6 +34,8 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
     var statusFriend: String? = ""
 
     var hasMore: Boolean = false
+
+    var userLogin: User = User()
     //private lateinit var mAuth: FirebaseAuth
 
     private val storageRef = FirebaseStorage.getInstance().reference
@@ -80,6 +82,12 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
                 //intent.putExtra("statusFriend", currentUser.status.toString())
 
                 intent.putExtra("uidLogin", uidLogin)
+
+                intent.putExtra("userLogin", userLogin)
+
+                intent.putExtra("userFriend", currentUser)
+
+
 
                 context.startActivity(intent)
                 notifyDataSetChanged()
@@ -142,5 +150,9 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 //        islandRef.downloadUrl.addOnSuccessListener {
 //            Toast.makeText(context, "load success", Toast.LENGTH_LONG).show()
 //        }
+    }
+
+    fun addUserLogin(userLogin: User) {
+        this.userLogin = userLogin
     }
 }
