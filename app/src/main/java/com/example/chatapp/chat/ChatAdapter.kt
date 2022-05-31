@@ -13,7 +13,8 @@ import com.example.chatapp.R
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 
-class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val ITEM_RECEIVE = 1
     val ITEM_SENT = 2
@@ -28,7 +29,7 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        return if(viewType == 1) {
+        return if (viewType == 1) {
             val view: View = LayoutInflater.from(context).inflate(R.layout.receive, parent, false)
             ReceiveViewHolder(view)
         } else {
@@ -63,21 +64,31 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
         } else {
             val viewHolder = holder as ReceiveViewHolder
             viewHolder.receiveMessage.text = currentMessage.message
-            if (currentMessage.time != null) {
-                viewHolder.time_receive.text = currentMessage.time
-            }
-            if (currentMessage.noAvatarMessage && position != 0) {
-                if (currentMessage.year == messageList[position -1].year && currentMessage.month == messageList[position -1].month
-                    && currentMessage.date.date == messageList[position - 1].date.date
-                    && currentMessage.date.hours == messageList[position -1].date.hours) {
+//            if (currentMessage.time != null && currentMessage.noAvatarMessage) {
+//                viewHolder.time_receive.visibility = View.GONE
+//            } else {
+//                viewHolder.time_receive.text = currentMessage.time
+//            }
+            viewHolder.time_receive.text = currentMessage.time
+
+            if (position != 0) {
+                if ( currentMessage.noAvatarMessage) {
                     viewHolder.img_avatar.visibility = View.GONE
+                } else {
+                    FirebaseStorage.getInstance().reference.child("images")
+                        .child(friendUid!!).downloadUrl.addOnSuccessListener {
+                            Picasso.get().load(it).into(viewHolder.img_avatar)
+                        }
                 }
+
             } else {
-                FirebaseStorage.getInstance().reference.child("images").child(friendUid!!).downloadUrl.addOnSuccessListener {
-                    Picasso.get().load(it).into(viewHolder.img_avatar)
-                }
+                FirebaseStorage.getInstance().reference.child("images")
+                    .child(friendUid!!).downloadUrl.addOnSuccessListener {
+                        Picasso.get().load(it).into(viewHolder.img_avatar)
+                    }
             }
         }
+
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -102,7 +113,7 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>): Re
         val img_avatar = itemView.findViewById<ImageView>(R.id.img_receiveProfile)
     }
 
-    class SentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    class SentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val sentMessage = itemView.findViewById<TextView>(R.id.txt_sent_message)
         val time_sent = itemView.findViewById<TextView>(R.id.time_sent)
         val status_Sent = itemView.findViewById<TextView>(R.id.status_messageSent)
