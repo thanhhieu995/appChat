@@ -1,12 +1,18 @@
 package com.example.chatapp.accountLogin
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.example.chatapp.main.MainActivity
 import com.example.chatapp.R
 import com.example.chatapp.User
@@ -57,6 +63,7 @@ class LogIn : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         hasMore = true
+
     }
 
     private fun login(email: String, password: String) {

@@ -6,6 +6,9 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -18,6 +21,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.Toolbar
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SearchView
 import androidx.core.graphics.green
 import androidx.core.graphics.red
@@ -61,7 +65,6 @@ class MainActivity : AppCompatActivity() {
     var user: User = User()
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -78,6 +81,7 @@ class MainActivity : AppCompatActivity() {
         userRecyclerView.adapter = adapter
 
         userList.clear()
+
 
         //var customView: View = LayoutInflater.from(this).inflate(R.layout.actionbar_title, null, false)
         //actionTitle.text = mAuth.currentUser?.displayName
