@@ -17,6 +17,7 @@ import com.example.chatapp.User
 import com.example.chatapp.main.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -30,7 +31,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
-    lateinit var mAuth: FirebaseAuth
+    //lateinit var mAuth: FirebaseAuth
 
     private lateinit var statusMessage: String
 
@@ -45,7 +46,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var userFriend: User
 
 
-    var seen: Boolean = false
+    private var seen: Boolean = false
 
     var hasMore: Boolean = false
 
@@ -56,6 +57,7 @@ class ChatActivity : AppCompatActivity() {
     var nameFriend: String = ""
 
     lateinit var date: Date
+    var dateExam: Date = Date(-2,-2, -2)
 
     var noAvatarMessage: Boolean = false
 
@@ -66,7 +68,7 @@ class ChatActivity : AppCompatActivity() {
     var dayExam: Int = -2
     var yearExam: Int = -2
 
-    var messageSender: Message? = Message("-2", "", "", "-2", false, Date(-2,-2,-2,-2, -2, -2, ), -2, -2, false)
+    var messageSender: Message? = Message("-2", "", "", "-2", false, dateExam, -2, -2, false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -173,6 +175,8 @@ class ChatActivity : AppCompatActivity() {
             hourExam = -2
             dayExam = -2
             yearExam = -2
+
+            messageSender = Message("-2", "", "", "-2", false, dateExam, -2, -2, false)
             loadDataRoomReceive()
         }
 
@@ -254,7 +258,7 @@ class ChatActivity : AppCompatActivity() {
                             if ((message.year == yearExam) && (message.month == monthExam) && (message.date.date == dayExam) && (message.date.hours == hourExam) && ((message.date.minutes - minuteExam) <= 1)) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("noAvatarMessage", true)
-                                if (message.date.minutes - messageSender!!.date.minutes <= 2 || message.date.minutes == messageSender!!.date.minutes && message.date.seconds - messageSender!!.date.seconds > 0) {
+                                if (messageSender!!.year != -2 && message.date.minutes - messageSender!!.date.minutes <= 2 || message.date.minutes == messageSender!!.date.minutes && message.date.seconds - messageSender!!.date.seconds > 0) {
                                     hashMap.put("noAvatarMessage", false)
                                 }
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
@@ -287,9 +291,12 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun loadDataRoomReceive() {
+
         mDbRef.child("chats").child(roomReceiver!!).child("messages")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    messageSender = Message("-2", "", "", "-2", false, dateExam, -2, -2, false)
+
 
                     messageList.clear()
                     minuteExam = -2
@@ -311,7 +318,7 @@ class ChatActivity : AppCompatActivity() {
                             if ((message.year == yearExam) && (message.month == monthExam) && (message.date.date == dayExam) && (message.date.hours == hourExam) && ((message.date.minutes - minuteExam) <= 1)) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("noAvatarMessage", true)
-                                if (message.date.minutes - messageSender!!.date.minutes <= 2 || message.date.minutes == messageSender!!.date.minutes && message.date.seconds - messageSender!!.date.seconds > 0) {
+                                if (messageSender!!.year != -2 && message.date.minutes - messageSender!!.date.minutes <= 2 || message.date.minutes == messageSender!!.date.minutes && message.date.seconds - messageSender!!.date.seconds > 0) {
                                     hashMap.put("noAvatarMessage", false)
                                 }
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
