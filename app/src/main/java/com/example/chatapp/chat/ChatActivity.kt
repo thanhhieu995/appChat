@@ -258,7 +258,7 @@ class ChatActivity : AppCompatActivity() {
                             if ((message.year == yearExam) && (message.month == monthExam) && (message.date.date == dayExam) && (message.date.hours == hourExam) && ((message.date.minutes - minuteExam) <= 1)) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("noAvatarMessage", true)
-                                if (messageSender!!.year != -2 && message.date.minutes - messageSender!!.date.minutes <= 2 || message.date.minutes == messageSender!!.date.minutes && message.date.seconds - messageSender!!.date.seconds > 0) {
+                                if (messageSender!!.year != -2 && message.date.minutes - messageSender!!.date.minutes <= 2  || message.date.minutes == messageSender!!.date.minutes && message.date.seconds - messageSender!!.date.seconds > 0) {
                                     hashMap.put("noAvatarMessage", false)
                                 }
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
