@@ -27,8 +27,6 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
 
     var tmpSeen: Boolean = false
 
-   var isReceived: Boolean = false
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         return if (viewType == 1) {
@@ -62,7 +60,6 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
             } else {
                 viewHolder.status_Sent.visibility = View.GONE
             }
-            isReceived = false
 
         } else {
             val viewHolder = holder as ReceiveViewHolder
@@ -96,7 +93,6 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
                     }
             }
             //positionReceipt = position
-            isReceived = true
         }
 
     }
