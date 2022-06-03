@@ -258,9 +258,30 @@ class ChatActivity : AppCompatActivity() {
                             if ((message.year == yearExam) && (message.month == monthExam) && (message.date.date == dayExam) && (message.date.hours == hourExam) && ((message.date.minutes - minuteExam) <= 1)) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("noAvatarMessage", true)
-                                if (messageSender!!.year != -2 && message.date.minutes - messageSender!!.date.minutes <= 2  || message.date.minutes == messageSender!!.date.minutes && message.date.seconds - messageSender!!.date.seconds > 0) {
-                                    hashMap.put("noAvatarMessage", false)
+//                                if (messageSender!!.year != -2 && message.date.minutes - messageSender!!.date.minutes <= 2 && yearExam == messageSender!!.year && monthExam == messageSender!!.month  && dayExam == messageSender!!.date.date && hourExam == messageSender!!.date.hours  || message.date.minutes == messageSender!!.date.minutes && message.date.seconds - messageSender!!.date.seconds > 0) {
+//                                    hashMap.put("noAvatarMessage", false)
+//                                }
+
+                                if (messageSender!!.year != -2) {
+//
+                                    if (messageSender!!.year == yearExam && messageSender!!.month == monthExam && messageSender!!.date.date == dayExam && messageSender!!.date.hours == hourExam) {
+                                        if (messageSender!!.date.minutes == message.date.minutes && messageSender!!.date.seconds <= message.date.seconds && messageSender!!.date.minutes == minuteExam && messageSender!!.date.seconds >= message.date.seconds) {
+                                        hashMap.put("noAvatarMessage", false)
+                                        }
+                                        if (messageSender!!.date.minutes < message.date.minutes && messageSender!!.date.minutes > minuteExam) {
+                                        hashMap.put("noAvatarMessage", false)
+                                        }
+
+                                        if (messageSender!!.date.minutes == minuteExam && messageSender!!.date.seconds >= secondExam && messageSender!!.date.minutes < message.date.minutes) {
+                                        hashMap.put("noAvatarMessage", false)
+                                        }
+
+                                        if (messageSender!!.date.minutes == message.date.minutes && messageSender!!.date.seconds <= message.date.seconds && messageSender!!.date.minutes > minuteExam) {
+                                        hashMap.put("noAvatarMessage", false)
+                                        }
+                                    }
                                 }
+
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
                                // messageSender = message
                             }
@@ -318,8 +339,28 @@ class ChatActivity : AppCompatActivity() {
                             if ((message.year == yearExam) && (message.month == monthExam) && (message.date.date == dayExam) && (message.date.hours == hourExam) && ((message.date.minutes - minuteExam) <= 1)) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("noAvatarMessage", true)
-                                if (messageSender!!.year != -2 && message.date.minutes - messageSender!!.date.minutes <= 2 || message.date.minutes == messageSender!!.date.minutes && message.date.seconds - messageSender!!.date.seconds > 0) {
-                                    hashMap.put("noAvatarMessage", false)
+//                                if (messageSender!!.year != -2 && message.date.minutes - messageSender!!.date.minutes <= 2 && yearExam == messageSender!!.year && monthExam == messageSender!!.month  && dayExam == messageSender!!.date.date && hourExam == messageSender!!.date.hours && minuteExam - messageSender!!.date.minutes < 0 || message.date.minutes == messageSender!!.date.minutes && message.date.seconds - messageSender!!.date.seconds > 0) {
+//                                    hashMap.put("noAvatarMessage", false)
+//                                }
+                                if (messageSender!!.year != -2) {
+
+                                    if (messageSender!!.year == yearExam && messageSender!!.month == monthExam && messageSender!!.date.date == dayExam && messageSender!!.date.hours == hourExam) {
+                                        if (messageSender!!.date.minutes == message.date.minutes && messageSender!!.date.seconds <= message.date.seconds && messageSender!!.date.minutes == minuteExam && messageSender!!.date.seconds >= message.date.seconds) {
+                                            hashMap.put("noAvatarMessage", false)
+                                        }
+                                        if (messageSender!!.date.minutes < message.date.minutes && messageSender!!.date.minutes > minuteExam) {
+                                            hashMap.put("noAvatarMessage", false)
+                                        }
+
+                                        if (messageSender!!.date.minutes == minuteExam && messageSender!!.date.seconds >= secondExam && messageSender!!.date.minutes < message.date.minutes) {
+                                            hashMap.put("noAvatarMessage", false)
+                                        }
+
+                                        if (messageSender!!.date.minutes == message.date.minutes && messageSender!!.date.seconds <= message.date.seconds && messageSender!!.date.minutes > minuteExam) {
+                                            hashMap.put("noAvatarMessage", false)
+                                        }
+                                    }
+
                                 }
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
                             }
