@@ -82,50 +82,9 @@ class MainActivity : AppCompatActivity() {
 
         userList.clear()
 
-
-        //var customView: View = LayoutInflater.from(this).inflate(R.layout.actionbar_title, null, false)
-        //actionTitle.text = mAuth.currentUser?.displayName
-        //supportActionBar?.title = mAuth.currentUser?.displayName
-//        actionTitle.setOnClickListener {
-//            Toast.makeText(this, "title clicked", Toast.LENGTH_LONG).show()
-
-        //actionbar_title.actionbarTitle.text = mAuth.currentUser?.displayName
-        //actionbar_title.actionbarTitle.text = mAuth.currentUser?.displayName ?:
-//        if (actionbar != null) {
-//
-//            actionBar?.setDisplayShowTitleEnabled(false)
-//            actionBar?.setDisplayShowCustomEnabled(true)
-////            customTitle.setTypeface(Typeface.MONOSPACE);
-//            val customView: View = layoutInflater.inflate(R.layout.actionbar_title, null)
-//            actionTitle = customView.findViewById(R.id.actionbarTitle)
-//            actionTitle.typeface = Typeface.MONOSPACE
-//
-//            actionTitle.setOnClickListener(object : View.OnClickListener{
-//                override fun onClick(v: View?) {
-//                    Log.d("MainActivity", "success")
-//                }
-//
-//            })
-//
-//            actionbar.customView = customView
-//        }
-        //actionbar.title = findViewById<>()
-
-       // supportActionBar.title = findViewById<TextView>(R.id.actionbarTitle)
-
-//        supportActionBar?.customView?.actionbarTitle?.setOnClickListener(object : View.OnClickListener{
-//            override fun onClick(v: View?) {
-//                val intent = Intent(this@MainActivity, ChatActivity::class.java)
-//                startActivity(intent)
-//            }
-//
-//        })
-
         statusAccount(mAuth.uid)
         addFriendUser()
 
-       // addAvatar()
-        //supportActionBar?.title = findViewById<Toolbar>(androidx.appcompat.R.id.action_bar).toString()
     }
 
     override fun onResume() {
@@ -172,9 +131,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         var menuItem: MenuItem = menu!!.findItem(R.id.action_name_title)
-        //menuItem.title = mAuth.currentUser!!.displayName
-        //val user: FirebaseUser? = mAuth.currentUser
-       // menuItem.title = user.name
         mDbRef.child("user").addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (postSnapshot in snapshot.children) {
@@ -215,13 +171,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-//        if (item.itemId == com.google.android.material.R.id.action_bar_title) {
-//            val intent : Intent = Intent()
-//            startActivity(intent)
-//        }
-//        if (item.itemId == androidx.appcompat.R.id.action_bar_title) {
-//            Toast.makeText(this, "success actionbar", Toast.LENGTH_LONG).show()
-//        }
         return false
     }
 
@@ -264,21 +213,11 @@ class MainActivity : AppCompatActivity() {
 
                 for (postSnapshot in snapshot.children) {
                     if (postSnapshot.getValue(User::class.java)?.uid != null && mAuth.uid != null && postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
-                        //statusAccount(postSnapshot.getValue(User::class.java)?.uid)
                         userList.add(postSnapshot.getValue(User::class.java)!!)
-                        // adapter.addItems(postSnapshot.getValue(User::class.java))
-                        //addAvatar()
-                        //adapter.addAvatar()
                         adapter.notifyDataSetChanged()
                     } else {
                         user = postSnapshot.getValue(User::class.java)!!
                         adapter.addUserLogin(user)
-                        //supportActionBar?.title = postSnapshot.getValue(User::class.java)?.name
-                        //title = postSnapshot.getValue(User::class.java)?.name.toString()
-                        //getTitle(title)
-                        //onMenuItemSelected(title, R.id.action_name_title)
-                        //onPrepareOptionsMenu(menu)
-                        //val menuItem: MenuItem = menu.findItem(R.id.action_name_title)
                     }
                 }
             }

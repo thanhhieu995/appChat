@@ -63,36 +63,18 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
 
         } else {
             val viewHolder = holder as ReceiveViewHolder
+
             viewHolder.receiveMessage.text = currentMessage.message
-//            if (currentMessage.time != null && currentMessage.noAvatarMessage) {
-//                viewHolder.time_receive.visibility = View.GONE
-//            } else {
-//                viewHolder.time_receive.text = currentMessage.time
-//            }
             viewHolder.time_receive.text = currentMessage.time
 
-            if (position != 0) {
-                if ( currentMessage.noAvatarMessage) {
-                    //if (position != messageList.size - 1) {
-                        //if (isReceived) {
-                            viewHolder.img_avatar.visibility = View.GONE
-                       // }
-                        //viewHolder.img_avatar.visibility = View.GONE
-                    //}
-                } else {
-                    FirebaseStorage.getInstance().reference.child("images")
-                        .child(friendUid!!).downloadUrl.addOnSuccessListener {
-                            Picasso.get().load(it).into(viewHolder.img_avatar)
-                        }
-                }
-
+            if (currentMessage.noAvatarMessage) {
+                viewHolder.img_avatar.visibility = View.GONE
             } else {
                 FirebaseStorage.getInstance().reference.child("images")
                     .child(friendUid!!).downloadUrl.addOnSuccessListener {
                         Picasso.get().load(it).into(viewHolder.img_avatar)
                     }
             }
-            //positionReceipt = position
         }
 
     }

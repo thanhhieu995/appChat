@@ -31,8 +31,6 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
-    //lateinit var mAuth: FirebaseAuth
-
     private lateinit var statusMessage: String
 
 
@@ -184,7 +182,6 @@ class ChatActivity : AppCompatActivity() {
 
     private fun addStatusFriend(status: String?) {
         this.statusFriend = status
-        //supportActionBar?.title = intent.getSerializableExtra("name").toString()
 
         supportActionBar?.subtitle = statusFriend
 
@@ -258,12 +255,8 @@ class ChatActivity : AppCompatActivity() {
                             if ((message.year == yearExam) && (message.month == monthExam) && (message.date.date == dayExam) && (message.date.hours == hourExam) && ((message.date.minutes - minuteExam) <= 1)) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("noAvatarMessage", true)
-//                                if (messageSender!!.year != -2 && message.date.minutes - messageSender!!.date.minutes <= 2 && yearExam == messageSender!!.year && monthExam == messageSender!!.month  && dayExam == messageSender!!.date.date && hourExam == messageSender!!.date.hours  || message.date.minutes == messageSender!!.date.minutes && message.date.seconds - messageSender!!.date.seconds > 0) {
-//                                    hashMap.put("noAvatarMessage", false)
-//                                }
 
                                 if (messageSender!!.year != -2) {
-//
                                     if (messageSender!!.year == yearExam && messageSender!!.month == monthExam && messageSender!!.date.date == dayExam && messageSender!!.date.hours == hourExam) {
                                         if (messageSender!!.date.minutes == message.date.minutes && messageSender!!.date.seconds <= message.date.seconds && messageSender!!.date.minutes == minuteExam && messageSender!!.date.seconds >= message.date.seconds) {
                                         hashMap.put("noAvatarMessage", false)
@@ -283,7 +276,6 @@ class ChatActivity : AppCompatActivity() {
                                 }
 
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-                               // messageSender = message
                             }
                             secondExam = message.date.seconds
                             minuteExam = message.date.minutes
@@ -339,9 +331,6 @@ class ChatActivity : AppCompatActivity() {
                             if ((message.year == yearExam) && (message.month == monthExam) && (message.date.date == dayExam) && (message.date.hours == hourExam) && ((message.date.minutes - minuteExam) <= 1)) {
                                 var hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("noAvatarMessage", true)
-//                                if (messageSender!!.year != -2 && message.date.minutes - messageSender!!.date.minutes <= 2 && yearExam == messageSender!!.year && monthExam == messageSender!!.month  && dayExam == messageSender!!.date.date && hourExam == messageSender!!.date.hours && minuteExam - messageSender!!.date.minutes < 0 || message.date.minutes == messageSender!!.date.minutes && message.date.seconds - messageSender!!.date.seconds > 0) {
-//                                    hashMap.put("noAvatarMessage", false)
-//                                }
                                 if (messageSender!!.year != -2) {
 
                                     if (messageSender!!.year == yearExam && messageSender!!.month == monthExam && messageSender!!.date.date == dayExam && messageSender!!.date.hours == hourExam) {
@@ -410,9 +399,6 @@ class ChatActivity : AppCompatActivity() {
             }
 
         })
-//        if (statusFriend == "online") {
-//            menuInflater.inflate(R.menu.icon_status, menu)
-//        }
         return super.onCreateOptionsMenu(menu)
     }
 
