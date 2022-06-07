@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
+import com.example.chatapp.MessageDiffUtil
 import com.example.chatapp.R
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
@@ -124,9 +126,35 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
         notifyDataSetChanged()
     }
 
+    fun addUid(loginUid: String, friendUid: String) {
+        this.loginUid = loginUid
+        this.friendUid = friendUid
+    }
+
 //    fun addUid(uid: String?) {
 //        uidActing = uid
 //        notifyDataSetChanged()
 //    }
+
+//    class MessageDiffCallBack: DiffUtil.ItemCallback<Message>() {
+//        override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean {
+//            return oldItem.senderId == newItem.senderId
+//        }
+//
+//        @SuppressLint("DiffUtilEquals")
+//        override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean {
+//            return oldItem == newItem
+//        }
+//
+//    }
+
+    fun updateData (newList: ArrayList<Message>) {
+        val diffCallBack = MessageDiffUtil(messageList, newList)
+        val diffResult = DiffUtil.calculateDiff(diffCallBack)
+
+        messageList.clear()
+        messageList.addAll(newList)
+        diffResult.dispatchUpdatesTo(this)
+    }
 }
 

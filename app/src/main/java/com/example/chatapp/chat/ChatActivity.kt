@@ -20,6 +20,7 @@ import com.google.firebase.database.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
@@ -32,6 +33,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
     private lateinit var statusMessage: String
+    private lateinit var newList: ArrayList<Message>
 
 
     private var roomSender: String? = null
@@ -98,6 +100,7 @@ class ChatActivity : AppCompatActivity() {
         sentButton = findViewById(R.id.img_sent)
 
         messageList = ArrayList()
+        newList = ArrayList()
         chatAdapter = ChatAdapter(this, messageList)
 
 
@@ -201,7 +204,9 @@ class ChatActivity : AppCompatActivity() {
         val messageObject = Message(message, loginUid, friendUid, currentDate, seen, date, month, year, noAvatarMessage)
         if (loginUid != null && message.trim().isNotEmpty()) {
             if (friendUid != null) {
-                chatAdapter.addMessage(messageObject, loginUid, friendUid)
+                //chatAdapter.addMessage(messageObject, loginUid, friendUid)
+                newList.add(messageObject)
+                chatAdapter.addUid(loginUid, friendUid)
             }
             mDbRef.child("chats").child(roomSender!!).child("messages").push()
                 .setValue(messageObject).addOnSuccessListener {
@@ -211,6 +216,7 @@ class ChatActivity : AppCompatActivity() {
             Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG)
                 .show()
         }
+        chatAdapter.updateData(newList)
         messageBox.setText("")
         chatRecyclerView.scrollToPosition(messageList.size - 1)
     }
@@ -229,6 +235,7 @@ class ChatActivity : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
                     messageList.clear()
+                    newList.clear()
                     secondExam = -2
                     minuteExam = -2
                     hourExam = -2
@@ -288,10 +295,13 @@ class ChatActivity : AppCompatActivity() {
                         }
                         if (message != null) {
 
-                            chatAdapter.addMessage(message, loginUid!!, friendUid!!)
+                           // chatAdapter.addMessage(message, loginUid!!, friendUid!!)
+                            newList.add(message)
                         }
                         chatRecyclerView.adapter = chatAdapter
                     }
+                    loginUid?.let { friendUid?.let { it1 -> chatAdapter.addUid(it, it1) } }
+                    chatAdapter.updateData(newList)
                     chatAdapter.notifyDataSetChanged()
                     chatRecyclerView.scrollToPosition(messageList.size - 1)
                 }
@@ -312,6 +322,7 @@ class ChatActivity : AppCompatActivity() {
 
 
                     messageList.clear()
+                    newList.clear()
                     minuteExam = -2
 
                     for (postSnapshot in snapshot.children) {
@@ -363,10 +374,13 @@ class ChatActivity : AppCompatActivity() {
                             messageSender = message
                         }
                         if (message != null) {
-                            chatAdapter.addMessage(message, loginUid!!, friendUid!!)
+                           // chatAdapter.addMessage(message, loginUid!!, friendUid!!)
+                            newList.add(message)
                         }
                         chatRecyclerView.adapter = chatAdapter
                     }
+                    loginUid?.let { friendUid?.let { it1 -> chatAdapter.addUid(it, it1) } }
+                    chatAdapter.updateData(newList)
                     chatAdapter.notifyDataSetChanged()
                     chatRecyclerView.scrollToPosition(messageList.size - 1)
                 }
