@@ -2,7 +2,7 @@ package com.example.chatapp
 
 import androidx.recyclerview.widget.DiffUtil
 
-class MessageDiffUtil(val oldList: List<Message>, val newList: List<Message>) : DiffUtil.Callback() {
+class MessageDiffUtil(val oldList: ArrayList<Message>, val newList: ArrayList<Message>) : DiffUtil.Callback() {
     override fun getOldListSize(): Int {
        return oldList.size
     }
@@ -31,5 +31,10 @@ class MessageDiffUtil(val oldList: List<Message>, val newList: List<Message>) : 
                 false
             else -> {true}
         }
+    }
+
+    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+        oldList[oldItemPosition] = newList[newItemPosition]
+        return super.getChangePayload(oldItemPosition, newItemPosition)
     }
 }

@@ -2,6 +2,8 @@ package com.example.chatapp.chat
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +30,9 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
     private var friendUid: String? = ""
 
     var tmpSeen: Boolean = false
+
+    lateinit var old_Avatar: ImageView
+    var new_Avatar: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
@@ -72,10 +77,23 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
             if (currentMessage.noAvatarMessage) {
                 viewHolder.img_avatar.visibility = View.GONE
             } else {
-                FirebaseStorage.getInstance().reference.child("images")
-                    .child(friendUid!!).downloadUrl.addOnSuccessListener {
-                        Picasso.get().load(it).into(viewHolder.img_avatar)
-                    }
+
+//                new_Avatar = FirebaseStorage.getInstance().reference.child("images")
+//                    .child(friendUid!!).downloadUrl
+//                new_Avatar.setImageURI(FirebaseStorage.getInstance().reference
+//                    .child("images").child(friendUid!!).downloadUrl.result)
+//                FirebaseStorage.getInstance().reference
+//                    .child("images").child(friendUid!!).downloadUrl.addOnSuccessListener {
+//                        new_Avatar = it
+//                    }
+                if (viewHolder.img_avatar.drawable == null) {
+                    FirebaseStorage.getInstance().reference.child("images")
+                        .child(friendUid!!).downloadUrl.addOnSuccessListener { it ->
+                            Picasso.get().load(it).into(viewHolder.img_avatar)
+                            //new_Avatar = viewHolder.img_avatar
+                            //Picasso.get().load(it).into(viewHolder.img_avatar)
+                        }
+                }
             }
         }
 
