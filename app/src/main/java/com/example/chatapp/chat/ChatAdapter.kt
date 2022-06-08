@@ -93,7 +93,7 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
                             //new_Avatar = viewHolder.img_avatar
                             //Picasso.get().load(it).into(viewHolder.img_avatar)
                         }
-                }
+               }
             }
         }
 
