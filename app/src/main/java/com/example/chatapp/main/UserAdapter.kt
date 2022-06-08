@@ -52,11 +52,13 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
         val currentUser = userList[position]
         //val statusList = statusList[position]
         //holder.imgAvatar.setImageURI(islandRef)
-        storageRef.child("images").child(currentUser.uid!!)
-            .downloadUrl.addOnSuccessListener {
-                //holder.imgAvatar.setImageURI(it)
-                Picasso.get().load(it).into(holder.imgAvatar)
-            }
+        if (holder.imgAvatar.drawable == null) {
+            storageRef.child("images").child(currentUser.uid!!)
+                .downloadUrl.addOnSuccessListener {
+                    //holder.imgAvatar.setImageURI(it)
+                    Picasso.get().load(it).into(holder.imgAvatar)
+                }
+        }
         //islandRef.getResult()
 
         //Glide.with(context).load(islandRef).into(holder.imgAvatar)
