@@ -10,10 +10,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.chatapp.Message
-import com.example.chatapp.ProfileActivity
+import com.example.chatapp.*
 import com.example.chatapp.R
-import com.example.chatapp.User
 import com.example.chatapp.main.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -34,7 +32,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var mDbRef: DatabaseReference
     private lateinit var statusMessage: String
     private lateinit var newList: ArrayList<Message>
-
+    lateinit var databaseReference: DatabaseReference
 
     private var roomSender: String? = null
     private var roomReceiver: String? = null
@@ -426,6 +424,8 @@ class ChatActivity : AppCompatActivity() {
 
         if (item.itemId == R.id.videoCall_bar) {
             Toast.makeText(this, "video call is ready", Toast.LENGTH_SHORT).show()
+            var intent = Intent(this@ChatActivity, VideoCallActivity::class.java)
+            startActivity(intent)
             return true
         }
 
