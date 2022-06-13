@@ -52,7 +52,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/txtVideoCallIncoming"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -64,7 +64,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_decline"
+        android:id="@+id/btn_decline_incoming"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/red"
@@ -89,18 +89,18 @@
         app:layout_constraintVertical_bias="0.815" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/txt_decline_incoming"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Decline"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@+id/btn_decline"
-        app:layout_constraintStart_toStartOf="@+id/btn_decline"
-        app:layout_constraintTop_toBottomOf="@+id/btn_decline" />
+        app:layout_constraintEnd_toEndOf="@+id/btn_decline_incoming"
+        app:layout_constraintStart_toStartOf="@+id/btn_decline_incoming"
+        app:layout_constraintTop_toBottomOf="@+id/btn_decline_incoming" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/txt_accept_incoming"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

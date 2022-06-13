@@ -422,7 +422,12 @@ class ChatActivity : AppCompatActivity() {
 
         if (item.itemId == R.id.videoCall_bar) {
             Toast.makeText(this, "video call is ready", Toast.LENGTH_SHORT).show()
-            //var intent = Intent(this@ChatActivity, VideoCallinComing::class.java)
+            var intent = Intent(this@ChatActivity, VideoCallOutgoing::class.java)
+            intent.putExtra("uidLogin", loginUid)
+            intent.putExtra("uidFriend", friendUid)
+            intent.putExtra("hasMore", hasMore)
+            intent.putExtra("userLogin", userLogin)
+            intent.putExtra("userFriend", userFriend)
             startActivity(intent)
             return true
         }
