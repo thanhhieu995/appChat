@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.*
 import com.example.chatapp.R
 import com.example.chatapp.main.MainActivity
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -424,7 +422,7 @@ class ChatActivity : AppCompatActivity() {
 
         if (item.itemId == R.id.videoCall_bar) {
             Toast.makeText(this, "video call is ready", Toast.LENGTH_SHORT).show()
-            var intent = Intent(this@ChatActivity, VideoCallActivity::class.java)
+            //var intent = Intent(this@ChatActivity, VideoCallinComing::class.java)
             startActivity(intent)
             return true
         }
