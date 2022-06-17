@@ -51,7 +51,7 @@ class SignUp : AppCompatActivity() {
             val password = edtPassword.text.toString()
             val name = edtName.text.toString().trim()
 
-            signUp(email, password, name, status.toString(), avatar)
+            signUp(email, password, name, status.toString(), avatar, isCalling)
             hasMore = true
             checkUserExist(email)
         }
@@ -62,14 +62,14 @@ class SignUp : AppCompatActivity() {
         hasMore = true
     }
 
-    private fun signUp(email: String, password: String, name: String, status: String, avatar: String?) {
+    private fun signUp(email: String, password: String, name: String, status: String, avatar: String?, isCalling: Boolean) {
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(name)) {
             Toast.makeText(this@SignUp, "please fill all the fields", Toast.LENGTH_SHORT).show()
         } else {
             mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        addUserToDatabase(name, email, mAuth.currentUser?.uid!!, status, avatar)
+                        addUserToDatabase(name, email, mAuth.currentUser?.uid!!, status, avatar, isCalling)
                         val intent = Intent(this@SignUp, SetUpActivity::class.java)
                         intent.putExtra("uid", mAuth.currentUser?.uid)
                         startActivity(intent)
@@ -79,7 +79,7 @@ class SignUp : AppCompatActivity() {
         }
     }
 
-    private fun addUserToDatabase(name: String, email: String, uid: String, status: String, avatar: String?) {
+    private fun addUserToDatabase(name: String, email: String, uid: String, status: String, avatar: String?, isCalling: Boolean) {
         mDbRef = FirebaseDatabase.getInstance().reference
 
         mDbRef.child("user").child(uid).setValue(User(name, email, uid, status, avatar, isCalling))

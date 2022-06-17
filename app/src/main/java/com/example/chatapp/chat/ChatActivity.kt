@@ -58,7 +58,7 @@ class ChatActivity : AppCompatActivity() {
 
     var noAvatarMessage: Boolean = false
 
-    var isCalling: Boolean = false
+    var isCalled: Boolean = false
 
     var secondExam: Int = -2
     var minuteExam: Int = -2
@@ -118,6 +118,8 @@ class ChatActivity : AppCompatActivity() {
         //loadDataRoomSend()
         //loadDataRoomReceive()
 
+
+
         //lam ham lay hoat dong cua user tai chatActivity
         mDbRef.child("user").child(friendUid.toString())
             .addValueEventListener(object : ValueEventListener {
@@ -127,6 +129,14 @@ class ChatActivity : AppCompatActivity() {
                     if (user != null && user.uid == friendUid) {
                         //statusFriend = user.status
                         addStatusFriend(user.status)
+                        isCalled = user.calling
+                        if (user.calling) {
+                            val intent = Intent(this@ChatActivity, VideoCallIncoming::class.java)
+                            intent.putExtra("loginUid", loginUid)
+                            intent.putExtra("friendUid", friendUid)
+                            startActivity(intent)
+                        }
+
                         chatAdapter.notifyDataSetChanged()
                     }
                 }
@@ -426,8 +436,8 @@ class ChatActivity : AppCompatActivity() {
         }
 
         if (item.itemId == R.id.videoCall_bar) {
-            isCalling = true
-            mDbRef.child("chats").child("user").addValueEventListener(object : ValueEventListener {
+            isCalled = true
+            mDbRef.child("chats").child("user").child(loginUid!!).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (postSnapshot in snapshot.children) {
                         val user = postSnapshot.getValue<User>()
@@ -481,7 +491,7 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun inComingCall() {
-        if (isCalling) {
+        if (isCalled) {
             val intent = Intent(this@ChatActivity, VideoCallIncoming::class.java)
             startActivity(intent)
         }

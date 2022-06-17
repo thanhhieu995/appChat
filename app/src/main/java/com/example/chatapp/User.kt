@@ -8,7 +8,7 @@ class User: Serializable {
     var uid: String? = null
     var status: String? = ""
     var avatar: String? = ""
-    var isCalling: Boolean = false
+    var calling: Boolean = false
 
     constructor() {}
     constructor(name: String?, email: String?, uid: String?, status: String?, avatar: String?, isCalling: Boolean) {
@@ -17,6 +17,6 @@ class User: Serializable {
         this.uid = uid
         this.status = status
         this.avatar = avatar
-        this.isCalling = isCalling
+        this.calling = isCalling
     }
 }
