@@ -1,13 +1,18 @@
 package com.example.chatapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.chatapp.chat.ChatActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -16,8 +21,8 @@ class VideoCallIncoming : AppCompatActivity() {
     lateinit var imgAvatarIncoming: ImageView
     lateinit var txtName: TextView
 
-    lateinit var btnAccept: Button
-    lateinit var btnDecline: Button
+    lateinit var btnAccept: FloatingActionButton
+    lateinit var btnDecline: FloatingActionButton
 
     lateinit var database: FirebaseDatabase
 
@@ -25,6 +30,9 @@ class VideoCallIncoming : AppCompatActivity() {
 
     var loginUid: String = ""
     var friendUid: String = ""
+    var hasMore: Boolean = false
+    lateinit var userLogin: User
+    lateinit var userFriend: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +46,9 @@ class VideoCallIncoming : AppCompatActivity() {
 
         loginUid = intent.getStringExtra("loginUid").toString()
         friendUid = intent.getStringExtra("friendUid").toString()
-
+        hasMore = intent.getBooleanExtra("hasMore", false)
+        userLogin = intent.getSerializableExtra("userLogin") as User
+        userFriend = intent.getSerializableExtra("userFriend") as User
 
         database.reference.child("user").addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -54,6 +64,12 @@ class VideoCallIncoming : AppCompatActivity() {
             }
 
         })
+
+        txtName.text = userFriend.name
+
+        FirebaseStorage.getInstance().reference.child("images").child(friendUid).downloadUrl.addOnSuccessListener {
+            Picasso.get().load(it).into(imgAvatarIncoming)
+        }
 
         btnDecline.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
@@ -73,6 +89,14 @@ class VideoCallIncoming : AppCompatActivity() {
 //                })
 
                 FirebaseDatabase.getInstance().reference.child("user").child(friendUid).child("calling").setValue(false)
+
+                val intent = Intent(this@VideoCallIncoming, ChatActivity::class.java)
+                intent.putExtra("uidLogin", loginUid)
+                intent.putExtra("uidFriend", friendUid)
+                intent.putExtra("hasMore", hasMore)
+                intent.putExtra("userLogin", userLogin)
+                intent.putExtra("userFriend", userFriend)
+                startActivity(intent)
             }
 
         })

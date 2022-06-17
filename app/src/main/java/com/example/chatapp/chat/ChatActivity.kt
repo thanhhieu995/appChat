@@ -121,31 +121,6 @@ class ChatActivity : AppCompatActivity() {
 
 
         //lam ham lay hoat dong cua user tai chatActivity
-        mDbRef.child("user").child(friendUid.toString())
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-
-                    val user: User? = snapshot.getValue(User::class.java)
-                    if (user != null && user.uid == friendUid) {
-                        //statusFriend = user.status
-                        addStatusFriend(user.status)
-                        //isCalled = user.calling
-                        if (user.calling) {
-                            val intent = Intent(this@ChatActivity, VideoCallIncoming::class.java)
-                            intent.putExtra("loginUid", loginUid)
-                            intent.putExtra("friendUid", friendUid)
-                            startActivity(intent)
-                        }
-
-                        chatAdapter.notifyDataSetChanged()
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-
-            })
 
         sentButton.setOnClickListener {
             date = Calendar.getInstance().time
@@ -190,7 +165,7 @@ class ChatActivity : AppCompatActivity() {
             loadDataRoomReceive()
         }
 
-        //inComingCall()
+        statusAndCall()
     }
 
     private fun addStatusFriend(status: String?) {
@@ -523,5 +498,36 @@ class ChatActivity : AppCompatActivity() {
 //            startActivity(intent)
 //        }
 //    }
+
+    private fun statusAndCall() {
+        mDbRef.child("user").child(friendUid.toString())
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    val user: User? = snapshot.getValue(User::class.java)
+                    if (user != null && user.uid == friendUid) {
+                        //statusFriend = user.status
+                        addStatusFriend(user.status)
+                        //isCalled = user.calling
+                        if (user.calling) {
+                            val intent = Intent(this@ChatActivity, VideoCallIncoming::class.java)
+                            intent.putExtra("loginUid", loginUid)
+                            intent.putExtra("friendUid", friendUid)
+                            intent.putExtra("hasMore", hasMore)
+                            intent.putExtra("userLogin", userLogin)
+                            intent.putExtra("userFriend", userFriend)
+                            startActivity(intent)
+                        }
+
+                        chatAdapter.notifyDataSetChanged()
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+    }
 }
 
