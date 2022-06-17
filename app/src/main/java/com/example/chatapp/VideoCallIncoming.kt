@@ -57,20 +57,22 @@ class VideoCallIncoming : AppCompatActivity() {
 
         btnDecline.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
-                mDbRef.child("chats").child("user").child(friendUid).addValueEventListener(object : ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        for (postSnapshot in snapshot.children) {
-                            val hashMap: HashMap<String, Boolean> = HashMap()
-                            hashMap.put("isCalling", false)
-                            postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-                        }
-                    }
+//                mDbRef.child("user").child(friendUid).addValueEventListener(object : ValueEventListener{
+//                    override fun onDataChange(snapshot: DataSnapshot) {
+//                        for (postSnapshot in snapshot.children) {
+//                            val hashMap: HashMap<String, Boolean> = HashMap()
+//                            hashMap.put("calling", false)
+//                            postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+//                        }
+//                    }
+//
+//                    override fun onCancelled(error: DatabaseError) {
+//
+//                    }
+//
+//                })
 
-                    override fun onCancelled(error: DatabaseError) {
-
-                    }
-
-                })
+                FirebaseDatabase.getInstance().reference.child("user").child(friendUid).child("calling").setValue(false)
             }
 
         })

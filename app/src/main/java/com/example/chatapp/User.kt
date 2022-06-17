@@ -11,12 +11,12 @@ class User: Serializable {
     var calling: Boolean = false
 
     constructor() {}
-    constructor(name: String?, email: String?, uid: String?, status: String?, avatar: String?, isCalling: Boolean) {
+    constructor(name: String?, email: String?, uid: String?, status: String?, avatar: String?, calling: Boolean) {
         this.name = name
         this.email = email
         this.uid = uid
         this.status = status
         this.avatar = avatar
-        this.calling = isCalling
+        this.calling = calling
     }
 }

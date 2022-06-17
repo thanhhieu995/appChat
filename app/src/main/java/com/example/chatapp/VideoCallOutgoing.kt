@@ -9,7 +9,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.chatapp.chat.ChatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 
@@ -21,6 +22,8 @@ class VideoCallOutgoing : AppCompatActivity() {
     var hasMore: Boolean = false
     lateinit var userLogin: User
     lateinit var userFriend: User
+
+    lateinit var mDbRef: DatabaseReference
 
     lateinit var txtNameOutgoing: TextView
     lateinit var imgAvatarOutgoing: ImageView
@@ -55,6 +58,26 @@ class VideoCallOutgoing : AppCompatActivity() {
            }
 
         btnDecline.setOnClickListener {
+
+//            mDbRef.child("user").child(loginUid).addValueEventListener(object : ValueEventListener{
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    for (postSnapshot in snapshot.children) {
+//                        val user = postSnapshot.getValue<User>()
+//                        if (loginUid == user?.uid) {
+//                            val hashMap: HashMap<String, Boolean> = HashMap()
+//                            hashMap.put("calling", false)
+//                            postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+//                        }
+//                    }
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//
+//                }
+//
+//            })
+            FirebaseDatabase.getInstance().reference.child("user").child(loginUid).child("calling").setValue(false)
+
             val intent = Intent(this@VideoCallOutgoing, ChatActivity::class.java)
             intent.putExtra("uidLogin", loginUid)
             intent.putExtra("uidFriend", friendUid)

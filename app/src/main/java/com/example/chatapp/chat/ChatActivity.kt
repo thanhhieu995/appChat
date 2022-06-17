@@ -129,7 +129,7 @@ class ChatActivity : AppCompatActivity() {
                     if (user != null && user.uid == friendUid) {
                         //statusFriend = user.status
                         addStatusFriend(user.status)
-                        isCalled = user.calling
+                        //isCalled = user.calling
                         if (user.calling) {
                             val intent = Intent(this@ChatActivity, VideoCallIncoming::class.java)
                             intent.putExtra("loginUid", loginUid)
@@ -436,29 +436,56 @@ class ChatActivity : AppCompatActivity() {
         }
 
         if (item.itemId == R.id.videoCall_bar) {
-            isCalled = true
-            mDbRef.child("chats").child("user").child(loginUid!!).addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    for (postSnapshot in snapshot.children) {
-                        val user = postSnapshot.getValue<User>()
-                        if (loginUid == user?.uid) {
-                            val hashMap: HashMap<String, Boolean> = HashMap()
-                            hashMap.put("isCalling", true)
-                            postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-                        }
-                    }
-                }
+            //isCalled = true
 
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-
-            })
+            FirebaseDatabase.getInstance().reference.child("user").child(loginUid.toString()).child("calling").setValue(true)
+//            mDbRef.child("user").child(loginUid.toString()).addChildEventListener(object : ChildEventListener{
+//                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+//
+//                }
+//
+//                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+////                    val hashMap: HashMap<String, Boolean> = HashMap()
+////                    hashMap.put("calling", true)
+////                    snapshot.ref.updateChildren(hashMap as Map<String, Any>)
+//                }
+//
+//                override fun onChildRemoved(snapshot: DataSnapshot) {
+//
+//                }
+//
+//                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+//
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//
+//                }
+//
+//            })
+//            mDbRef.child("user").child(loginUid.toString()).addChildEventListener() {
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    for (postSnapshot in snapshot.children) {
+//                        val user = postSnapshot.getValue<User>()
+//                        if (loginUid == user?.uid) {
+//                            val hashMap: HashMap<String, Boolean> = HashMap()
+//                            hashMap.put("calling", true)
+//                            postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+//                        }
+//                    }
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//
+//                }
+//
+//            })
+            //mDbRef.child("user").child(loginUid.toString())
 
             //mDbRef.ref.updateChildren(hashMap as Map<String, Any>)
             //FirebaseDatabase.getInstance().reference.child("chats")
             Toast.makeText(this, "video call is ready", Toast.LENGTH_SHORT).show()
-            var intent = Intent(this@ChatActivity, VideoCallOutgoing::class.java)
+            val intent = Intent(this@ChatActivity, VideoCallOutgoing::class.java)
             intent.putExtra("uidLogin", loginUid)
             intent.putExtra("uidFriend", friendUid)
             intent.putExtra("hasMore", hasMore)
@@ -490,11 +517,11 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    private fun inComingCall() {
-        if (isCalled) {
-            val intent = Intent(this@ChatActivity, VideoCallIncoming::class.java)
-            startActivity(intent)
-        }
-    }
+//    private fun inComingCall() {
+//        if (isCalled) {
+//            val intent = Intent(this@ChatActivity, VideoCallIncoming::class.java)
+//            startActivity(intent)
+//        }
+//    }
 }
 
