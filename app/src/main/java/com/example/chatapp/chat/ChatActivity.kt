@@ -177,6 +177,7 @@ class ChatActivity : AppCompatActivity() {
             loadDataRoomReceive()
         }
 
+        inComingCall()
     }
 
     private fun addStatusFriend(status: String?) {
@@ -222,6 +223,7 @@ class ChatActivity : AppCompatActivity() {
         hasMore = false
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("hasMore", hasMore)
+        startActivity(intent)
     }
 
     private fun loadDataRoomSend() {
@@ -451,6 +453,13 @@ class ChatActivity : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
             false
+        }
+    }
+
+    fun inComingCall() {
+        if (roomSender == roomReceiver) {
+            val intent = Intent(this@ChatActivity, VideoCallIncoming::class.java)
+            startActivity(intent)
         }
     }
 }

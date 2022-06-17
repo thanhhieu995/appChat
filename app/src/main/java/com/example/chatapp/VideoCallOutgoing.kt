@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.example.chatapp.chat.ChatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.FirebaseDatabase
@@ -14,7 +15,7 @@ import com.squareup.picasso.Picasso
 
 class VideoCallOutgoing : AppCompatActivity() {
 
-    lateinit var btnDecline: FloatingActionButton
+    private lateinit var btnDecline: FloatingActionButton
     var loginUid: String = ""
     var friendUid: String = ""
     var hasMore: Boolean = false
@@ -38,6 +39,14 @@ class VideoCallOutgoing : AppCompatActivity() {
         userLogin = intent.getSerializableExtra("userLogin") as User
         userFriend = intent.getSerializableExtra("userFriend") as User
 
+        val bundle: Bundle? = intent.extras
+
+        if (bundle != null) {
+
+        } else {
+            Toast.makeText(this, "Data missing", Toast.LENGTH_LONG).show()
+        }
+
         txtNameOutgoing.text = userFriend.name
 
        FirebaseStorage.getInstance().reference.child("images").child(friendUid)
@@ -54,5 +63,12 @@ class VideoCallOutgoing : AppCompatActivity() {
             intent.putExtra("userFriend", userFriend)
             startActivity(intent)
         }
+
+//        val roomA: String = loginUid + friendUid
+//        val roomB: String = friendUid + loginUid
+//
+//        if (roomA == roomB) {
+//
+//        }
     }
 }
