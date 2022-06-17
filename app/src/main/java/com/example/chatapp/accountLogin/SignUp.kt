@@ -31,6 +31,8 @@ class SignUp : AppCompatActivity() {
 
     var hasMore: Boolean = false
 
+    var isCalling: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -80,7 +82,7 @@ class SignUp : AppCompatActivity() {
     private fun addUserToDatabase(name: String, email: String, uid: String, status: String, avatar: String?) {
         mDbRef = FirebaseDatabase.getInstance().reference
 
-        mDbRef.child("user").child(uid).setValue(User(name, email, uid, status, avatar))
+        mDbRef.child("user").child(uid).setValue(User(name, email, uid, status, avatar, isCalling))
     }
 
     private fun checkUserExist(email: String?) {

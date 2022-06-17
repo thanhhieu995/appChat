@@ -14,6 +14,7 @@ import com.example.chatapp.*
 import com.example.chatapp.R
 import com.example.chatapp.main.MainActivity
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -56,6 +57,8 @@ class ChatActivity : AppCompatActivity() {
     var dateExam: Date = Date(-2,-2, -2)
 
     var noAvatarMessage: Boolean = false
+
+    var isCalling: Boolean = false
 
     var secondExam: Int = -2
     var minuteExam: Int = -2
@@ -177,7 +180,7 @@ class ChatActivity : AppCompatActivity() {
             loadDataRoomReceive()
         }
 
-        inComingCall()
+        //inComingCall()
     }
 
     private fun addStatusFriend(status: String?) {
@@ -423,6 +426,27 @@ class ChatActivity : AppCompatActivity() {
         }
 
         if (item.itemId == R.id.videoCall_bar) {
+            isCalling = true
+            mDbRef.child("chats").child("user").addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (postSnapshot in snapshot.children) {
+                        val user = postSnapshot.getValue<User>()
+                        if (loginUid == user?.uid) {
+                            val hashMap: HashMap<String, Boolean> = HashMap()
+                            hashMap.put("isCalling", true)
+                            postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+
+            //mDbRef.ref.updateChildren(hashMap as Map<String, Any>)
+            //FirebaseDatabase.getInstance().reference.child("chats")
             Toast.makeText(this, "video call is ready", Toast.LENGTH_SHORT).show()
             var intent = Intent(this@ChatActivity, VideoCallOutgoing::class.java)
             intent.putExtra("uidLogin", loginUid)
@@ -456,8 +480,8 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    fun inComingCall() {
-        if (roomSender == roomReceiver) {
+    private fun inComingCall() {
+        if (isCalling) {
             val intent = Intent(this@ChatActivity, VideoCallIncoming::class.java)
             startActivity(intent)
         }
