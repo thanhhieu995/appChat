@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_chat.*
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -50,21 +51,6 @@ class VideoCallIncoming : AppCompatActivity() {
         userLogin = intent.getSerializableExtra("userLogin") as User
         userFriend = intent.getSerializableExtra("userFriend") as User
 
-        database.reference.child("user").addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-
-                } else {
-
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
-
         txtName.text = userFriend.name
 
         FirebaseStorage.getInstance().reference.child("images").child(friendUid).downloadUrl.addOnSuccessListener {
@@ -100,5 +86,32 @@ class VideoCallIncoming : AppCompatActivity() {
             }
 
         })
+
+        database.reference.child("user").child(friendUid).addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val user: User? = snapshot.getValue(User::class.java)
+                if (user != null && user.uid == friendUid) {
+                    if (!user.calling) {
+                        val intent = Intent(this@VideoCallIncoming, ChatActivity::class.java)
+                        intent.putExtra("uidLogin", loginUid)
+                        intent.putExtra("uidFriend", friendUid)
+                        intent.putExtra("hasMore", hasMore)
+                        intent.putExtra("userLogin", userLogin)
+                        intent.putExtra("userFriend", userFriend)
+                        startActivity(intent)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 }

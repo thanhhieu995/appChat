@@ -28,6 +28,8 @@ class VideoCallOutgoing : AppCompatActivity() {
     lateinit var txtNameOutgoing: TextView
     lateinit var imgAvatarOutgoing: ImageView
 
+    lateinit var database: FirebaseDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_call_outgoing)
@@ -36,19 +38,21 @@ class VideoCallOutgoing : AppCompatActivity() {
         txtNameOutgoing = findViewById(R.id.txtName_outgoing)
         imgAvatarOutgoing = findViewById(R.id.img_avatar_outgoing)
 
+        database = FirebaseDatabase.getInstance()
+
         loginUid = intent.getSerializableExtra("uidLogin") as String
         friendUid = intent.getSerializableExtra("uidFriend") as String
         hasMore = intent.getBooleanExtra("hasMore", false)
         userLogin = intent.getSerializableExtra("userLogin") as User
         userFriend = intent.getSerializableExtra("userFriend") as User
 
-        val bundle: Bundle? = intent.extras
-
-        if (bundle != null) {
-
-        } else {
-            Toast.makeText(this, "Data missing", Toast.LENGTH_LONG).show()
-        }
+//        val bundle: Bundle? = intent.extras
+//
+//        if (bundle != null) {
+//
+//        } else {
+//            Toast.makeText(this, "Data missing", Toast.LENGTH_LONG).show()
+//        }
 
         txtNameOutgoing.text = userFriend.name
 
@@ -58,24 +62,6 @@ class VideoCallOutgoing : AppCompatActivity() {
            }
 
         btnDecline.setOnClickListener {
-
-//            mDbRef.child("user").child(loginUid).addValueEventListener(object : ValueEventListener{
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    for (postSnapshot in snapshot.children) {
-//                        val user = postSnapshot.getValue<User>()
-//                        if (loginUid == user?.uid) {
-//                            val hashMap: HashMap<String, Boolean> = HashMap()
-//                            hashMap.put("calling", false)
-//                            postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-//                        }
-//                    }
-//                }
-//
-//                override fun onCancelled(error: DatabaseError) {
-//
-//                }
-//
-//            })
             FirebaseDatabase.getInstance().reference.child("user").child(loginUid).child("calling").setValue(false)
 
             val intent = Intent(this@VideoCallOutgoing, ChatActivity::class.java)
@@ -86,12 +72,30 @@ class VideoCallOutgoing : AppCompatActivity() {
             intent.putExtra("userFriend", userFriend)
             startActivity(intent)
         }
+    }
 
-//        val roomA: String = loginUid + friendUid
-//        val roomB: String = friendUid + loginUid
+    override fun onResume() {
+        super.onResume()
+//        database.reference.child("user").child(friendUid).addValueEventListener(object : ValueEventListener{
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                val user: User? = snapshot.getValue(User::class.java)
+//                if (user != null && user.uid == friendUid) {
+//                    if (!user.calling) {
+//                        val intent = Intent(this@VideoCallOutgoing, ChatActivity::class.java)
+//                        intent.putExtra("uidLogin", loginUid)
+//                        intent.putExtra("uidFriend", friendUid)
+//                        intent.putExtra("hasMore", hasMore)
+//                        intent.putExtra("userLogin", userLogin)
+//                        intent.putExtra("userFriend", userFriend)
+//                        startActivity(intent)
+//                    }
+//                }
+//            }
 //
-//        if (roomA == roomB) {
+//            override fun onCancelled(error: DatabaseError) {
 //
-//        }
+//            }
+//
+//        })
     }
 }

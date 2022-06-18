@@ -153,6 +153,16 @@ class ChatActivity : AppCompatActivity() {
         super.onResume()
         hasMore = intent.getBooleanExtra("hasMore", false)
 
+        friendUid = intent.getSerializableExtra("uidFriend") as String?
+
+        loginUid = intent.getSerializableExtra("uidLogin") as String?
+
+        hasMore = intent.getBooleanExtra("hasMore", false)
+
+        userLogin = intent.getSerializableExtra("userLogin") as User
+
+        userFriend = intent.getSerializableExtra("userFriend") as User
+
         if (hasMore) {
             loadDataRoomSend()
             secondExam = -2
@@ -166,6 +176,7 @@ class ChatActivity : AppCompatActivity() {
         }
 
         statusAndCall()
+        //chatAdapter.notifyDataSetChanged()
     }
 
     private fun addStatusFriend(status: String?) {
