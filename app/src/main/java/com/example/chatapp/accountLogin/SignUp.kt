@@ -33,6 +33,8 @@ class SignUp : AppCompatActivity() {
 
     var isCalling: Boolean = false
 
+    var acceptCall: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -51,7 +53,7 @@ class SignUp : AppCompatActivity() {
             val password = edtPassword.text.toString()
             val name = edtName.text.toString().trim()
 
-            signUp(email, password, name, status.toString(), avatar, isCalling)
+            signUp(email, password, name, status.toString(), avatar, isCalling, acceptCall)
             hasMore = true
             checkUserExist(email)
         }
@@ -62,14 +64,14 @@ class SignUp : AppCompatActivity() {
         hasMore = true
     }
 
-    private fun signUp(email: String, password: String, name: String, status: String, avatar: String?, isCalling: Boolean) {
+    private fun signUp(email: String, password: String, name: String, status: String, avatar: String?, isCalling: Boolean, acceptCall: Boolean) {
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(name)) {
             Toast.makeText(this@SignUp, "please fill all the fields", Toast.LENGTH_SHORT).show()
         } else {
             mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        addUserToDatabase(name, email, mAuth.currentUser?.uid!!, status, avatar, isCalling)
+                        addUserToDatabase(name, email, mAuth.currentUser?.uid!!, status, avatar, isCalling, acceptCall)
                         val intent = Intent(this@SignUp, SetUpActivity::class.java)
                         intent.putExtra("uid", mAuth.currentUser?.uid)
                         startActivity(intent)
@@ -79,10 +81,10 @@ class SignUp : AppCompatActivity() {
         }
     }
 
-    private fun addUserToDatabase(name: String, email: String, uid: String, status: String, avatar: String?, isCalling: Boolean) {
+    private fun addUserToDatabase(name: String, email: String, uid: String, status: String, avatar: String?, isCalling: Boolean, acceptCall: Boolean) {
         mDbRef = FirebaseDatabase.getInstance().reference
 
-        mDbRef.child("user").child(uid).setValue(User(name, email, uid, status, avatar, isCalling))
+        mDbRef.child("user").child(uid).setValue(User(name, email, uid, status, avatar, isCalling, acceptCall))
     }
 
     private fun checkUserExist(email: String?) {

@@ -76,26 +76,26 @@ class VideoCallOutgoing : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-//        database.reference.child("user").child(friendUid).addValueEventListener(object : ValueEventListener{
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                val user: User? = snapshot.getValue(User::class.java)
-//                if (user != null && user.uid == friendUid) {
-//                    if (!user.calling) {
-//                        val intent = Intent(this@VideoCallOutgoing, ChatActivity::class.java)
-//                        intent.putExtra("uidLogin", loginUid)
-//                        intent.putExtra("uidFriend", friendUid)
-//                        intent.putExtra("hasMore", hasMore)
-//                        intent.putExtra("userLogin", userLogin)
-//                        intent.putExtra("userFriend", userFriend)
-//                        startActivity(intent)
-//                    }
-//                }
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//
-//            }
-//
-//        })
+        database.reference.child("user").child(loginUid).addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val user: User? = snapshot.getValue(User::class.java)
+                if (user != null && user.uid == loginUid) {
+                    if (!user.calling) {
+                        val intent = Intent(this@VideoCallOutgoing, ChatActivity::class.java)
+                        intent.putExtra("uidLogin", loginUid)
+                        intent.putExtra("uidFriend", friendUid)
+                        intent.putExtra("hasMore", hasMore)
+                        intent.putExtra("userLogin", userLogin)
+                        intent.putExtra("userFriend", userFriend)
+                        startActivity(intent)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 }
