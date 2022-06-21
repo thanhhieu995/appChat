@@ -21,6 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatApp">
         <activity
+            android:name=".RoomCallActivity"
+            android:exported="false" />
+        <activity
             android:name=".WebrtcActivity"
             android:exported="false" />
         <activity

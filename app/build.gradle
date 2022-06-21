@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.chatapp"
-        minSdk 21
+        minSdk 24
         targetSdk 31
         versionCode 1
         versionName "1.0"
@@ -60,6 +60,7 @@ dependencies {
 
     implementation platform('com.google.firebase:firebase-bom:29.2.1')
     implementation 'com.google.firebase:firebase-analytics-ktx'
+
 }
 
 apply plugin: 'com.android.application'

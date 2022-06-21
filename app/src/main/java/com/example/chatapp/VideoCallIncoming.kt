@@ -59,21 +59,6 @@ class VideoCallIncoming : AppCompatActivity() {
 
         btnDecline.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
-//                mDbRef.child("user").child(friendUid).addValueEventListener(object : ValueEventListener{
-//                    override fun onDataChange(snapshot: DataSnapshot) {
-//                        for (postSnapshot in snapshot.children) {
-//                            val hashMap: HashMap<String, Boolean> = HashMap()
-//                            hashMap.put("calling", false)
-//                            postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-//                        }
-//                    }
-//
-//                    override fun onCancelled(error: DatabaseError) {
-//
-//                    }
-//
-//                })
-
                 FirebaseDatabase.getInstance().reference.child("user").child(friendUid).child("calling").setValue(false)
 
                 val intent = Intent(this@VideoCallIncoming, ChatActivity::class.java)
@@ -85,6 +70,12 @@ class VideoCallIncoming : AppCompatActivity() {
                 startActivity(intent)
             }
 
+        })
+
+        btnAccept.setOnClickListener(object : View.OnClickListener{
+            override fun onClick(v: View?) {
+                FirebaseDatabase.getInstance().reference.child("user").child(loginUid).child("acceptCall").setValue(true)
+            }
         })
 
         database.reference.child("user").child(friendUid).addValueEventListener(object : ValueEventListener{
