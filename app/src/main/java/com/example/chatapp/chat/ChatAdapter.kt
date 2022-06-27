@@ -2,6 +2,7 @@ package com.example.chatapp.chat
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.LayoutInflater
@@ -13,9 +14,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
 import com.example.chatapp.MessageDiffUtil
+import com.example.chatapp.ProfileActivity
 import com.example.chatapp.R
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.receive.view.*
 
 class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -70,6 +73,13 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
 
         } else {
             val viewHolder = holder as ReceiveViewHolder
+
+            viewHolder.img_avatar.setOnClickListener {
+                val intent = Intent(context, ProfileActivity::class.java)
+
+                context.startActivity(intent)
+            }
+
 
             viewHolder.receiveMessage.text = currentMessage.message
             viewHolder.time_receive.text = currentMessage.time
