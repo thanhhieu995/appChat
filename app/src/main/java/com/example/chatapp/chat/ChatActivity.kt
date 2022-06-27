@@ -483,8 +483,13 @@ class ChatActivity : AppCompatActivity() {
 
         if (item.itemId == R.id.action_name_title) {
             val intent = Intent(this@ChatActivity, ProfileActivity::class.java)
-            intent.putExtra("uid", friendUid)
-            intent.putExtra("name", nameFriend)
+//            intent.putExtra("uid", friendUid)
+//            intent.putExtra("name", nameFriend)
+            intent.putExtra("uidLogin", loginUid)
+            intent.putExtra("uidFriend", friendUid)
+            intent.putExtra("hasMore", hasMore)
+            intent.putExtra("userLogin", userLogin)
+            intent.putExtra("userFriend", userFriend)
             startActivity(intent)
         }
         return false

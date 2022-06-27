@@ -1,47 +1,23 @@
 package com.example.chatapp.main
 
-import android.annotation.SuppressLint
-import android.app.ActionBar
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import android.widget.Toolbar
-import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SearchView
-import androidx.core.graphics.green
-import androidx.core.graphics.red
-import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.chatapp.ProfileActivity
+import com.example.chatapp.ProfileLoginActivity
 import com.example.chatapp.R
 import com.example.chatapp.User
 import com.example.chatapp.accountLogin.LogIn
-import com.example.chatapp.chat.ChatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.actionbar_title.*
-import kotlinx.android.synthetic.main.actionbar_title.view.*
-import java.io.File
-import java.net.URI
 
 class MainActivity : AppCompatActivity() {
 
@@ -62,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     var title: String = ""
 
-    var user: User = User()
+    var userLogin: User = User()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -135,7 +111,7 @@ class MainActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (postSnapshot in snapshot.children) {
                     if (postSnapshot.getValue(User::class.java)?.uid == mAuth.currentUser?.uid) {
-                        menuItem.title = user.name
+                        menuItem.title = userLogin.name
                         //menuItem.setTitle(titleColor.red)
                     }
                 }
@@ -164,14 +140,18 @@ class MainActivity : AppCompatActivity() {
             finish()
             return true
         } else if (item.itemId == R.id.action_name_title) {
-            val intent = Intent(this@MainActivity, ProfileActivity::class.java)
-            //intent.putExtra("user", user)
-            intent.putExtra("uid", user.uid)
-            intent.putExtra("name", user.name)
+            val intent = Intent(this@MainActivity, ProfileLoginActivity::class.java)
+//            //intent.putExtra("user", user)
+//            intent.putExtra("uid", user.uid)
+//            intent.putExtra("name", user.name)
             startActivity(intent)
-            finish()
+//            finish()
         }
         return false
+    }
+
+    fun popUpProfileLoginUser() {
+
     }
 
     private fun statusAccount(Uid: String? ) {
@@ -216,8 +196,8 @@ class MainActivity : AppCompatActivity() {
                         userList.add(postSnapshot.getValue(User::class.java)!!)
                         adapter.notifyDataSetChanged()
                     } else {
-                        user = postSnapshot.getValue(User::class.java)!!
-                        adapter.addUserLogin(user)
+                        userLogin = postSnapshot.getValue(User::class.java)!!
+                        adapter.addUserLogin(userLogin)
                     }
                 }
             }

@@ -1,8 +1,6 @@
 package com.example.chatapp
 
 import android.annotation.SuppressLint
-import android.app.Dialog
-import android.app.SearchManager
 import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -10,25 +8,23 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.graphics.toColorInt
 import com.example.chatapp.accountLogin.SetUpActivity
-import com.example.chatapp.main.MainActivity
+import com.example.chatapp.chat.ChatActivity
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.popup.*
-import org.w3c.dom.Text
-import java.io.Serializable
 
 class ProfileActivity : AppCompatActivity() {
 
     private val storeRef = FirebaseStorage.getInstance().reference
     private lateinit var imageDialog: AlertDialog.Builder
     private lateinit var imgProfile: ImageView
-    private var uid: String? = ""
+    private var loginUid: String? = ""
+    var friendUid: String? = ""
+    var hasMore: Boolean = false
+    lateinit var userLogin: User
+    lateinit var userFriend: User
 
-    var nameFriend: String? = ""
     lateinit var userName: TextView
 
     @SuppressLint("ResourceType")
@@ -39,13 +35,16 @@ class ProfileActivity : AppCompatActivity() {
         imgProfile = findViewById(R.id.profile_image)
         userName = findViewById(R.id.username)
         //val user: Serializable? = intent.getSerializableExtra("user")
-        uid = intent.getSerializableExtra("uid") as String?
-        nameFriend = intent.getStringExtra("name")
+        loginUid = intent.getSerializableExtra("uidLogin") as String?
+        friendUid = intent.getSerializableExtra("uidFriend") as String?
+        hasMore = intent.getSerializableExtra("hasMore") as Boolean
+        userLogin = intent.getSerializableExtra("userLogin") as User
+        userFriend = intent.getSerializableExtra("userFriend") as User
 
-        userName.text = nameFriend
+        userName.text = userFriend.name
 
-        if (uid != null) {
-            storeRef.child("images").child(uid!!).downloadUrl.addOnSuccessListener {
+        if (loginUid != null) {
+            storeRef.child("images").child(loginUid!!).downloadUrl.addOnSuccessListener {
                 Picasso.get().load(it).into(imgProfile)
             }
         }
@@ -56,7 +55,7 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        storeRef.child("images").child(uid!!).downloadUrl.addOnSuccessListener {
+        storeRef.child("images").child(loginUid!!).downloadUrl.addOnSuccessListener {
             Picasso.get().load(it).into(imgProfile)
         }
     }
@@ -74,14 +73,14 @@ class ProfileActivity : AppCompatActivity() {
         imageDialog.setPositiveButton("view image profile", DialogInterface.OnClickListener { dialog, which ->
             //Toast.makeText(this, "success", Toast.LENGTH_LONG).show()
             val intent = Intent(this@ProfileActivity, ViewProfileActivity::class.java)
-            intent.putExtra("uid", uid)
+            intent.putExtra("uid", loginUid)
             startActivity(intent)
         })
 
         imageDialog.setNegativeButton("Edit image profile", DialogInterface.OnClickListener { dialog, which ->
             //Toast.makeText(this, "edit", Toast.LENGTH_LONG).show()
             val intent = Intent(this@ProfileActivity, SetUpActivity::class.java)
-            intent.putExtra("uid", uid)
+            intent.putExtra("uid", loginUid)
             startActivity(intent)
         })
 
@@ -90,8 +89,13 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val intent = Intent(this@ProfileActivity, MainActivity::class.java)
-        startActivity(intent)
         super.onBackPressed()
+        val intent = Intent(this@ProfileActivity, ChatActivity::class.java)
+        intent.putExtra("uidLogin", loginUid)
+        intent.putExtra("uidFriend", friendUid)
+        intent.putExtra("hasMore", hasMore)
+        intent.putExtra("userLogin", userLogin)
+        intent.putExtra("userFriend", userFriend)
+        startActivity(intent)
     }
 }
