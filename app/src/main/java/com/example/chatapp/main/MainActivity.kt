@@ -144,6 +144,7 @@ class MainActivity : AppCompatActivity() {
 //            //intent.putExtra("user", user)
 //            intent.putExtra("uid", user.uid)
 //            intent.putExtra("name", user.name)
+            intent.putExtra("userLogin", userLogin)
             startActivity(intent)
 //            finish()
         }
