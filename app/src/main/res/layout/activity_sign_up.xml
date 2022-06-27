@@ -7,7 +7,7 @@
     tools:context=".accountLogin.SignUp">
 
     <ImageView
-        android:id="@+id/imgLogo"
+        android:id="@+id/imgLogo_signUp"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_centerHorizontal="true"
@@ -15,10 +15,10 @@
         app:srcCompat="@drawable/geek" />
 
     <EditText
-        android:id="@+id/edt_email"
+        android:id="@+id/edt_email_signUp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@+id/edt_name"
+        android:layout_below="@+id/edt_name_signUp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
@@ -28,10 +28,10 @@
         android:textSize="16sp" />
 
     <EditText
-        android:id="@+id/edt_name"
+        android:id="@+id/edt_name_signUp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@+id/imgLogo"
+        android:layout_below="@+id/imgLogo_signUp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/edt_background"
@@ -40,10 +40,10 @@
         android:textSize="16sp" />
 
     <EditText
-        android:id="@+id/edt_password"
+        android:id="@+id/edt_password_signUp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@+id/edt_email"
+        android:layout_below="@+id/edt_email_signUp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
@@ -57,7 +57,7 @@
         android:id="@+id/btn_signup"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edt_password"
+        android:layout_below="@id/edt_password_signUp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:background="@drawable/btn_background"

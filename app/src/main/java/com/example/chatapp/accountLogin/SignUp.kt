@@ -7,7 +7,6 @@ import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.example.chatapp.main.MainActivity
 import com.example.chatapp.R
 import com.example.chatapp.User
 import com.google.firebase.auth.FirebaseAuth
@@ -41,9 +40,9 @@ class SignUp : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        edtEmail = findViewById(R.id.edt_email)
-        edtPassword = findViewById(R.id.edt_password)
-        edtName = findViewById(R.id.edt_name)
+        edtEmail = findViewById(R.id.edt_email_signUp)
+        edtPassword = findViewById(R.id.edt_password_signUp)
+        edtName = findViewById(R.id.edt_name_signUp)
        // avatar = findViewById(R.id.imgAva_main)
 
         mAuth = FirebaseAuth.getInstance()

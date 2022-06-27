@@ -1,21 +1,17 @@
 package com.example.chatapp.accountLogin
 
-import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.text.TextUtils
-import android.util.Log
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import com.example.chatapp.main.MainActivity
 import com.example.chatapp.R
-import com.example.chatapp.User
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -34,6 +30,14 @@ class LogIn : AppCompatActivity() {
 
     private lateinit var mDbRef: DatabaseReference
 
+    lateinit var strCheckbox: String
+    lateinit var strEmail: String
+    lateinit var strPassword: String
+
+    lateinit var checkBox: CheckBox
+    private lateinit var sharedPreferences: SharedPreferences
+    lateinit var editor: SharedPreferences.Editor
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
@@ -42,8 +46,14 @@ class LogIn : AppCompatActivity() {
 
         edtEmail = findViewById(R.id.edt_email)
         edtPassword = findViewById(R.id.edt_password)
+        checkBox = findViewById(R.id.checkRemember)
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        editor = sharedPreferences.edit()
 
         mAuth = FirebaseAuth.getInstance()
+
+        checkSharedPreference()
 
         btn_signup.setOnClickListener {
             val intent = Intent(this, SignUp::class.java)
@@ -54,6 +64,7 @@ class LogIn : AppCompatActivity() {
             val email = edtEmail.text.toString().trim()
             val password = edtPassword.text.toString()
 
+            checkBoxChecked()
             login(email, password)
         }
 
@@ -89,28 +100,36 @@ class LogIn : AppCompatActivity() {
         }
     }
 
-    private fun statusAccount(loginUid: String? ) {
-        val studentRef = FirebaseDatabase.getInstance().getReference("user").child(loginUid!!)
-        val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
+    private fun checkBoxChecked() {
+        if (checkBox.isChecked) {
+            editor.putString("checkRemember", "True")
+            editor.apply()
+            strEmail = edtEmail.text.toString()
+            editor.putString("email", strEmail)
+            editor.commit()
+            strPassword = edtPassword.text.toString()
+            editor.putString("password", strPassword)
+            editor.commit()
+        } else {
+            editor.putString("checkRemember", "False")
+            editor.commit()
+            editor.putString("email", "")
+            editor.commit()
+            editor.putString("password", "")
+            editor.commit()
+        }
+    }
 
-        connectedRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val connected = snapshot.getValue(Boolean::class.java)!!
-                if (connected) {
-                    if (hasMore) {
-                        studentRef.child("status").setValue("offline!!!")
-                    } else {
-                        studentRef.child("status").onDisconnect().setValue("offline!")
-                        studentRef.child("status").setValue("online")
-                    }
-                } else {
-                    studentRef.child("status").setValue("offline")
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-        })
+    private fun checkSharedPreference() {
+        //strCheckBox = sharedPreferences.getString(getString(R.id.checkRemember), "False").toString()
+        strCheckbox = sharedPreferences.getString("checkRemember", "False").toString()
+        strEmail = sharedPreferences.getString("email", "").toString()
+        strPassword = sharedPreferences.getString("password", "").toString()
+        edtEmail.setText(strEmail)
+        edtPassword.setText(strPassword)
+        //checkBox.isChecked = strCheckbox == "True"
+        if (strCheckbox == "True") {
+            checkBox.isChecked = strCheckbox.toBoolean()
+        }
     }
 }
