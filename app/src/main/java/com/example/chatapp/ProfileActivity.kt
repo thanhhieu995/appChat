@@ -43,26 +43,29 @@ class ProfileActivity : AppCompatActivity() {
 
         userName.text = userFriend.name
 
-        if (loginUid != null) {
-            storeRef.child("images").child(loginUid!!).downloadUrl.addOnSuccessListener {
+        if (friendUid != null) {
+            storeRef.child("images").child(friendUid!!).downloadUrl.addOnSuccessListener {
                 Picasso.get().load(it).into(imgProfile)
             }
         }
         imgProfile.setOnClickListener(View.OnClickListener {
-            popUp()
+            //popUp()
+            val intent = Intent(this@ProfileActivity, ViewProfileActivity::class.java)
+            intent.putExtra("uid", friendUid)
+            startActivity(intent)
         })
     }
 
     override fun onResume() {
         super.onResume()
-        storeRef.child("images").child(loginUid!!).downloadUrl.addOnSuccessListener {
+        storeRef.child("images").child(friendUid!!).downloadUrl.addOnSuccessListener {
             Picasso.get().load(it).into(imgProfile)
         }
     }
 
     private fun popUp() {
         imageDialog = AlertDialog.Builder(this@ProfileActivity)
-        val layout: View = View.inflate(this, R.layout.popup, null)
+        //val layout: View = View.inflate(this, R.layout.popup, null)
         //imageDialog.setTitle("Choose an item")
         //imageDialog.setMessage("What will you choose?")
         //imageDialog.setView(layout)
@@ -73,14 +76,14 @@ class ProfileActivity : AppCompatActivity() {
         imageDialog.setPositiveButton("view image profile", DialogInterface.OnClickListener { dialog, which ->
             //Toast.makeText(this, "success", Toast.LENGTH_LONG).show()
             val intent = Intent(this@ProfileActivity, ViewProfileActivity::class.java)
-            intent.putExtra("uid", loginUid)
+            intent.putExtra("uid", friendUid)
             startActivity(intent)
         })
 
         imageDialog.setNegativeButton("Edit image profile", DialogInterface.OnClickListener { dialog, which ->
             //Toast.makeText(this, "edit", Toast.LENGTH_LONG).show()
             val intent = Intent(this@ProfileActivity, SetUpActivity::class.java)
-            intent.putExtra("uid", loginUid)
+            intent.putExtra("uid", friendUid)
             startActivity(intent)
         })
 
