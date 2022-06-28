@@ -177,6 +177,7 @@ class ChatActivity : AppCompatActivity() {
 
         statusAndCall()
         //chatAdapter.notifyDataSetChanged()
+        chatAdapter.setValueUser(userLogin, userFriend, hasMore)
     }
 
     private fun addStatusFriend(status: String?) {

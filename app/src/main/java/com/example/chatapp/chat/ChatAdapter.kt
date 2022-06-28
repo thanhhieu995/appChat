@@ -12,10 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.chatapp.Message
-import com.example.chatapp.MessageDiffUtil
-import com.example.chatapp.ProfileActivity
-import com.example.chatapp.R
+import com.example.chatapp.*
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.receive.view.*
@@ -33,6 +30,10 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
     private var friendUid: String? = ""
 
     var tmpSeen: Boolean = false
+
+    lateinit var userLogin: User
+    lateinit var userFriend: User
+    var hasMore: Boolean = false
 
     lateinit var old_Avatar: ImageView
     var new_Avatar: String? = null
@@ -76,7 +77,11 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
 
             viewHolder.img_avatar.setOnClickListener {
                 val intent = Intent(context, ProfileActivity::class.java)
-
+                intent.putExtra("uidLogin", userLogin.uid)
+                intent.putExtra("uidFriend", userFriend.uid)
+                intent.putExtra("hasMore", hasMore)
+                intent.putExtra("userLogin", userLogin)
+                intent.putExtra("userFriend", userFriend)
                 context.startActivity(intent)
             }
 
@@ -183,6 +188,12 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
         messageList.clear()
         messageList.addAll(newList)
         diffResult.dispatchUpdatesTo(this)
+    }
+
+    fun setValueUser(userLogin: User, userFriend: User, hasMore: Boolean) {
+        this.userLogin = userLogin
+        this.userFriend = userFriend
+        this.hasMore = hasMore
     }
 }
 
