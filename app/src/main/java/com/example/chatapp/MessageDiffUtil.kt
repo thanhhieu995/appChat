@@ -2,7 +2,7 @@ package com.example.chatapp
 
 import androidx.recyclerview.widget.DiffUtil
 
-class MessageDiffUtil(val oldList: ArrayList<Message>, val newList: ArrayList<Message>) : DiffUtil.Callback() {
+class MessageDiffUtil(private val oldList: ArrayList<Message>, private val newList: ArrayList<Message>) : DiffUtil.Callback() {
     override fun getOldListSize(): Int {
        return oldList.size
     }
@@ -12,7 +12,7 @@ class MessageDiffUtil(val oldList: ArrayList<Message>, val newList: ArrayList<Me
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].senderId == newList[newItemPosition].senderId
+        return oldList[oldItemPosition] == newList[newItemPosition]
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
@@ -23,15 +23,16 @@ class MessageDiffUtil(val oldList: ArrayList<Message>, val newList: ArrayList<Me
                 false
             oldList[oldItemPosition].noAvatarMessage != newList[newItemPosition].noAvatarMessage ->
                 false
-            oldList[oldItemPosition].date != newList[newItemPosition].date ->
-                false
             oldList[oldItemPosition].message != newList[newItemPosition].message ->
                 false
             oldList[oldItemPosition].seen != newList[newItemPosition].seen ->
                 false
+            oldList[oldItemPosition].time != newList[newItemPosition].time ->
+                false
             else -> {true}
         }
     }
+
 
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
         oldList[oldItemPosition] = newList[newItemPosition]

@@ -101,14 +101,15 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
 //                    .child("images").child(friendUid!!).downloadUrl.addOnSuccessListener {
 //                        new_Avatar = it
 //                    }
-                if (viewHolder.img_avatar.drawable == null) {
+               // if (viewHolder.img_avatar.drawable == null) {
                     FirebaseStorage.getInstance().reference.child("images")
                         .child(friendUid!!).downloadUrl.addOnSuccessListener { it ->
                             Picasso.get().load(it).into(viewHolder.img_avatar)
                             //new_Avatar = viewHolder.img_avatar
                             //Picasso.get().load(it).into(viewHolder.img_avatar)
                         }
-               }
+                    var url = FirebaseStorage.getInstance().reference.child("images").child(friendUid!!).downloadUrl
+              // }
             }
         }
 
@@ -185,8 +186,8 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
         val diffCallBack = MessageDiffUtil(messageList, newList)
         val diffResult = DiffUtil.calculateDiff(diffCallBack)
 
-        messageList.clear()
-        messageList.addAll(newList)
+        //messageList.clear()
+       // messageList.addAll(newList)
         diffResult.dispatchUpdatesTo(this)
     }
 
