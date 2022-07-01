@@ -28,9 +28,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageBox: EditText
     private lateinit var sentButton: ImageView
     private lateinit var chatAdapter: ChatAdapter
-    private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
-    private lateinit var newList: ArrayList<Message>
 
     private var roomSender: String? = null
     private var roomReceiver: String? = null
@@ -95,9 +93,7 @@ class ChatActivity : AppCompatActivity() {
         messageBox = findViewById(R.id.messageBox)
         sentButton = findViewById(R.id.img_sent)
 
-        messageList = ArrayList()
-        newList = ArrayList()
-        chatAdapter = ChatAdapter(this, messageList)
+        chatAdapter = ChatAdapter(this)
 
 
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -105,7 +101,7 @@ class ChatActivity : AppCompatActivity() {
 
         chatRecyclerView.adapter = chatAdapter
 
-        chatRecyclerView.scrollToPosition(messageList.size - 1)
+        chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
 
 
         date = Calendar.getInstance().time
@@ -135,9 +131,9 @@ class ChatActivity : AppCompatActivity() {
                 avatarReceiveUrl.toString()
             )
 
-            chatRecyclerView.scrollToPosition(messageList.size - 1)
+            chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
 
-            chatAdapter.notifyDataSetChanged()
+           // chatAdapter.notifyDataSetChanged()
         }
     }
 
@@ -158,7 +154,7 @@ class ChatActivity : AppCompatActivity() {
         if (hasMore) {
             loadDataRoomSend()
             //messageSender = Message("-2", "", "", "-2", false, dateExam, -2, -2, false)
-            loadDataRoomReceive()
+//            loadDataRoomReceive()
         }
 
         statusAndCall()
@@ -188,7 +184,7 @@ class ChatActivity : AppCompatActivity() {
             if (friendUid != null) {
                 //chatAdapter.addMessage(messageObject, loginUid, friendUid)
                 //newList = messageList
-                newList.add(messageObject)
+//                newList.add(messageObject)
                 chatAdapter.addUid(loginUid, friendUid)
             }
             mDbRef.child("chats").child(roomSender!!).child("messages").push()
@@ -202,9 +198,9 @@ class ChatActivity : AppCompatActivity() {
 
        // hideOrShowAvatarMess(messageObject)
 
-        chatAdapter.updateData(newList)
+//        chatAdapter.updateData(newList)
         messageBox.setText("")
-        chatRecyclerView.scrollToPosition(messageList.size - 1)
+        chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
     }
 
     override fun onBackPressed() {
@@ -221,8 +217,9 @@ class ChatActivity : AppCompatActivity() {
                 @SuppressLint("SetTextI18n")
                 override fun onDataChange(snapshot: DataSnapshot) {
 
-                    messageList.clear()
-                    newList.clear()
+                    val messageList = ArrayList<Message>()
+//                    messageList.clear()
+//                    newList.clear()
 
                     for (postSnapshot in snapshot.children) {
 
@@ -263,14 +260,13 @@ class ChatActivity : AppCompatActivity() {
 
                             // chatAdapter.addMessage(message, loginUid!!, friendUid!!)
                             messageList.add(message)
-                            newList.add(message)
+//                            newList.add(message)
                         }
-                        chatRecyclerView.adapter = chatAdapter
                     }
                     loginUid?.let { friendUid?.let { it1 -> chatAdapter.addUid(it, it1) } }
-                    chatAdapter.updateData(newList)
-                    chatAdapter.notifyDataSetChanged()
-                    chatRecyclerView.scrollToPosition(messageList.size - 1)
+                    chatAdapter.updateData(messageList)
+//                    chatAdapter.notifyDataSetChanged()
+                    chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -287,9 +283,9 @@ class ChatActivity : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     //messageSender = Message("-2", "", "", "-2", false, false)
 
-
+                    val messageList = ArrayList<Message>()
                     messageList.clear()
-                    newList.clear()
+//                    newList.clear()
 
                     for (postSnapshot in snapshot.children) {
                         val message = postSnapshot.getValue(Message::class.java)
@@ -323,14 +319,13 @@ class ChatActivity : AppCompatActivity() {
                         if (message != null) {
                            // chatAdapter.addMessage(message, loginUid!!, friendUid!!)
                             messageList.add(message)
-                            newList.add(message)
+//                            newList.add(message)
                         }
-                        chatRecyclerView.adapter = chatAdapter
                     }
                     loginUid?.let { friendUid?.let { it1 -> chatAdapter.addUid(it, it1) } }
-                    chatAdapter.updateData(newList)
-                    chatAdapter.notifyDataSetChanged()
-                    chatRecyclerView.scrollToPosition(messageList.size - 1)
+                    chatAdapter.updateData(messageList)
+//                    chatAdapter.notifyDataSetChanged()
+                    chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -445,7 +440,7 @@ class ChatActivity : AppCompatActivity() {
                             startActivity(intent)
                         }
 
-                        chatAdapter.notifyDataSetChanged()
+//                        chatAdapter.notifyDataSetChanged()
                     }
                 }
 

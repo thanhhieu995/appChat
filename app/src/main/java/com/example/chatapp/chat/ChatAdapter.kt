@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.receive.view.*
 
-class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
+class ChatAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val ITEM_RECEIVE = 1
@@ -28,6 +29,7 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
     var status: String? = ""
 
     private var friendUid: String? = ""
+    private val messageList = ArrayList<Message>()
 
     var tmpSeen: Boolean = false
 
@@ -54,9 +56,9 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
 
         val currentMessage = messageList[position]
 
-        if (holder.javaClass == SentViewHolder::class.java) {
+        if (holder is SentViewHolder) {
 
-            val viewHolder = holder as SentViewHolder
+            val viewHolder = holder
             viewHolder.sentMessage.text = currentMessage.message
             if (currentMessage.time != null) {
                 viewHolder.time_sent.text = currentMessage.time
@@ -86,17 +88,22 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
             }
 
 
+            Log.d("Hieu", "$viewHolder - bind ${currentMessage.message}")
+
             viewHolder.receiveMessage.text = currentMessage.message
             viewHolder.time_receive.text = currentMessage.time
 
             if (currentMessage.noAvatarMessage) {
                 viewHolder.img_avatar.visibility = View.GONE
             } else {
-
+//                viewHolder.img_avatar.visibility = View.VISIBLE
+                val friendUid = friendUid
+                if (friendUid != null) {
                     FirebaseStorage.getInstance().reference.child("images")
-                        .child(friendUid!!).downloadUrl.addOnSuccessListener { it ->
+                        .child(friendUid).downloadUrl.addOnSuccessListener { it ->
                             Picasso.get().load(it).into(viewHolder.img_avatar)
                         }
+                }
             }
         }
 
@@ -111,7 +118,6 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
         } else {
             ITEM_RECEIVE
         }
-        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
@@ -130,22 +136,22 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
         val status_Sent = itemView.findViewById<TextView>(R.id.status_messageSent)
     }
 
-    fun addMessage(messageObject: Message, loginUid: String, friendUid: String) {
-        this.friendUid = friendUid
-        this.loginUid = loginUid
-        messageList.add(messageObject)
-        notifyDataSetChanged()
-    }
-
-    fun addStatus(status: String?) {
-        this.status = status
-        notifyDataSetChanged()
-    }
-
-    fun addSeen(seen: Boolean) {
-        this.tmpSeen = seen
-        notifyDataSetChanged()
-    }
+//    fun addMessage(messageObject: Message, loginUid: String, friendUid: String) {
+//        this.friendUid = friendUid
+//        this.loginUid = loginUid
+//        messageList.add(messageObject)
+//        notifyDataSetChanged()
+//    }
+//
+//    fun addStatus(status: String?) {
+//        this.status = status
+//        notifyDataSetChanged()
+//    }
+//
+//    fun addSeen(seen: Boolean) {
+//        this.tmpSeen = seen
+//        notifyDataSetChanged()
+//    }
 
     fun addUid(loginUid: String, friendUid: String) {
         this.loginUid = loginUid
@@ -173,8 +179,8 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
         val diffCallBack = MessageDiffUtil(messageList, newList)
         val diffResult = DiffUtil.calculateDiff(diffCallBack)
 
-        //messageList.clear()
-       // messageList.addAll(newList)
+        messageList.clear()
+        messageList.addAll(newList)
         diffResult.dispatchUpdatesTo(this)
     }
 
