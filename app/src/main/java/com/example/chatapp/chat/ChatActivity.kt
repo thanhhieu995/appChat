@@ -56,14 +56,17 @@ class ChatActivity : AppCompatActivity() {
 
     private var noAvatarMessage: Boolean = false
 
+    var avatarSendUrl: String? = ""
+    var avatarReceiveUrl: String? = ""
+
     var messageEXReceive: Message? = Message("", "", "", "2020-06-06 10:00:00",
         seen = false,
-        noAvatarMessage = false
+        noAvatarMessage = false, "", ""
     )
 
     var messageSender: Message? = Message("", "", "", "2020-06-06 10:00:00",
         seen = false,
-        noAvatarMessage = false
+        noAvatarMessage = false, "", ""
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -127,7 +130,9 @@ class ChatActivity : AppCompatActivity() {
                 currentDate,
                 friendUid as String?,
                 seen,
-                noAvatarMessage
+                noAvatarMessage,
+                avatarSendUrl.toString(),
+                avatarReceiveUrl.toString()
             )
 
             chatRecyclerView.scrollToPosition(messageList.size - 1)
@@ -173,10 +178,12 @@ class ChatActivity : AppCompatActivity() {
         currentDate: String?,
         friendUid: String?,
         seen: Boolean,
-        noAvatarMessage: Boolean
+        noAvatarMessage: Boolean,
+        avatarSendUrl: String,
+        avatarReceiveUrl: String
     ) {
         val message = messageBox.text.toString()
-        val messageObject = Message(message, loginUid, friendUid, currentDate, seen, noAvatarMessage)
+        val messageObject = Message(message, loginUid, friendUid, currentDate, seen, noAvatarMessage, avatarSendUrl, avatarReceiveUrl)
         if (loginUid != null && message.trim().isNotEmpty()) {
             if (friendUid != null) {
                 //chatAdapter.addMessage(messageObject, loginUid, friendUid)

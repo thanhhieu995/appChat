@@ -93,23 +93,10 @@ class ChatAdapter(val context: Context, val messageList: ArrayList<Message>) :
                 viewHolder.img_avatar.visibility = View.GONE
             } else {
 
-//                new_Avatar = FirebaseStorage.getInstance().reference.child("images")
-//                    .child(friendUid!!).downloadUrl
-//                new_Avatar.setImageURI(FirebaseStorage.getInstance().reference
-//                    .child("images").child(friendUid!!).downloadUrl.result)
-//                FirebaseStorage.getInstance().reference
-//                    .child("images").child(friendUid!!).downloadUrl.addOnSuccessListener {
-//                        new_Avatar = it
-//                    }
-               // if (viewHolder.img_avatar.drawable == null) {
                     FirebaseStorage.getInstance().reference.child("images")
                         .child(friendUid!!).downloadUrl.addOnSuccessListener { it ->
                             Picasso.get().load(it).into(viewHolder.img_avatar)
-                            //new_Avatar = viewHolder.img_avatar
-                            //Picasso.get().load(it).into(viewHolder.img_avatar)
                         }
-                    var url = FirebaseStorage.getInstance().reference.child("images").child(friendUid!!).downloadUrl
-              // }
             }
         }
 

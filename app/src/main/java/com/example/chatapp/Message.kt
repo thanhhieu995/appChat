@@ -10,6 +10,8 @@ class Message {
     var time: String?= null
     var seen: Boolean = false
     var noAvatarMessage: Boolean = false
+    var avatarSendUrl: String? = null
+    var avatarReceiveUrl: String? = null
 
     constructor() { }
     constructor(
@@ -18,7 +20,9 @@ class Message {
         receiveId: String?,
         time: String?,
         seen: Boolean,
-        noAvatarMessage: Boolean
+        noAvatarMessage: Boolean,
+        avatarSendUrl: String,
+        avatarReceiveUrl: String
     ) {
         this.message = message
         this.senderId = senderId
@@ -26,5 +30,7 @@ class Message {
         this.time = time
         this.seen = seen
         this.noAvatarMessage = noAvatarMessage
+        this.avatarSendUrl = avatarSendUrl
+        this.avatarReceiveUrl = avatarReceiveUrl
     }
 }

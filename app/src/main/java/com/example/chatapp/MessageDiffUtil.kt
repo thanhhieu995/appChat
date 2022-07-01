@@ -29,6 +29,10 @@ class MessageDiffUtil(private val oldList: ArrayList<Message>, private val newLi
                 false
             oldList[oldItemPosition].time != newList[newItemPosition].time ->
                 false
+            oldList[oldItemPosition].avatarSendUrl != newList[newItemPosition].avatarSendUrl ->
+                false
+            oldList[oldItemPosition].avatarReceiveUrl != newList[newItemPosition].avatarReceiveUrl ->
+                false
             else -> {true}
         }
     }
