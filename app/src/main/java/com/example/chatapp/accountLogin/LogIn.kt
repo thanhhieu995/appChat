@@ -2,7 +2,6 @@ package com.example.chatapp.accountLogin
 
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.TextUtils
@@ -10,11 +9,13 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
-import com.example.chatapp.main.MainActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.example.chatapp.R
+import com.example.chatapp.main.MainActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_log_in.*
 
 class LogIn : AppCompatActivity() {
@@ -131,5 +132,13 @@ class LogIn : AppCompatActivity() {
         if (strCheckbox == "True") {
             checkBox.isChecked = strCheckbox.toBoolean()
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val a = Intent(Intent.ACTION_MAIN)
+        a.addCategory(Intent.CATEGORY_HOME)
+        a.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(a)
     }
 }

@@ -96,7 +96,7 @@ class ChatAdapter(val context: Context) :
             if (currentMessage.noAvatarMessage) {
                 viewHolder.img_avatar.visibility = View.GONE
             } else {
-//                viewHolder.img_avatar.visibility = View.VISIBLE
+                viewHolder.img_avatar.visibility = View.VISIBLE
                 val friendUid = friendUid
                 if (friendUid != null) {
                     FirebaseStorage.getInstance().reference.child("images")
