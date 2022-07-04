@@ -31,11 +31,11 @@ class LogIn : AppCompatActivity() {
 
     private lateinit var mDbRef: DatabaseReference
 
-    lateinit var strCheckbox: String
-    lateinit var strEmail: String
+    private var isCheckbox: Boolean = false
+    private lateinit var strEmail: String
     lateinit var strPassword: String
 
-    lateinit var checkBox: CheckBox
+    private lateinit var checkBox: CheckBox
     private lateinit var sharedPreferences: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
 
@@ -103,35 +103,29 @@ class LogIn : AppCompatActivity() {
 
     private fun checkBoxChecked() {
         if (checkBox.isChecked) {
-            editor.putString("checkRemember", "True")
-            editor.apply()
+            editor.putBoolean("check_Remember", true)
             strEmail = edtEmail.text.toString()
             editor.putString("email", strEmail)
-            editor.commit()
             strPassword = edtPassword.text.toString()
             editor.putString("password", strPassword)
-            editor.commit()
         } else {
-            editor.putString("checkRemember", "False")
-            editor.commit()
+            editor.putBoolean("check_Remember", false)
             editor.putString("email", "")
-            editor.commit()
             editor.putString("password", "")
-            editor.commit()
         }
+        editor.commit()
     }
 
     private fun checkSharedPreference() {
         //strCheckBox = sharedPreferences.getString(getString(R.id.checkRemember), "False").toString()
-        strCheckbox = sharedPreferences.getString("checkRemember", "False").toString()
+        isCheckbox = sharedPreferences.getBoolean("check_Remember", false)
         strEmail = sharedPreferences.getString("email", "").toString()
         strPassword = sharedPreferences.getString("password", "").toString()
         edtEmail.setText(strEmail)
         edtPassword.setText(strPassword)
         //checkBox.isChecked = strCheckbox == "True"
-        if (strCheckbox == "True") {
-            checkBox.isChecked = strCheckbox.toBoolean()
-        }
+
+        checkBox.isChecked = isCheckbox
     }
 
     override fun onBackPressed() {
