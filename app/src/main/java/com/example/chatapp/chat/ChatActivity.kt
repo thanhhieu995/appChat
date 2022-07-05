@@ -39,7 +39,6 @@ class ChatActivity : AppCompatActivity() {
 
     private lateinit var userFriend: User
 
-
     private var seen: Boolean = false
 
     var hasMore: Boolean = false
@@ -57,12 +56,12 @@ class ChatActivity : AppCompatActivity() {
     var avatarSendUrl: String? = ""
     var avatarReceiveUrl: String? = ""
 
-    var messageEXReceive: Message? = Message("", "", "", "2020-06-06 10:00:00",
+    var messageEXReceive: Message? = Message("", "", "", null,
         seen = false,
         noAvatarMessage = false, "", ""
     )
 
-    var messageSender: Message? = Message("", "", "", "2020-06-06 10:00:00",
+    var messageSender: Message? = Message("", "", "", "2020-06-06 10:10:10",
         seen = false,
         noAvatarMessage = false, "", ""
     )
@@ -152,9 +151,25 @@ class ChatActivity : AppCompatActivity() {
         userFriend = intent.getSerializableExtra("userFriend") as User
 
         if (hasMore) {
-            loadDataRoomSend()
-            //messageSender = Message("-2", "", "", "-2", false, dateExam, -2, -2, false)
+//            if (loginUid?.let { roomSender?.startsWith(it, false) } == true) {
+//                loadDataRoomSend()
+//            }
+//
 //            loadDataRoomReceive()
+
+
+            loadDataRoomSend()
+
+//            val tmp1 : String = roomSender.toString()
+//            val tmp2: String = roomReceiver.toString()
+
+//            if (loginUid?.let { tmp1.startsWith(it, false) } == true) {
+//                loadDataRoomSend()
+//            }
+
+//            if (loginUid?.let { tmp2.startsWith(it, false) } == true) {
+//                loadDataRoomReceive()
+//            }
         }
 
         statusAndCall()
@@ -240,11 +255,11 @@ class ChatActivity : AppCompatActivity() {
 
                         if (message != null && message.receiveId == loginUid) {
                             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                            val exMessTime = sdf.parse(messageEXReceive?.time.toString())
-                            val messageTime = sdf.parse(message.time.toString())
-                            val messageSendTime = sdf.parse(messageSender?.time.toString())
+                            val exMessTime = messageEXReceive?.time?.let { sdf.parse(it) }
+                            val messageTime = message.time?.let { sdf.parse(it) }
+                            val messageSendTime = messageSender?.time?.let { sdf.parse(it) }
 
-                            if (messageTime != null && exMessTime != null && messageSendTime != null) {
+                            if (messageTime != null && exMessTime != null && messageSendTime != null && message.time != messageEXReceive?.time) {
                                 if ((messageTime.time - exMessTime.time)/ 1000 / 60 <= 1 && messageSendTime.before(exMessTime) || messageSendTime.after(messageTime)) {
                                     var hashMap: HashMap<String, Boolean> = HashMap()
                                     hashMap.put("noAvatarMessage", true)
@@ -252,6 +267,7 @@ class ChatActivity : AppCompatActivity() {
                                 }
                             }
                             messageEXReceive = message
+
                         } else {
                             messageSender = message
                         }
