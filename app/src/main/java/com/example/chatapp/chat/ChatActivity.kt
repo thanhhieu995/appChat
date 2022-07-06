@@ -56,15 +56,15 @@ class ChatActivity : AppCompatActivity() {
     var avatarSendUrl: String? = ""
     var avatarReceiveUrl: String? = ""
 
-    var messageEXReceive: Message? = Message("", "", "", null,
-        seen = false,
-        noAvatarMessage = false, "", ""
-    )
-
-    var messageSender: Message? = Message("", "", "", "2020-06-06 10:10:10",
-        seen = false,
-        noAvatarMessage = false, "", ""
-    )
+//    var messageEXReceive: Message? = Message("", "", "", null,
+//        seen = false,
+//        noAvatarMessage = false, "", ""
+//    )
+//
+//    var messageSender: Message? = Message("", "", "", "2020-06-06 10:10:10",
+//        seen = false,
+//        noAvatarMessage = false, "", ""
+//    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -235,6 +235,15 @@ class ChatActivity : AppCompatActivity() {
                     val messageList = ArrayList<Message>()
 //                    messageList.clear()
 //                    newList.clear()
+                    var messageEXReceive: Message? = Message("", "", "", null,
+                        seen = false,
+                        noAvatarMessage = false, "", ""
+                    )
+
+                    var messageSender: Message? = Message("", "", "", "2020-06-06 10:10:10",
+                        seen = false,
+                        noAvatarMessage = false, "", ""
+                    )
 
                     for (postSnapshot in snapshot.children) {
 
@@ -292,64 +301,64 @@ class ChatActivity : AppCompatActivity() {
             })
     }
 
-    private fun loadDataRoomReceive() {
-
-        mDbRef.child("chats").child(roomReceiver!!).child("messages")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    //messageSender = Message("-2", "", "", "-2", false, false)
-
-                    val messageList = ArrayList<Message>()
-                    messageList.clear()
-//                    newList.clear()
-
-                    for (postSnapshot in snapshot.children) {
-                        val message = postSnapshot.getValue(Message::class.java)
-
-                        if (message != null  && hasMore) {
-                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
-                                var hashMap: HashMap<String, Boolean> = HashMap()
-                                hashMap.put("seen", true)
-                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-                            }
-                        }
-
-                        if (message != null && message.receiveId == loginUid) {
-                            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                            val exMessTime = sdf.parse(messageEXReceive?.time.toString())
-                            val messageTime = sdf.parse(message.time.toString())
-                            val messageSendTime = sdf.parse(messageSender?.time.toString())
-
-                            if (messageTime != null && exMessTime != null && messageSendTime != null) {
-                                if ((messageTime.time - exMessTime.time)/ 1000 / 60 <= 1 && messageSendTime.before(exMessTime) || messageSendTime.after(messageTime)) {
-                                    var hashMap: HashMap<String, Boolean> = HashMap()
-                                    hashMap.put("noAvatarMessage", true)
-                                    postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-                                }
-                            }
-                            messageEXReceive = message
-                        } else {
-                            messageSender = message
-                        }
-
-                        if (message != null) {
-                           // chatAdapter.addMessage(message, loginUid!!, friendUid!!)
-                            messageList.add(message)
-//                            newList.add(message)
-                        }
-                    }
-                    loginUid?.let { friendUid?.let { it1 -> chatAdapter.addUid(it, it1) } }
-                    chatAdapter.updateData(messageList)
-//                    chatAdapter.notifyDataSetChanged()
-                    chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-
-                }
-
-            })
-    }
+//    private fun loadDataRoomReceive() {
+//
+//        mDbRef.child("chats").child(roomReceiver!!).child("messages")
+//            .addValueEventListener(object : ValueEventListener {
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    //messageSender = Message("-2", "", "", "-2", false, false)
+//
+//                    val messageList = ArrayList<Message>()
+//                    messageList.clear()
+////                    newList.clear()
+//
+//                    for (postSnapshot in snapshot.children) {
+//                        val message = postSnapshot.getValue(Message::class.java)
+//
+//                        if (message != null  && hasMore) {
+//                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
+//                                var hashMap: HashMap<String, Boolean> = HashMap()
+//                                hashMap.put("seen", true)
+//                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+//                            }
+//                        }
+//
+//                        if (message != null && message.receiveId == loginUid) {
+//                            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+//                            val exMessTime = sdf.parse(messageEXReceive?.time.toString())
+//                            val messageTime = sdf.parse(message.time.toString())
+//                            val messageSendTime = sdf.parse(messageSender?.time.toString())
+//
+//                            if (messageTime != null && exMessTime != null && messageSendTime != null) {
+//                                if ((messageTime.time - exMessTime.time)/ 1000 / 60 <= 1 && messageSendTime.before(exMessTime) || messageSendTime.after(messageTime)) {
+//                                    var hashMap: HashMap<String, Boolean> = HashMap()
+//                                    hashMap.put("noAvatarMessage", true)
+//                                    postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+//                                }
+//                            }
+//                            messageEXReceive = message
+//                        } else {
+//                            messageSender = message
+//                        }
+//
+//                        if (message != null) {
+//                           // chatAdapter.addMessage(message, loginUid!!, friendUid!!)
+//                            messageList.add(message)
+////                            newList.add(message)
+//                        }
+//                    }
+//                    loginUid?.let { friendUid?.let { it1 -> chatAdapter.addUid(it, it1) } }
+//                    chatAdapter.updateData(messageList)
+////                    chatAdapter.notifyDataSetChanged()
+//                    chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//
+//                }
+//
+//            })
+//    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.chatbar, menu)
@@ -467,18 +476,18 @@ class ChatActivity : AppCompatActivity() {
             })
     }
 
-    private fun hideOrShowAvatarMess(message: Message) {
-        val sdf = SimpleDateFormat("")
-        val exMessTime = sdf.parse(messageEXReceive?.time.toString())
-        val messageTime = sdf.parse(message.time.toString())
-        val messageSendTime = sdf.parse(messageSender?.time.toString())
-
-        if (messageTime != null && exMessTime != null && messageSendTime != null) {
-            if ((messageTime.time - exMessTime.time)/ 1000 / 60 <= 1 && messageSendTime.before(exMessTime) || messageSendTime.after(messageTime)) {
-                message.noAvatarMessage = true
-            }
-        }
-    }
+//    private fun hideOrShowAvatarMess(message: Message) {
+//        val sdf = SimpleDateFormat("")
+//        val exMessTime = sdf.parse(messageEXReceive?.time.toString())
+//        val messageTime = sdf.parse(message.time.toString())
+//        val messageSendTime = sdf.parse(messageSender?.time.toString())
+//
+//        if (messageTime != null && exMessTime != null && messageSendTime != null) {
+//            if ((messageTime.time - exMessTime.time)/ 1000 / 60 <= 1 && messageSendTime.before(exMessTime) || messageSendTime.after(messageTime)) {
+//                message.noAvatarMessage = true
+//            }
+//        }
+//    }
 
     fun getLegacyDateDifference(fromDate: String, toDate: String, formatter: String= "yyyy-MM-dd HH:mm:ss" , locale: Locale = Locale.getDefault()): Map<String, Long> {
 
