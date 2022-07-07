@@ -65,6 +65,7 @@ class ChatAdapter(val context: Context) :
             }
 
             if (position == messageList.size - 1) {
+                //viewHolder.status_Sent.visibility = View.VISIBLE
                 if (currentMessage.seen) {
                     viewHolder.status_Sent.text = "Seen"
                 } else {

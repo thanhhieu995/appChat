@@ -33,6 +33,7 @@
         android:background="@drawable/text_receive_background"
         android:orientation="vertical"
         android:padding="5dp"
+        app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

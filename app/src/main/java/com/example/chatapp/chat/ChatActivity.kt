@@ -33,6 +33,9 @@ class ChatActivity : AppCompatActivity() {
     private var roomSender: String? = null
     private var roomReceiver: String? = null
 
+    var tmp1: String? = null
+    var tmp2: String? = null
+
     private var statusFriend: String? = "1"
 
     private lateinit var userLogin: User
@@ -150,15 +153,17 @@ class ChatActivity : AppCompatActivity() {
 
         userFriend = intent.getSerializableExtra("userFriend") as User
 
+        tmp1 = roomSender
+        tmp2 = roomReceiver
+
         if (hasMore) {
 //            if (loginUid?.let { roomSender?.startsWith(it, false) } == true) {
 //                loadDataRoomSend()
 //            }
 //
 //            loadDataRoomReceive()
-
-
             loadDataRoomSend()
+            //loadDataRoomReceive()
 
 //            val tmp1 : String = roomSender.toString()
 //            val tmp2: String = roomReceiver.toString()
@@ -250,13 +255,95 @@ class ChatActivity : AppCompatActivity() {
                         val message = postSnapshot.getValue(Message::class.java)
 
 //                        messageList.add(message!!)
-
                         if (message != null && hasMore) {
+                            //message.seen = false
                             if ((message.receiveId?.equals(loginUid) == true) && (message.senderId?.equals(
                                     friendUid
                                 ) == true)
                             ) {
-                                var hashMap: HashMap<String, Boolean> = HashMap()
+                                val hashMap: HashMap<String, Boolean> = HashMap()
+                                hashMap.put("seen", true)
+                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+                            }
+                        }
+
+//                        if (message != null) {
+//                            var tmpSeen = false
+//                            if (message.receiveId?.let { roomSender!!.startsWith(it, false) } == true) {
+//                                tmpSeen = true
+//                            }
+//                            message.seen = tmpSeen
+//                        }
+
+                        if (message != null && message.receiveId == loginUid) {
+                            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                            val exMessTime = messageEXReceive?.time?.let { sdf.parse(it) }
+                            val messageTime = message.time?.let { sdf.parse(it) }
+                            val messageSendTime = messageSender?.time?.let { sdf.parse(it) }
+
+                            if (messageTime != null && exMessTime != null && messageSendTime != null && message.time != messageEXReceive?.time) {
+                                if ((messageTime.time - exMessTime.time)/ 1000 / 60 <= 1 && messageSendTime.before(exMessTime) || messageSendTime.after(messageTime)) {
+                                    var hashMap: HashMap<String, Boolean> = HashMap()
+                                    hashMap.put("noAvatarMessage", true)
+                                    postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+                                }
+                            }
+                            messageEXReceive = message
+
+                        } else {
+                            messageSender = message
+                        }
+
+                        if (message != null) {
+
+                            // chatAdapter.addMessage(message, loginUid!!, friendUid!!)
+                            messageList.add(message)
+//                            newList.add(message)
+                        }
+                    }
+                    loginUid?.let { friendUid?.let { it1 -> chatAdapter.addUid(it, it1) } }
+                    chatAdapter.updateData(messageList)
+//                    chatAdapter.notifyDataSetChanged()
+                    chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+            })
+    }
+
+    private fun loadDataRoomReceive() {
+
+        mDbRef.child("chats").child(roomReceiver!!).child("messages")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val messageList = ArrayList<Message>()
+//                    messageList.clear()
+//                    newList.clear()
+                    var messageEXReceive: Message? = Message("", "", "", null,
+                        seen = false,
+                        noAvatarMessage = false, "", ""
+                    )
+
+                    var messageSender: Message? = Message("", "", "", "2020-06-06 10:10:10",
+                        seen = false,
+                        noAvatarMessage = false, "", ""
+                    )
+
+                    for (postSnapshot in snapshot.children) {
+
+                        val message = postSnapshot.getValue(Message::class.java)
+
+//                        messageList.add(message!!)
+                        if (message != null && hasMore) {
+                            //message.seen = false
+                            if ((message.receiveId?.equals(loginUid) == true) && (message.senderId?.equals(
+                                    friendUid
+                                ) == true)
+                            ) {
+                                val hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("seen", true)
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
                             }
@@ -300,65 +387,6 @@ class ChatActivity : AppCompatActivity() {
 
             })
     }
-
-//    private fun loadDataRoomReceive() {
-//
-//        mDbRef.child("chats").child(roomReceiver!!).child("messages")
-//            .addValueEventListener(object : ValueEventListener {
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    //messageSender = Message("-2", "", "", "-2", false, false)
-//
-//                    val messageList = ArrayList<Message>()
-//                    messageList.clear()
-////                    newList.clear()
-//
-//                    for (postSnapshot in snapshot.children) {
-//                        val message = postSnapshot.getValue(Message::class.java)
-//
-//                        if (message != null  && hasMore) {
-//                            if (message.receiveId?.equals(loginUid) == true && message.senderId?.equals(friendUid) == true) {
-//                                var hashMap: HashMap<String, Boolean> = HashMap()
-//                                hashMap.put("seen", true)
-//                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-//                            }
-//                        }
-//
-//                        if (message != null && message.receiveId == loginUid) {
-//                            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-//                            val exMessTime = sdf.parse(messageEXReceive?.time.toString())
-//                            val messageTime = sdf.parse(message.time.toString())
-//                            val messageSendTime = sdf.parse(messageSender?.time.toString())
-//
-//                            if (messageTime != null && exMessTime != null && messageSendTime != null) {
-//                                if ((messageTime.time - exMessTime.time)/ 1000 / 60 <= 1 && messageSendTime.before(exMessTime) || messageSendTime.after(messageTime)) {
-//                                    var hashMap: HashMap<String, Boolean> = HashMap()
-//                                    hashMap.put("noAvatarMessage", true)
-//                                    postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-//                                }
-//                            }
-//                            messageEXReceive = message
-//                        } else {
-//                            messageSender = message
-//                        }
-//
-//                        if (message != null) {
-//                           // chatAdapter.addMessage(message, loginUid!!, friendUid!!)
-//                            messageList.add(message)
-////                            newList.add(message)
-//                        }
-//                    }
-//                    loginUid?.let { friendUid?.let { it1 -> chatAdapter.addUid(it, it1) } }
-//                    chatAdapter.updateData(messageList)
-////                    chatAdapter.notifyDataSetChanged()
-//                    chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
-//                }
-//
-//                override fun onCancelled(error: DatabaseError) {
-//
-//                }
-//
-//            })
-//    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.chatbar, menu)
