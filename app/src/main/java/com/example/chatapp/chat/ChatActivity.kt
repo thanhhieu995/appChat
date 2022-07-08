@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.*
 import com.example.chatapp.R
 import com.example.chatapp.main.MainActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -157,24 +158,10 @@ class ChatActivity : AppCompatActivity() {
         tmp2 = roomReceiver
 
         if (hasMore) {
-//            if (loginUid?.let { roomSender?.startsWith(it, false) } == true) {
-//                loadDataRoomSend()
-//            }
-//
-//            loadDataRoomReceive()
+
             loadDataRoomSend()
             //loadDataRoomReceive()
 
-//            val tmp1 : String = roomSender.toString()
-//            val tmp2: String = roomReceiver.toString()
-
-//            if (loginUid?.let { tmp1.startsWith(it, false) } == true) {
-//                loadDataRoomSend()
-//            }
-
-//            if (loginUid?.let { tmp2.startsWith(it, false) } == true) {
-//                loadDataRoomReceive()
-//            }
         }
 
         statusAndCall()
@@ -215,7 +202,6 @@ class ChatActivity : AppCompatActivity() {
             Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG)
                 .show()
         }
-
        // hideOrShowAvatarMess(messageObject)
 
 //        chatAdapter.updateData(newList)

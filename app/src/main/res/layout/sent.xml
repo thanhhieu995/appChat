@@ -6,14 +6,19 @@
     android:layout_height="wrap_content"
     android:padding="5dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/RL_sentLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_marginStart="100dp"
         android:background="@drawable/text_sent_background"
+        android:orientation="vertical"
         android:padding="5dp"
+        app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
@@ -22,10 +27,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="This is sent message"
+            android:text="This is sent message "
             android:textColor="@color/white"
             android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -37,14 +42,14 @@
             app:layout_constraintStart_toStartOf="@+id/txt_sent_message"
             app:layout_constraintTop_toBottomOf="@+id/txt_sent_message" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <TextView
         android:id="@+id/status_messageSent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="status message sent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/RL_sentLayout"
         app:layout_constraintTop_toBottomOf="@+id/RL_sentLayout" />
 
 
