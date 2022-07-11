@@ -107,7 +107,6 @@ class ChatAdapter(val context: Context) :
                 }
             }
         }
-
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -137,44 +136,11 @@ class ChatAdapter(val context: Context) :
         val status_Sent = itemView.findViewById<TextView>(R.id.status_messageSent)
     }
 
-//    fun addMessage(messageObject: Message, loginUid: String, friendUid: String) {
-//        this.friendUid = friendUid
-//        this.loginUid = loginUid
-//        messageList.add(messageObject)
-//        notifyDataSetChanged()
-//    }
-//
-//    fun addStatus(status: String?) {
-//        this.status = status
-//        notifyDataSetChanged()
-//    }
-//
-//    fun addSeen(seen: Boolean) {
-//        this.tmpSeen = seen
-//        notifyDataSetChanged()
-//    }
 
     fun addUid(loginUid: String, friendUid: String) {
         this.loginUid = loginUid
         this.friendUid = friendUid
     }
-
-//    fun addUid(uid: String?) {
-//        uidActing = uid
-//        notifyDataSetChanged()
-//    }
-
-//    class MessageDiffCallBack: DiffUtil.ItemCallback<Message>() {
-//        override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean {
-//            return oldItem.senderId == newItem.senderId
-//        }
-//
-//        @SuppressLint("DiffUtilEquals")
-//        override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean {
-//            return oldItem == newItem
-//        }
-//
-//    }
 
     fun updateData (newList: ArrayList<Message>) {
         val diffCallBack = MessageDiffUtil(messageList, newList)

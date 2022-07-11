@@ -15,12 +15,16 @@ class MessageDiffUtil(private val oldList: ArrayList<Message>, private val newLi
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val same = oldList[oldItemPosition] == newList[newItemPosition]
         if (!same) {
-            Log.d("exexex", same.toString())
+            Log.d("same", same.toString())
         }
         return same
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val compare = oldList[oldItemPosition] == newList[newItemPosition]
+        if (!compare) {
+            Log.d("compare", compare.toString())
+        }
         return oldList[oldItemPosition] == newList[newItemPosition]
     }
 
