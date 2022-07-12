@@ -108,6 +108,9 @@ class ChatAdapter(val context: Context) :
                                 Picasso.get().load(it).into(viewHolder.img_Avatar_Status)
                             }
                     }
+//                    if (messageList[position - 2].seen) {
+//                        viewHolder.img_Avatar_Status.visibility = View.GONE
+//                    }
 
                 } else {
                     viewHolder.img_Avatar_Status.visibility = View.GONE
