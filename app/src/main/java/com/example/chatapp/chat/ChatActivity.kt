@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -138,6 +140,31 @@ class ChatActivity : AppCompatActivity() {
 
            // chatAdapter.notifyDataSetChanged()
         }
+
+
+//        messageBox.setOnKeyListener(object : View.OnKeyListener{
+//            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+//                if (event != null) {
+//                    if (event.action == KeyEvent.KEYCODE_ENTER) {
+//                        date = Calendar.getInstance().time
+//                        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+//                        val currentDate = sdf.format(Date())
+//
+//                        sendChatMessage(
+//                            loginUid.toString(),
+//                            currentDate,
+//                            friendUid as String?,
+//                            seen,
+//                            noAvatarMessage,
+//                            avatarSendUrl.toString(),
+//                            avatarReceiveUrl.toString()
+//                        )
+//                    }
+//                    return true
+//                }
+//                return  false
+//            }
+//        })
     }
 
     override fun onResume() {

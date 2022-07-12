@@ -64,6 +64,25 @@ class ChatAdapter(val context: Context) :
                 viewHolder.time_sent.text = currentMessage.time
             }
 
+            if (currentMessage.noAvatarMessage) {
+                viewHolder.img_avatarSent.visibility = View.GONE
+            } else {
+                FirebaseStorage.getInstance().reference.child("images")
+                    .child(loginUid).downloadUrl.addOnSuccessListener { it ->
+                        Picasso.get().load(it).into(viewHolder.img_avatarSent)
+                    }
+            }
+
+//            viewHolder.img_avatarSent.setOnClickListener {
+//                val intent = Intent(context, ProfileActivity::class.java)
+//                intent.putExtra("uidLogin", userLogin.uid)
+//                intent.putExtra("uidFriend", userFriend.uid)
+//                intent.putExtra("hasMore", hasMore)
+//                intent.putExtra("userLogin", userLogin)
+//                intent.putExtra("userFriend", userFriend)
+//                context.startActivity(intent)
+//            }
+
 //            if (position == messageList.size - 1) {
 //                //viewHolder.status_Sent.visibility = View.VISIBLE
 //                if (currentMessage.seen) {
@@ -177,6 +196,7 @@ class ChatAdapter(val context: Context) :
     }
 
     class SentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val img_avatarSent = itemView.findViewById<ImageView>(R.id.img_Avatar_Send)
         val sentMessage = itemView.findViewById<TextView>(R.id.txt_sent_message)
         val time_sent = itemView.findViewById<TextView>(R.id.time_sent)
         val status_Sent = itemView.findViewById<TextView>(R.id.status_messageSent)
