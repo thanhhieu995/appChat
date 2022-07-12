@@ -53,4 +53,22 @@
         app:layout_constraintTop_toBottomOf="@+id/RL_sentLayout" />
 
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_img_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/status_messageSent"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/img_Avatar_Status"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            tools:srcCompat="@tools:sample/avatars" />
+
+    </androidx.cardview.widget.CardView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

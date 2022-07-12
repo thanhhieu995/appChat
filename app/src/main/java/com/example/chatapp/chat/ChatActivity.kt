@@ -159,9 +159,9 @@ class ChatActivity : AppCompatActivity() {
 
         if (hasMore) {
 
-            //loadDataRoomSend()
-            //loadDataRoomReceive()
-            room()
+            loadDataRoomSend()
+            loadDataRoomReceive()
+            //room()
 
         }
 
@@ -187,7 +187,7 @@ class ChatActivity : AppCompatActivity() {
         avatarReceiveUrl: String
     ) {
         val message = messageBox.text.toString()
-        val messageObject = Message(message, loginUid, friendUid, currentDate, seen, noAvatarMessage, avatarSendUrl, avatarReceiveUrl)
+        val messageObject = Message(message, loginUid, friendUid, currentDate, noAvatarMessage, seen, avatarSendUrl, avatarReceiveUrl)
         if (loginUid != null && message.trim().isNotEmpty()) {
             mDbRef.child("chats").child(roomSender!!).child("messages").push()
                 .setValue(messageObject).addOnSuccessListener {
@@ -212,89 +212,89 @@ class ChatActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun  room() {
-        mDbRef.child("chats").child(roomSender!!).child("messages")
-            .addValueEventListener(
-                mDbRef.child("chats").child(roomReceiver!!).child("messages")
-                    .addValueEventListener(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            val messageList = ArrayList<Message>()
-//                    messageList.clear()
-//                    newList.clear()
-                            var messageEXReceive: Message? = Message("", "", "", null,
-                                seen = false,
-                                noAvatarMessage = false, "", ""
-                            )
-
-                            var messageSender: Message? = Message("", "", "", "2020-06-06 10:10:10",
-                                seen = false,
-                                noAvatarMessage = false, "", ""
-                            )
-
-                            for (postSnapshot in snapshot.children) {
-
-                                val message = postSnapshot.getValue(Message::class.java)
-
-//                        messageList.add(message!!)
-                                if (message != null && hasMore) {
-                                    //message.seen = false
-                                    if ((message.receiveId?.equals(loginUid) == true) && (message.senderId?.equals(
-                                            friendUid
-                                        ) == true)
-                                    ) {
-                                        val hashMap: HashMap<String, Boolean> = HashMap()
-                                        hashMap.put("seen", true)
-                                        postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-                                    }
-                                }
-
-//                        if (message != null) {
-//                            var tmpSeen = false
-//                            if (message.receiveId?.let { roomSender!!.startsWith(it, false) } == true) {
-//                                tmpSeen = true
+//    private fun  room() {
+//        mDbRef.child("chats").child(roomSender!!).child("messages")
+//            .addValueEventListener(
+//                mDbRef.child("chats").child(roomReceiver!!).child("messages")
+//                    .addValueEventListener(object : ValueEventListener {
+//                        override fun onDataChange(snapshot: DataSnapshot) {
+//                            val messageList = ArrayList<Message>()
+////                    messageList.clear()
+////                    newList.clear()
+//                            var messageEXReceive: Message? = Message("", "", "", null,
+//                                seen = false,
+//                                noAvatarMessage = false, "", ""
+//                            )
+//
+//                            var messageSender: Message? = Message("", "", "", "2020-06-06 10:10:10",
+//                                seen = false,
+//                                noAvatarMessage = false, "", ""
+//                            )
+//
+//                            for (postSnapshot in snapshot.children) {
+//
+//                                val message = postSnapshot.getValue(Message::class.java)
+//
+////                        messageList.add(message!!)
+//                                if (message != null && hasMore) {
+//                                    //message.seen = false
+//                                    if ((message.receiveId?.equals(loginUid) == true) && (message.senderId?.equals(
+//                                            friendUid
+//                                        ) == true)
+//                                    ) {
+//                                        val hashMap: HashMap<String, Boolean> = HashMap()
+//                                        hashMap.put("seen", true)
+//                                        postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+//                                    }
+//                                }
+//
+////                        if (message != null) {
+////                            var tmpSeen = false
+////                            if (message.receiveId?.let { roomSender!!.startsWith(it, false) } == true) {
+////                                tmpSeen = true
+////                            }
+////                            message.seen = tmpSeen
+////                        }
+//
+//                                if (message != null && message.receiveId == loginUid) {
+//                                    val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+//                                    val exMessTime = messageEXReceive?.time?.let { sdf.parse(it) }
+//                                    val messageTime = message.time?.let { sdf.parse(it) }
+//                                    val messageSendTime = messageSender?.time?.let { sdf.parse(it) }
+//
+//                                    if (messageTime != null && exMessTime != null && messageSendTime != null && message.time != messageEXReceive?.time) {
+//                                        if ((messageTime.time - exMessTime.time)/ 1000 / 60 <= 1 && messageSendTime.before(exMessTime) || messageSendTime.after(messageTime)) {
+//                                            var hashMap: HashMap<String, Boolean> = HashMap()
+//                                            hashMap.put("noAvatarMessage", true)
+//                                            postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+//                                        }
+//                                    }
+//                                    messageEXReceive = message
+//
+//                                } else {
+//                                    messageSender = message
+//                                }
+//
+//                                if (message != null) {
+//
+//                                    // chatAdapter.addMessage(message, loginUid!!, friendUid!!)
+//                                    messageList.add(message)
+////                            newList.add(message)
+//                                }
 //                            }
-//                            message.seen = tmpSeen
+//                            loginUid?.let { friendUid?.let { it1 -> chatAdapter.addUid(it, it1) } }
+//                            chatAdapter.updateData(messageList)
+////                    chatAdapter.notifyDataSetChanged()
+//                            chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
 //                        }
-
-                                if (message != null && message.receiveId == loginUid) {
-                                    val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                                    val exMessTime = messageEXReceive?.time?.let { sdf.parse(it) }
-                                    val messageTime = message.time?.let { sdf.parse(it) }
-                                    val messageSendTime = messageSender?.time?.let { sdf.parse(it) }
-
-                                    if (messageTime != null && exMessTime != null && messageSendTime != null && message.time != messageEXReceive?.time) {
-                                        if ((messageTime.time - exMessTime.time)/ 1000 / 60 <= 1 && messageSendTime.before(exMessTime) || messageSendTime.after(messageTime)) {
-                                            var hashMap: HashMap<String, Boolean> = HashMap()
-                                            hashMap.put("noAvatarMessage", true)
-                                            postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-                                        }
-                                    }
-                                    messageEXReceive = message
-
-                                } else {
-                                    messageSender = message
-                                }
-
-                                if (message != null) {
-
-                                    // chatAdapter.addMessage(message, loginUid!!, friendUid!!)
-                                    messageList.add(message)
-//                            newList.add(message)
-                                }
-                            }
-                            loginUid?.let { friendUid?.let { it1 -> chatAdapter.addUid(it, it1) } }
-                            chatAdapter.updateData(messageList)
-//                    chatAdapter.notifyDataSetChanged()
-                            chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-
-                        }
-
-                    })
-            )
-    }
+//
+//                        override fun onCancelled(error: DatabaseError) {
+//
+//                        }
+//
+//                    })
+//            )
+//    }
 
     private fun loadDataRoomSend() {
         mDbRef.child("chats").child(roomSender!!).child("messages")
@@ -305,13 +305,11 @@ class ChatActivity : AppCompatActivity() {
                     val messageList = ArrayList<Message>()
 //                    messageList.clear()
 //                    newList.clear()
-                    var messageEXReceive: Message? = Message("", "", "", null,
-                        seen = false,
-                        noAvatarMessage = false, "", ""
+                    var messageEXReceive: Message? = Message("", "", "", null, seen,
+                        noAvatarMessage = false ,"", ""
                     )
 
-                    var messageSender: Message? = Message("", "", "", "2020-06-06 10:10:10",
-                        seen = false,
+                    var messageSender: Message? = Message("", "", "", "2020-06-06 10:10:10", seen,
                         noAvatarMessage = false, "", ""
                     )
 

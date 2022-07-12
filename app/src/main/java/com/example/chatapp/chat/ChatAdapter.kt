@@ -64,15 +64,58 @@ class ChatAdapter(val context: Context) :
                 viewHolder.time_sent.text = currentMessage.time
             }
 
-            if (position == messageList.size - 1) {
-                //viewHolder.status_Sent.visibility = View.VISIBLE
-                if (currentMessage.seen) {
-                    viewHolder.status_Sent.text = "Seen"
+//            if (position == messageList.size - 1) {
+//                //viewHolder.status_Sent.visibility = View.VISIBLE
+//                if (currentMessage.seen) {
+//                    viewHolder.status_Sent.text = "Seen"
+//                } else {
+//                    viewHolder.status_Sent.text = "Delivered"
+//                }
+//            } else {
+//                viewHolder.status_Sent.visibility = View.GONE
+//            }
+
+//            if (position == messageList.size - 1) {
+//                //viewHolder.img_Avatar_Status.visibility = View.VISIBLE
+//                viewHolder.status_Sent.visibility = View.VISIBLE
+//                if (currentMessage.seen) {
+//                    viewHolder.status_Sent.visibility = View.GONE
+//                    viewHolder.img_Avatar_Status.visibility = View.VISIBLE
+//                    friendUid?.let {
+//                        FirebaseStorage.getInstance().reference.child("images")
+//                            .child(it).downloadUrl.addOnSuccessListener { it ->
+//                                Picasso.get().load(it).into(viewHolder.img_Avatar_Status)
+//                            }
+//                    }
+//                } else {
+//                    //viewHolder.status_Sent.visibility = View.VISIBLE
+//                    viewHolder.status_Sent.text = "sent"
+//                    viewHolder.img_Avatar_Status.visibility = View.GONE
+//                }
+//            } else {
+//                viewHolder.img_Avatar_Status.visibility = View.GONE
+//                viewHolder.status_Sent.visibility = View.GONE
+//            }
+
+            if (currentMessage.seen) {
+                viewHolder.status_Sent.visibility = View.GONE
+                viewHolder.img_Avatar_Status.visibility = View.GONE
+                if (position == messageList.size - 1) {
+                    viewHolder.img_Avatar_Status.visibility = View.VISIBLE
+                    friendUid?.let {
+                        FirebaseStorage.getInstance().reference.child("images")
+                            .child(it).downloadUrl.addOnSuccessListener { it ->
+                                Picasso.get().load(it).into(viewHolder.img_Avatar_Status)
+                            }
+                    }
+
                 } else {
-                    viewHolder.status_Sent.text = "Delivered"
+                    viewHolder.img_Avatar_Status.visibility = View.GONE
                 }
             } else {
-                viewHolder.status_Sent.visibility = View.GONE
+                viewHolder.status_Sent.visibility = View.VISIBLE
+                viewHolder.status_Sent.text = "sent"
+                viewHolder.img_Avatar_Status.visibility = View.GONE
             }
 
         } else {
@@ -134,6 +177,7 @@ class ChatAdapter(val context: Context) :
         val sentMessage = itemView.findViewById<TextView>(R.id.txt_sent_message)
         val time_sent = itemView.findViewById<TextView>(R.id.time_sent)
         val status_Sent = itemView.findViewById<TextView>(R.id.status_messageSent)
+        val img_Avatar_Status = itemView.findViewById<ImageView>(R.id.img_Avatar_Status)
     }
 
 
