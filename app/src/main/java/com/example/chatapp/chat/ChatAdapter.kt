@@ -67,54 +67,13 @@ class ChatAdapter(val context: Context) :
             if (currentMessage.noAvatarMessage) {
                 viewHolder.img_avatarSent.visibility = View.GONE
             } else {
+                viewHolder.img_avatarSent.visibility = View.VISIBLE
                 FirebaseStorage.getInstance().reference.child("images")
                     .child(loginUid).downloadUrl.addOnSuccessListener { it ->
                         Picasso.get().load(it).into(viewHolder.img_avatarSent)
                     }
             }
 
-//            viewHolder.img_avatarSent.setOnClickListener {
-//                val intent = Intent(context, ProfileActivity::class.java)
-//                intent.putExtra("uidLogin", userLogin.uid)
-//                intent.putExtra("uidFriend", userFriend.uid)
-//                intent.putExtra("hasMore", hasMore)
-//                intent.putExtra("userLogin", userLogin)
-//                intent.putExtra("userFriend", userFriend)
-//                context.startActivity(intent)
-//            }
-
-//            if (position == messageList.size - 1) {
-//                //viewHolder.status_Sent.visibility = View.VISIBLE
-//                if (currentMessage.seen) {
-//                    viewHolder.status_Sent.text = "Seen"
-//                } else {
-//                    viewHolder.status_Sent.text = "Delivered"
-//                }
-//            } else {
-//                viewHolder.status_Sent.visibility = View.GONE
-//            }
-
-//            if (position == messageList.size - 1) {
-//                //viewHolder.img_Avatar_Status.visibility = View.VISIBLE
-//                viewHolder.status_Sent.visibility = View.VISIBLE
-//                if (currentMessage.seen) {
-//                    viewHolder.status_Sent.visibility = View.GONE
-//                    viewHolder.img_Avatar_Status.visibility = View.VISIBLE
-//                    friendUid?.let {
-//                        FirebaseStorage.getInstance().reference.child("images")
-//                            .child(it).downloadUrl.addOnSuccessListener { it ->
-//                                Picasso.get().load(it).into(viewHolder.img_Avatar_Status)
-//                            }
-//                    }
-//                } else {
-//                    //viewHolder.status_Sent.visibility = View.VISIBLE
-//                    viewHolder.status_Sent.text = "sent"
-//                    viewHolder.img_Avatar_Status.visibility = View.GONE
-//                }
-//            } else {
-//                viewHolder.img_Avatar_Status.visibility = View.GONE
-//                viewHolder.status_Sent.visibility = View.GONE
-//            }
 
             if (currentMessage.seen) {
                 viewHolder.status_Sent.visibility = View.GONE
@@ -127,9 +86,6 @@ class ChatAdapter(val context: Context) :
                                 Picasso.get().load(it).into(viewHolder.img_Avatar_Status)
                             }
                     }
-//                    if (messageList[position - 2].seen) {
-//                        viewHolder.img_Avatar_Status.visibility = View.GONE
-//                    }
 
                 } else {
                     viewHolder.img_Avatar_Status.visibility = View.GONE
