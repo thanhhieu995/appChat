@@ -2,6 +2,7 @@ package com.example.chatapp.chat
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.media.MediaExtractor
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
@@ -187,7 +188,7 @@ class ChatActivity : AppCompatActivity() {
         if (hasMore) {
 
             loadDataRoomSend()
-            loadDataRoomReceive()
+            //loadDataRoomReceive()
             //room()
 
         }
@@ -332,13 +333,13 @@ class ChatActivity : AppCompatActivity() {
                     val messageList = ArrayList<Message>()
 //                    messageList.clear()
 //                    newList.clear()
-                    var messageEXReceive: Message? = Message("", "", "", null, seen,
-                        noAvatarMessage = false ,"", ""
-                    )
+                    var messageEXReceive: Message? = Message("", "", "", "2019-06-06 10:10:10", seen, noAvatarMessage = false ,"", "")
 
-                    var messageSender: Message? = Message("", "", "", "2020-06-06 10:10:10", seen,
-                        noAvatarMessage = false, "", ""
-                    )
+                    var messageSender: Message? = Message("", "", "", "2020-06-06 10:10:10", seen, noAvatarMessage = false, "", "")
+
+                    var messageExSend: Message? = Message("", "", "", "2019-06-06 10:10:10", seen, noAvatarMessage, "", "")
+
+                    var messageReceive: Message? = Message("", "", "", "2020-06-06 10:10:10", seen, noAvatarMessage, "", "")
 
                     for (postSnapshot in snapshot.children) {
 
@@ -355,6 +356,24 @@ class ChatActivity : AppCompatActivity() {
                                 hashMap.put("seen", true)
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
                             }
+                        }
+
+                        if (message != null && message.senderId == loginUid) {
+                            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                            val exSendTime = messageExSend?.time.let { sdf.parse(it) }
+                            val messageTime = message.time.let { sdf.parse(it) }
+                            val messageReceiveTime = messageReceive?.time.let { sdf.parse(it) }
+
+                            if (messageTime != null && exSendTime != null && messageReceiveTime != null && message.time != messageEXReceive?.time) {
+                                if ((messageTime.time - exSendTime.time)/ 1000 / 60 <= 1 && messageReceiveTime.before(exSendTime) || messageReceiveTime.after(messageTime)) {
+                                    var hashMap: HashMap<String, Boolean> = HashMap()
+                                    hashMap.put("noAvatarMessage", true)
+                                    postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+                                }
+                            }
+                            messageExSend = message
+                        } else {
+                            messageReceive = message
                         }
 
                         if (message != null && message.receiveId == loginUid) {
