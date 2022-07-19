@@ -215,7 +215,7 @@ class ChatActivity : AppCompatActivity() {
         avatarReceiveUrl: String
     ) {
         val message = messageBox.text.toString()
-        val messageObject = Message(message, loginUid, friendUid, currentDate, noAvatarMessage, seen, avatarSendUrl, avatarReceiveUrl)
+        val messageObject = Message(message, loginUid, friendUid, currentDate, noAvatarMessage, avatarSendUrl, avatarReceiveUrl)
         if (loginUid != null && message.trim().isNotEmpty()) {
             mDbRef.child("chats").child(roomSender!!).child("messages").push()
                 .setValue(messageObject).addOnSuccessListener {
@@ -333,13 +333,13 @@ class ChatActivity : AppCompatActivity() {
                     val messageList = ArrayList<Message>()
 //                    messageList.clear()
 //                    newList.clear()
-                    var messageEXReceive: Message? = Message("", "", "", "2019-06-06 10:10:10", seen, noAvatarMessage = false ,"", "")
+                    var messageEXReceive: Message? = Message("", "", "", "2019-06-06 10:10:10", noAvatarMessage = false ,"", "")
 
-                    var messageSender: Message? = Message("", "", "", "2020-06-06 10:10:10", seen, noAvatarMessage = false, "", "")
+                    var messageSender: Message? = Message("", "", "", "2020-06-06 10:10:10", noAvatarMessage = false, "", "")
 
-                    var messageExSend: Message? = Message("", "", "", "2019-06-06 10:10:10", seen, noAvatarMessage, "", "")
+                    var messageExSend: Message? = Message("", "", "", "2019-06-06 10:10:10", noAvatarMessage, "", "")
 
-                    var messageReceive: Message? = Message("", "", "", "2020-06-06 10:10:10", seen, noAvatarMessage, "", "")
+                    var messageReceive: Message? = Message("", "", "", "2020-06-06 10:10:10", noAvatarMessage, "", "")
 
                     for (postSnapshot in snapshot.children) {
 
@@ -422,12 +422,10 @@ class ChatActivity : AppCompatActivity() {
 //                    messageList.clear()
 //                    newList.clear()
                     var messageEXReceive: Message? = Message("", "", "", null,
-                        seen = false,
                         noAvatarMessage = false, "", ""
                     )
 
                     var messageSender: Message? = Message("", "", "", "2020-06-06 10:10:10",
-                        seen = false,
                         noAvatarMessage = false, "", ""
                     )
 

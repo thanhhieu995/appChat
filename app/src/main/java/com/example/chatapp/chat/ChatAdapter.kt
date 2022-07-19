@@ -75,26 +75,26 @@ class ChatAdapter(val context: Context) :
             }
 
 
-            if (currentMessage.seen) {
-                viewHolder.status_Sent.visibility = View.GONE
-                viewHolder.img_Avatar_Status.visibility = View.GONE
-                if (position == messageList.size - 1) {
-                    viewHolder.img_Avatar_Status.visibility = View.VISIBLE
-                    friendUid?.let {
-                        FirebaseStorage.getInstance().reference.child("images")
-                            .child(it).downloadUrl.addOnSuccessListener { it ->
-                                Picasso.get().load(it).into(viewHolder.img_Avatar_Status)
-                            }
-                    }
-
-                } else {
-                    viewHolder.img_Avatar_Status.visibility = View.GONE
-                }
-            } else {
-                viewHolder.status_Sent.visibility = View.VISIBLE
-                viewHolder.status_Sent.text = "sent"
-                viewHolder.img_Avatar_Status.visibility = View.GONE
-            }
+//            if (currentMessage.seen) {
+//                viewHolder.status_Sent.visibility = View.GONE
+//                viewHolder.img_Avatar_Status.visibility = View.GONE
+//                if (position == messageList.size - 1) {
+//                    viewHolder.img_Avatar_Status.visibility = View.VISIBLE
+//                    friendUid?.let {
+//                        FirebaseStorage.getInstance().reference.child("images")
+//                            .child(it).downloadUrl.addOnSuccessListener { it ->
+//                                Picasso.get().load(it).into(viewHolder.img_Avatar_Status)
+//                            }
+//                    }
+//
+//                } else {
+//                    viewHolder.img_Avatar_Status.visibility = View.GONE
+//                }
+//            } else {
+//                viewHolder.status_Sent.visibility = View.VISIBLE
+//                viewHolder.status_Sent.text = "sent"
+//                viewHolder.img_Avatar_Status.visibility = View.GONE
+//            }
 
         } else {
             val viewHolder = holder as ReceiveViewHolder
