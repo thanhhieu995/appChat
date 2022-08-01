@@ -1,6 +1,6 @@
 package com.example.chatapp
 
-import android.R
+import com.example.chatapp.R
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -19,6 +19,9 @@ import com.google.firebase.messaging.RemoteMessage
 
 class FirebaseMessageReceiver : FirebaseMessagingService() {
 
+    val channelId = "notification_channel"
+    val channelName = "com.example.chatapp"
+
 
     var tag: String = "FirebaseMessageReceiver"
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -33,37 +36,30 @@ class FirebaseMessageReceiver : FirebaseMessagingService() {
 
     }
 
-    private fun sendNotification(title: String? , body: String?) {
+    private fun getRemoteView(title: String?, message: String?): RemoteViews? {
+        val remoteView = RemoteViews("com.example.chatapp", R.layout.notification)
+
+        remoteView.setTextViewText(R.id.title_00, title)
+        remoteView.setTextViewText(R.id.message, message)
+        remoteView.setImageViewResource(R.id.app_logo, R.drawable.chatlogo)
+
+        return remoteView
+    }
+
+    private fun sendNotification(title: String? , message: String?) {
         var intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val builder: NotificationCompat.Builder? = NotificationCompat.Builder(this)
-            .setSmallIcon(R.drawable.stat_notify_chat) //set icon for notification
-            .setContentTitle(title) //set title of notification
-            .setContentText(body) //this is notification message
-            .setAutoCancel(true) // makes auto cancel of notification
-            .setPriority(Notification.PRIORITY_DEFAULT) //set priority of notification
-        val notificationIntent = Intent(this, MainActivity::class.java)
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        //notification message will get at NotificationView
-        notificationIntent.putExtra("message", body)
-        val pendingIntent = PendingIntent.getActivity(
-            this, 0, notificationIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        builder?.setContentIntent(pendingIntent)
-        val manager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.notify(0, builder?.build())
 
-        val channelId: String = getString(R.string.status_bar_notification_info_overflow)
-        var defaultSoundUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            var channel : NotificationChannel = NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT)
-            notificationManager.createNotificationChannel(channel)
-        }
-        if (builder != null) {
-            notificationManager.notify(0, builder.build())
-        }
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+
+        var builder: NotificationCompat.Builder = NotificationCompat.Builder(applicationContext, channelId)
+            .setSmallIcon(R.drawable.chatlogo)
+            .setAutoCancel(true)
+            .setVibrate(longArrayOf(1000, 1000, 1000, 1000))
+            .setOnlyAlertOnce(true)
+            .setContentIntent(pendingIntent)
+        
+        builder = builder.setContent(message?.let { getRemoteView(title, it) })
     }
+    
 }
