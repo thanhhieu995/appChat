@@ -33,7 +33,6 @@ class FirebaseMessageReceiver : FirebaseMessagingService() {
             Log.d(tag, "Message Notification Body: $body")
             sendNotification(title, body)
         }
-
     }
 
     private fun getRemoteView(title: String?, message: String?): RemoteViews? {
