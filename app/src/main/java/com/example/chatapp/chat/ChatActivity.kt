@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
@@ -17,10 +18,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.*
 import com.example.chatapp.R
 import com.example.chatapp.main.MainActivity
+import com.example.chatapp.notification.PushNotification
+import com.example.chatapp.notification.RetrofitInstance
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -136,10 +141,14 @@ class ChatActivity : AppCompatActivity() {
                 avatarReceiveUrl.toString()
             )
 
+
+
             chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
 
            // chatAdapter.notifyDataSetChanged()
         }
+
+        FirebaseMessaging.getInstance().subscribeToTopic("simple test")
 
 
 //        messageBox.setOnKeyListener(object : View.OnKeyListener{
@@ -590,6 +599,17 @@ class ChatActivity : AppCompatActivity() {
                 }
 
             })
+    }
+
+    private suspend fun sendNotification(notification: PushNotification) {
+        try {
+            val response = RetrofitInstance.api.postNotification(notification)
+            if (response.isSuccess) {
+                Log.d("Hieu", "Response: ${Gson().toJson(response)}")
+            }
+        }catch (e: java.lang.Exception) {
+            Log.e("Hieu", e.toString())
+        }
     }
 }
 
