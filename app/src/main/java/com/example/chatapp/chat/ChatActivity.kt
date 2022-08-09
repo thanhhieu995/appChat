@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.*
 import com.example.chatapp.R
 import com.example.chatapp.main.MainActivity
+import com.example.chatapp.notification.NotificationData
 import com.example.chatapp.notification.PushNotification
 import com.example.chatapp.notification.RetrofitInstance
 import com.google.firebase.auth.FirebaseAuth
@@ -213,15 +214,7 @@ class ChatActivity : AppCompatActivity() {
 
     }
 
-    private fun sendChatMessage(
-        loginUid: String?,
-        currentDate: String?,
-        friendUid: String?,
-        seen: Boolean,
-        noAvatarMessage: Boolean,
-        avatarSendUrl: String,
-        avatarReceiveUrl: String
-    ) {
+    private fun sendChatMessage(loginUid: String?, currentDate: String?, friendUid: String?, seen: Boolean, noAvatarMessage: Boolean, avatarSendUrl: String, avatarReceiveUrl: String) {
         val message = messageBox.text.toString()
         val messageObject = Message(message, loginUid, friendUid, currentDate, noAvatarMessage, avatarSendUrl, avatarReceiveUrl)
         if (loginUid != null && message.trim().isNotEmpty()) {
@@ -235,6 +228,16 @@ class ChatActivity : AppCompatActivity() {
         }
        // hideOrShowAvatarMess(messageObject)
 
+        val title: String? = userLogin.name
+
+        if (title != null) {
+            if (title.isNotEmpty() && message.isNotEmpty()) {
+                PushNotification(NotificationData(title, message), "new message")
+                    .also {
+                        sendNotification(it)
+                    }
+            }
+        }
 //        chatAdapter.updateData(newList)
         messageBox.setText("")
         chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
@@ -601,7 +604,7 @@ class ChatActivity : AppCompatActivity() {
             })
     }
 
-    private suspend fun sendNotification(notification: PushNotification) {
+    private fun sendNotification(notification: PushNotification) {
         try {
             val response = RetrofitInstance.api.postNotification(notification)
             if (response.isSuccess) {
