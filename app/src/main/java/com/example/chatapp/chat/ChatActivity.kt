@@ -30,7 +30,7 @@ import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+const val TOPIC = "/topics/myTopic"
 class ChatActivity : AppCompatActivity() {
 
     private lateinit var chatRecyclerView: RecyclerView
@@ -81,6 +81,8 @@ class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
+
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
 
         friendUid = intent.getSerializableExtra("uidFriend") as String?
 
