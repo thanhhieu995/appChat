@@ -6,10 +6,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,10 +19,8 @@ import com.example.chatapp.User
 import com.example.chatapp.accountLogin.LogIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import java.util.*
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlin.collections.ArrayList
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 class MainActivity : AppCompatActivity() {
 
@@ -45,6 +43,8 @@ class MainActivity : AppCompatActivity() {
 
     var userLogin: User = User()
 
+    var newToken: String? = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,9 +63,13 @@ class MainActivity : AppCompatActivity() {
 
         userList.clear()
 
+        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this
+        ) { instanceIdResult ->
+            newToken = instanceIdResult.token
+        }
+
         statusAccount(mAuth.uid)
         addFriendUser()
-
     }
 
     override fun onResume() {
@@ -204,6 +208,16 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         userLogin = postSnapshot.getValue(User::class.java)!!
                         adapter.addUserLogin(userLogin)
+
+//                        if(newToken?.let { userLogin.lisToken?.contains(it)} == true) {
+//                            userLogin.lisToken?.add(newToken!!)
+//                        }
+                        if (!userLogin.listToken!!.contains(newToken)) {
+                            newToken?.let { userLogin.listToken!!.add(it) }
+                            mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
+                        } else {
+                            Log.d("token", newToken.toString())
+                        }
                     }
                 }
             }
@@ -214,6 +228,14 @@ class MainActivity : AppCompatActivity() {
 
         })
     }
+
+//    fun String.containsAnyOfIgnoreCase(listToken: ArrayList<String>): Boolean {
+//        for (newToken in listToken) {
+//            if (this.contains(newToken, true)) return true
+//        }
+//        return false
+//    }
+
 
     fun addSearchFriend(query: String) {
         mDbRef.child("user").addValueEventListener(object: ValueEventListener{
