@@ -1,16 +1,17 @@
 package com.example.chatapp.accountLogin
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.chatapp.R
 import com.example.chatapp.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_log_in.*
 
 class SignUp : AppCompatActivity() {
@@ -44,6 +45,8 @@ class SignUp : AppCompatActivity() {
         edtPassword = findViewById(R.id.edt_password_signUp)
         edtName = findViewById(R.id.edt_name_signUp)
        // avatar = findViewById(R.id.imgAva_main)
+
+        val token: String? = FirebaseInstanceId.getInstance().getToken()
 
         mAuth = FirebaseAuth.getInstance()
 
