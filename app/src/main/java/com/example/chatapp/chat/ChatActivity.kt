@@ -29,6 +29,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 const val TOPIC = "/topics/myTopic"
 class ChatActivity : AppCompatActivity() {
@@ -67,6 +68,8 @@ class ChatActivity : AppCompatActivity() {
 
     var avatarSendUrl: String? = ""
     var avatarReceiveUrl: String? = ""
+
+    val listToken: ArrayList<String> = ArrayList()
 
 //    var messageEXReceive: Message? = Message("", "", "", null,
 //        seen = false,
@@ -234,7 +237,7 @@ class ChatActivity : AppCompatActivity() {
 
         if (title != null) {
             if (title.isNotEmpty() && message.isNotEmpty()) {
-                PushNotification(NotificationData(title, message), "new message")
+                PushNotification(NotificationData(title, message), listToken)
                     .also {
                         sendNotification(it)
                     }

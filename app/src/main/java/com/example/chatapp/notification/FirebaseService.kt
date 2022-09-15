@@ -32,8 +32,6 @@ class FirebaseService : FirebaseMessagingService() {
     val channelId = "notification_channel"
     val channelName = "com.example.chatapp"
 
-
-
     var tag: String = "FirebaseMessageReceiver"
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
@@ -49,17 +47,18 @@ class FirebaseService : FirebaseMessagingService() {
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
-        val pendingIntent = PendingIntent.getActivity(this, 0,
-            intent, FLAG_ONE_SHOT)
-
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        } else {
+            TODO("VERSION.SDK_INT < M")
+        }
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(remoteMessage.data["title"])
             .setContentText(remoteMessage.data["message"])
-            .setSmallIcon(R.drawable.chatlogo)
+            .setSmallIcon(R.drawable.ic_baseline_message_24)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .build()
-
 
         notificationManager.notify(notificationID, notification)
     }
@@ -73,15 +72,5 @@ class FirebaseService : FirebaseMessagingService() {
             lightColor = Color.GREEN
         }
         notificationManager.createNotificationChannel(channel)
-    }
-
-    private fun getRemoteView(title: String?, message: String?): RemoteViews? {
-        val remoteView = RemoteViews("com.example.chatapp", R.layout.notification)
-
-        remoteView.setTextViewText(R.id.title_00, title)
-        remoteView.setTextViewText(R.id.message, message)
-        remoteView.setImageViewResource(R.id.app_logo, R.drawable.chatlogo)
-
-        return remoteView
     }
 }
