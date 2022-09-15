@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
     var userLogin: User = User()
 
-    var newToken: String? = ""
+    var newToken: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

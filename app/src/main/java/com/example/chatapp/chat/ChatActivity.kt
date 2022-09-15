@@ -31,7 +31,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-const val TOPIC = "/topics/myTopic"
 class ChatActivity : AppCompatActivity() {
 
     private lateinit var chatRecyclerView: RecyclerView
@@ -69,7 +68,7 @@ class ChatActivity : AppCompatActivity() {
     var avatarSendUrl: String? = ""
     var avatarReceiveUrl: String? = ""
 
-    val listToken: ArrayList<String> = ArrayList()
+    var listToken: ArrayList<String> = ArrayList()
 
 //    var messageEXReceive: Message? = Message("", "", "", null,
 //        seen = false,
@@ -84,8 +83,6 @@ class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-
-        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
 
         friendUid = intent.getSerializableExtra("uidFriend") as String?
 
@@ -122,6 +119,23 @@ class ChatActivity : AppCompatActivity() {
 
         date = Calendar.getInstance().time
 
+        mDbRef.child("user").addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (postSnapshot in snapshot.children) {
+                    var user = postSnapshot.getValue(User::class.java)
+                    if (user != null) {
+                        if (user.uid == friendUid) {
+                            user.listToken?.let { listToken.addAll(it) }
+                        }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+
         //val now = Calendar.getInstance()
 
         //loadDataRoomSend()
@@ -154,7 +168,7 @@ class ChatActivity : AppCompatActivity() {
            // chatAdapter.notifyDataSetChanged()
         }
 
-        FirebaseMessaging.getInstance().subscribeToTopic("simple test")
+//        FirebaseMessaging.getInstance().subscribeToTopic("simple test")
 
 
 //        messageBox.setOnKeyListener(object : View.OnKeyListener{
