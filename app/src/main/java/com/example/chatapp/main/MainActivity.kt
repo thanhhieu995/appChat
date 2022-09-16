@@ -209,9 +209,7 @@ class MainActivity : AppCompatActivity() {
                         userLogin = postSnapshot.getValue(User::class.java)!!
                         adapter.addUserLogin(userLogin)
 
-//                        if(newToken?.let { userLogin.lisToken?.contains(it)} == true) {
-//                            userLogin.lisToken?.add(newToken!!)
-//                        }
+
                         if (!userLogin.listToken!!.contains(newToken)) {
                             newToken?.let { userLogin.listToken!!.add(it) }
                             mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)

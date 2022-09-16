@@ -1,9 +1,9 @@
 package com.example.chatapp.notification
 
 import com.example.chatapp.notification.Constants.Companion.BASE_URL
-import retrofit.BaseUrl
-import retrofit.GsonConverterFactory
-import retrofit.Retrofit
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
 
 class RetrofitInstance {
 

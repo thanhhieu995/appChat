@@ -1,4 +1,4 @@
 package com.example.chatapp.notification
 
-data class PushNotification(val data: NotificationData, val listToken: ArrayList<String>)
+class PushNotification(val data: NotificationData, val token: String)
 

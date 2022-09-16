@@ -1,9 +1,6 @@
 package com.example.chatapp.chat
 
 import android.annotation.SuppressLint
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -12,7 +9,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.*
@@ -21,12 +17,12 @@ import com.example.chatapp.main.MainActivity
 import com.example.chatapp.notification.NotificationData
 import com.example.chatapp.notification.PushNotification
 import com.example.chatapp.notification.RetrofitInstance
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -118,23 +114,6 @@ class ChatActivity : AppCompatActivity() {
 
 
         date = Calendar.getInstance().time
-
-        mDbRef.child("user").addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (postSnapshot in snapshot.children) {
-                    var user = postSnapshot.getValue(User::class.java)
-                    if (user != null) {
-                        if (user.uid == friendUid) {
-                            user.listToken?.let { listToken.addAll(it) }
-                        }
-                    }
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
 
         //val now = Calendar.getInstance()
 
@@ -251,10 +230,12 @@ class ChatActivity : AppCompatActivity() {
 
         if (title != null) {
             if (title.isNotEmpty() && message.isNotEmpty()) {
-                PushNotification(NotificationData(title, message), listToken)
-                    .also {
-                        sendNotification(it)
-                    }
+                for (token in listToken) {
+                    PushNotification(NotificationData(title, message), token)
+                        .also {
+                            sendNotification(it)
+                        }
+                }
             }
         }
 //        chatAdapter.updateData(newList)
@@ -600,9 +581,11 @@ class ChatActivity : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
                     val user: User? = snapshot.getValue(User::class.java)
-                    if (user != null && user.uid == friendUid) {
+                    if ((user != null) && (user.uid == friendUid)) {
                         //statusFriend = user.status
                         addStatusFriend(user.status)
+
+                        listToken = user.listToken!!
                         //isCalled = user.calling
                         if (user.calling) {
                             val intent = Intent(this@ChatActivity, VideoCallIncoming::class.java)
@@ -623,11 +606,17 @@ class ChatActivity : AppCompatActivity() {
             })
     }
 
-    private fun sendNotification(notification: PushNotification) {
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        throwable.printStackTrace()
+    }
+
+    private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO + coroutineExceptionHandler).launch {
         try {
             val response = RetrofitInstance.api.postNotification(notification)
-            if (response.isSuccess) {
+            if (response.isSuccessful) {
                 Log.d("Hieu", "Response: ${Gson().toJson(response)}")
+            } else {
+                Log.e("Hieu", response.errorBody().toString())
             }
         }catch (e: java.lang.Exception) {
             Log.e("Hieu", e.toString())
