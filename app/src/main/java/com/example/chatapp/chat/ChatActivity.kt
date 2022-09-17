@@ -613,6 +613,8 @@ class ChatActivity : AppCompatActivity() {
     private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO + coroutineExceptionHandler).launch {
         try {
             val response = RetrofitInstance.api.postNotification(notification)
+//            Log.d("Hieu", "Response: ${Gson().toJson(response)}")
+//            val resTest = Gson().toJson(response)
             if (response.isSuccessful) {
                 Log.d("Hieu", "Response: ${Gson().toJson(response)}")
             } else {
