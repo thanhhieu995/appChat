@@ -54,6 +54,12 @@ class LogIn : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
 
+        if (sharedPreferences.getBoolean("logging_Success", false)) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
         checkSharedPreference()
 
         btn_signup.setOnClickListener {
@@ -91,6 +97,10 @@ class LogIn : AppCompatActivity() {
                             .child("status").setValue("online")
 
                         Toast.makeText(this, "Successfully Logged In", Toast.LENGTH_LONG).show()
+
+                        editor.putBoolean("logging_Success", true)
+                        editor.commit()
+
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                         finish()
