@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -238,6 +239,9 @@ class MainActivity : AppCompatActivity() {
                             Log.d("token", newToken.toString())
                         }
                     }
+                }
+                if (userList.isEmpty()) {
+                    Toast.makeText(this@MainActivity, "No Friend Found", Toast.LENGTH_LONG).show()
                 }
             }
 
