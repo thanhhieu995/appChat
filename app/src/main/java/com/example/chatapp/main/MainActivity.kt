@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     var newToken: String? = null
 
 //    var logging: Boolean = true
+    val TIME_INTERVAL = 2000
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -203,10 +204,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        val intent = Intent(this, LogIn::class.java)
+//        val intent = Intent(this, LogIn::class.java)
         FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid!!).child("status").setValue("offline")
-        mAuth.signOut()
-        startActivity(intent)
+////        mAuth.signOut()
+//        startActivity(intent)
+//        finish()
+
+//        val mBackPressed: Long
         finish()
     }
 
