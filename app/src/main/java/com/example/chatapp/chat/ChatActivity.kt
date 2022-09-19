@@ -584,6 +584,7 @@ class ChatActivity : AppCompatActivity() {
                     if ((user != null) && (user.uid == friendUid)) {
                         //statusFriend = user.status
                         addStatusFriend(user.status)
+                        listToken.clear()
 
                         listToken = user.listToken!!
                         //isCalled = user.calling
