@@ -56,6 +56,8 @@ class MainActivity : AppCompatActivity() {
 
     var deleteToken: Boolean = false
 
+    val listTokenTem: ArrayList<String> = ArrayList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -173,6 +175,20 @@ class MainActivity : AppCompatActivity() {
 //            }
 //            newToken?.let { userLogin.listToken!!.remove(it) }
 
+            for (token in userLogin.listToken!!) {
+                if (token == newToken) {
+//                    listTokenTem.addAll(userLogin.listToken!!)
+//                    listTokenTem.remove(token)
+                    userLogin.listToken!!.remove(token)
+//                    val hashMap : HashMap<ArrayList<String>, String> = HashMap()
+//                    hashMap.put(userLogin.listToken!!, "listToken")
+                    //mDbRef.child("user").child(userLogin.uid.toString()).updateChildren()
+                    mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
+
+                }
+            }
+
+
             val intent = Intent(this@MainActivity, LogIn::class.java)
             startActivity(intent)
             finish()
@@ -243,7 +259,7 @@ class MainActivity : AppCompatActivity() {
                         adapter.addUserLogin(userLogin)
 
 
-                        if (!userLogin.listToken!!.contains(newToken)) {
+                        if (!userLogin.listToken!!.contains(newToken) && userLogin.status == "online") {
                             newToken?.let { userLogin.listToken!!.add(it) }
                             mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
                         } else {

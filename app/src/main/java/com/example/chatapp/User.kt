@@ -10,7 +10,7 @@ class User: Serializable {
     var avatar: String? = ""
     var calling: Boolean = false
     var acceptCall: Boolean = false
-    var listToken: ArrayList<String>? = null
+    var listToken: ArrayList<String>? = ArrayList()
 
     constructor() {}
     constructor(name: String?, email: String?, uid: String?, status: String?, avatar: String?, calling: Boolean, acceptCall: Boolean, listToken: ArrayList<String>) {
