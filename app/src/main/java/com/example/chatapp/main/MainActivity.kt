@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity() {
 //    var logging: Boolean = true
     val TIME_INTERVAL = 2000
 
+    var deleteToken: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,6 +162,16 @@ class MainActivity : AppCompatActivity() {
 
             editor.putBoolean("logging_Success", false)
             editor.commit()
+
+//            for (token in userLogin.listToken!!) {
+//                if (token == newToken) {
+////                    userLogin.listToken!!.remove(token)
+////                    mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
+////                    deleteToken = true
+//                    userLogin.listToken!!.remove(token)
+//                }
+//            }
+//            newToken?.let { userLogin.listToken!!.remove(it) }
 
             val intent = Intent(this@MainActivity, LogIn::class.java)
             startActivity(intent)

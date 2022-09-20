@@ -52,7 +52,7 @@ class SignUp : AppCompatActivity() {
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this
         ) { instanceIdResult ->
            val newToken = instanceIdResult.token
-            if (listToken?.contains(newToken) == false) {
+            if (listToken?.contains(newToken) == false|| listToken!!.isEmpty()) {
                 listToken!!.add(newToken)
             }
         }
