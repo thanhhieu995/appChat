@@ -3,9 +3,9 @@ package com.example.chatapp
 import java.io.Serializable
 
 class User: Serializable {
-    var name: String? = null
-    var email: String? = null
-    var uid: String? = null
+    var name: String? = ""
+    var email: String? = ""
+    var uid: String? = ""
     var status: String? = ""
     var avatar: String? = ""
     var calling: Boolean = false

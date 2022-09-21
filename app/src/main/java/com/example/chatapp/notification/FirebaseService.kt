@@ -55,7 +55,7 @@ class FirebaseService : FirebaseMessagingService() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(remoteMessage.data["title"])
             .setContentText(remoteMessage.data["message"])
-            .setSmallIcon(R.drawable.ic_baseline_message_24)
+            .setSmallIcon(R.drawable.chatlogo)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .build()
