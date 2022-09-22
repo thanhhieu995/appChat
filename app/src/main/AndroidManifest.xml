@@ -86,7 +86,7 @@
         </activity>
 
 
-        <service android:name=".notification.FirebaseService"
+        <service android:name=".notificationTest.FirebaseService"
             android:permission="com.google.android.c2dm.permission.SEND"
             android:exported="false">
             <intent-filter>

@@ -1,28 +1,19 @@
-package com.example.chatapp.notification
+package com.example.chatapp.notificationTest
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_HIGH
 import com.example.chatapp.R
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_ONE_SHOT
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
-import android.util.Log
-import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.chatapp.chat.ChatActivity
-import com.example.chatapp.main.MainActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.google.gson.Gson
-import com.squareup.okhttp.Dispatcher
-import java.lang.Exception
-import kotlin.coroutines.CoroutineContext
 import kotlin.random.Random
 
 private const val CHANNEL_ID = "my_channel"
@@ -55,6 +46,8 @@ class FirebaseService : FirebaseMessagingService() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(remoteMessage.data["title"])
             .setContentText(remoteMessage.data["message"])
+//            .setContentTitle(remoteMessage.notification?.title)
+//            .setContentText(remoteMessage.notification?.body)
             .setSmallIcon(R.drawable.chatlogo)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)

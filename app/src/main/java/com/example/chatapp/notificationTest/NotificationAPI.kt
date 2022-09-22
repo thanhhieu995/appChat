@@ -1,7 +1,7 @@
-package com.example.chatapp.notification
+package com.example.chatapp.notificationTest
 
-import com.example.chatapp.notification.Constants.Companion.CONTENT_TYPE
-import com.example.chatapp.notification.Constants.Companion.SERVER_KEY
+import com.example.chatapp.notificationTest.Constants.Companion.CONTENT_TYPE
+import com.example.chatapp.notificationTest.Constants.Companion.SERVER_KEY
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body

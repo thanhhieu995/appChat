@@ -14,9 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.*
 import com.example.chatapp.R
 import com.example.chatapp.main.MainActivity
-import com.example.chatapp.notification.NotificationData
-import com.example.chatapp.notification.PushNotification
-import com.example.chatapp.notification.RetrofitInstance
+import com.example.chatapp.notificationTest.NotificationData
+import com.example.chatapp.notificationTest.NotificationHH
+import com.example.chatapp.notificationTest.PushNotification
+import com.example.chatapp.notificationTest.RetrofitInstance
 import com.google.firebase.database.*
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -231,7 +232,7 @@ class ChatActivity : AppCompatActivity() {
         if (title != null) {
             if (title.isNotEmpty() && message.isNotEmpty()) {
                 for (token in listToken) {
-                    PushNotification(NotificationData(title, message), token)
+                    PushNotification(NotificationData(title, message), NotificationHH(title, message, ""), token)
                         .also {
                             sendNotification(it)
                         }

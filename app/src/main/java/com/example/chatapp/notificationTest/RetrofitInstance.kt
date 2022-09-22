@@ -1,6 +1,6 @@
-package com.example.chatapp.notification
+package com.example.chatapp.notificationTest
 
-import com.example.chatapp.notification.Constants.Companion.BASE_URL
+import com.example.chatapp.notificationTest.Constants.Companion.BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

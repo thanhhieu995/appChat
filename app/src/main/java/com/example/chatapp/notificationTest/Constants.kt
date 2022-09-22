@@ -1,4 +1,4 @@
-package com.example.chatapp.notification
+package com.example.chatapp.notificationTest
 
 class Constants {
 
