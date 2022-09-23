@@ -1,9 +1,9 @@
 package com.example.chatapp.notificationTest
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_HIGH
-import com.example.chatapp.R
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -11,10 +11,14 @@ import android.graphics.Color
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.example.chatapp.R
 import com.example.chatapp.chat.ChatActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import org.json.JSONException
+import org.json.JSONObject
 import kotlin.random.Random
+
 
 private const val CHANNEL_ID = "my_channel"
 
@@ -28,9 +32,12 @@ class FirebaseService : FirebaseMessagingService() {
 
         super.onMessageReceived(remoteMessage)
 
-        val intent = Intent(this, ChatActivity::class.java)
+//        intent.putExtra("remoteMessage", remoteMessage)
+
         val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
+
+        val intent = Intent(this, ChatActivity::class.java)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel(notificationManager)
@@ -44,10 +51,10 @@ class FirebaseService : FirebaseMessagingService() {
             TODO("VERSION.SDK_INT < M")
         }
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(remoteMessage.data["title"])
-            .setContentText(remoteMessage.data["message"])
-//            .setContentTitle(remoteMessage.notification?.title)
-//            .setContentText(remoteMessage.notification?.body)
+//            .setContentTitle(remoteMessage.data["title"])
+//            .setContentText(remoteMessage.data["message"])
+            .setContentTitle(remoteMessage.notification?.title)
+            .setContentText(remoteMessage.notification?.body)
             .setSmallIcon(R.drawable.chatlogo)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
