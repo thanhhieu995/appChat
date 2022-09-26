@@ -17,11 +17,13 @@ import com.example.chatapp.*
 import com.example.chatapp.R
 import com.example.chatapp.main.MainActivity
 import com.example.chatapp.notificationTest.NotificationData
-import com.example.chatapp.notificationTest.NotificationHH
+import com.example.chatapp.notificationTest.Notification
 import com.example.chatapp.notificationTest.PushNotification
 import com.example.chatapp.notificationTest.RetrofitInstance
 import com.google.firebase.database.*
 import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -93,12 +95,20 @@ class ChatActivity : AppCompatActivity() {
 //        friendUid = intent.getSerializableExtra("uidFriend") as String?
 //
 //        loginUid = intent.getSerializableExtra("uidLogin") as String?
+        val userLoginTemp = intent.extras?.get("userLogin")
+        val userFriendTemp = intent.extras?.get("userFriend")
+
+        if (userFriendTemp is JsonObject || userFriendTemp is JsonArray || userFriendTemp is String) {
+            userLogin = parseJSON(userLoginTemp as String)
+            userFriend = parseJSON(userFriendTemp as String)
+        } else {
+            userLogin = intent.getSerializableExtra("userLogin") as User
+
+            userFriend = intent.getSerializableExtra("userFriend") as User
+        }
+
 
         hasMore = intent.getBooleanExtra("hasMore", false)
-
-        userLogin = intent.getSerializableExtra("userLogin") as User
-
-        userFriend = intent.getSerializableExtra("userFriend") as User
 
 
         mDbRef = FirebaseDatabase.getInstance().reference
@@ -193,11 +203,17 @@ class ChatActivity : AppCompatActivity() {
 //
 //        loginUid = intent.getSerializableExtra("uidLogin") as String?
 
-        hasMore = intent.getBooleanExtra("hasMore", false)
+        val userLoginTemp = intent.extras?.get("userLogin")
+        val userFriendTemp = intent.extras?.get("userFriend")
 
-        userLogin = intent.getSerializableExtra("userLogin") as User
+        if (userFriendTemp is JsonObject || userFriendTemp is JsonArray || userFriendTemp is String) {
+            userLogin = parseJSON(userLoginTemp as String)
+            userFriend = parseJSON(userFriendTemp as String)
+        } else {
+            userLogin = intent.getSerializableExtra("userLogin") as User
 
-        userFriend = intent.getSerializableExtra("userFriend") as User
+            userFriend = intent.getSerializableExtra("userFriend") as User
+        }
 
         tmp1 = roomSender
         tmp2 = roomReceiver
@@ -241,7 +257,7 @@ class ChatActivity : AppCompatActivity() {
         if (title != null) {
             if (title.isNotEmpty() && message.isNotEmpty()) {
                 for (token in listToken) {
-                    PushNotification(NotificationData("juice"), NotificationHH(title, message, ".chat.ChatActivity"), token)
+                    PushNotification(NotificationData(userLogin, userFriend, hasMore, title, message), Notification(title, message, "View"), token, "high")
                         .also {
                             sendNotification(it)
                         }
@@ -563,6 +579,10 @@ class ChatActivity : AppCompatActivity() {
         }catch (e: java.lang.Exception) {
             Log.e("Hieu", e.toString())
         }
+    }
+
+    fun parseJSON(jsonResponse: String): User {
+        return Gson().fromJson(jsonResponse, User::class.java)
     }
 }
 

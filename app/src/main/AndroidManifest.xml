@@ -63,7 +63,7 @@
             </intent-filter>
 
             <intent-filter>
-                <action android:name=".chat.ChatActivity" />
+                <action android:name="View" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

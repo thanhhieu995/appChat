@@ -31,13 +31,16 @@ class FirebaseService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
         super.onMessageReceived(remoteMessage)
+        val intent = Intent(this, ChatActivity::class.java)
 
 //        intent.putExtra("remoteMessage", remoteMessage)
 
         val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
 
-        val intent = Intent(this, ChatActivity::class.java)
+//        intent.putExtra("userLogin", remoteMessage.data["userLogin"])
+//        intent.putExtra("userFriend", remoteMessage.data["userFriend"])
+//        intent.putExtra("hasMore", remoteMessage.data["hasMore"])
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel(notificationManager)
@@ -53,8 +56,8 @@ class FirebaseService : FirebaseMessagingService() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
 //            .setContentTitle(remoteMessage.data["title"])
 //            .setContentText(remoteMessage.data["message"])
-            .setContentTitle(remoteMessage.notification?.title)
-            .setContentText(remoteMessage.notification?.body)
+            .setContentTitle(remoteMessage.data["title"])
+            .setContentText(remoteMessage.data["body"])
             .setSmallIcon(R.drawable.chatlogo)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
