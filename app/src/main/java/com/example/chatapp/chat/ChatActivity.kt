@@ -244,6 +244,7 @@ class ChatActivity : AppCompatActivity() {
         }
 
         statusAndCall()
+        statusAccount(userLogin.uid)
         //chatAdapter.notifyDataSetChanged()
         chatAdapter.setValueUser(userLogin, userFriend, hasMore)
     }
@@ -601,5 +602,27 @@ class ChatActivity : AppCompatActivity() {
     fun parseJSON(jsonResponse: String): User {
         return Gson().fromJson(jsonResponse, User::class.java)
     }
+
+    private fun statusAccount(Uid: String? ) {
+        val studentRef = FirebaseDatabase.getInstance().getReference("user").child(Uid!!)
+        val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
+
+        connectedRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val connected = snapshot.getValue(Boolean::class.java)!!
+                if (connected) {
+                    studentRef.child("status").onDisconnect().setValue("offline")
+                    studentRef.child("status").setValue("online")
+                }else {
+                    studentRef.child("status").setValue("offline")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+
 }
 
