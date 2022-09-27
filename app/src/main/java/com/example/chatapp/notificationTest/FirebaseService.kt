@@ -30,7 +30,7 @@ class FirebaseService : FirebaseMessagingService() {
     var tag: String = "FirebaseMessageReceiver"
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
-        super.onMessageReceived(remoteMessage)
+        //super.onMessageReceived(remoteMessage)
         val intent = Intent(this, ChatActivity::class.java)
 
 //        intent.putExtra("remoteMessage", remoteMessage)
@@ -38,9 +38,11 @@ class FirebaseService : FirebaseMessagingService() {
         val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationID = Random.nextInt()
 
-//        intent.putExtra("userLogin", remoteMessage.data["userLogin"])
-//        intent.putExtra("userFriend", remoteMessage.data["userFriend"])
-//        intent.putExtra("hasMore", remoteMessage.data["hasMore"])
+        //val userLogin = remoteMessage.data["userLogin"]
+
+        intent.putExtra("userLogin", remoteMessage.data["userLogin"])
+        intent.putExtra("userFriend", remoteMessage.data["userFriend"])
+        intent.putExtra("hasMore", remoteMessage.data["hasMore"].toBoolean())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel(notificationManager)

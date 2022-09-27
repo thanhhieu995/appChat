@@ -85,6 +85,13 @@ class ChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
 
 //        val bundle = intent.extras
+
+        val hasMoreTemp = intent.extras?.get("hasMore")
+        hasMore = if (hasMoreTemp is String) {
+            hasMoreTemp.toBoolean()
+        } else {
+            intent.getBooleanExtra("hasMore", false)
+        }
 //
 //        if (bundle != null) {
 //            bundle.get("data")
@@ -97,10 +104,11 @@ class ChatActivity : AppCompatActivity() {
 //        loginUid = intent.getSerializableExtra("uidLogin") as String?
         val userLoginTemp = intent.extras?.get("userLogin")
         val userFriendTemp = intent.extras?.get("userFriend")
+//        val hasMoreTemp = intent.extras?.get("hasMore")
 
         if (userFriendTemp is JsonObject || userFriendTemp is JsonArray || userFriendTemp is String) {
-            userLogin = parseJSON(userLoginTemp as String)
-            userFriend = parseJSON(userFriendTemp as String)
+            userLogin = parseJSON(userFriendTemp as String)
+            userFriend = parseJSON(userLoginTemp as String)
         } else {
             userLogin = intent.getSerializableExtra("userLogin") as User
 
@@ -108,7 +116,7 @@ class ChatActivity : AppCompatActivity() {
         }
 
 
-        hasMore = intent.getBooleanExtra("hasMore", false)
+//        hasMore = intent.extras?.get("hasMore") as Boolean
 
 
         mDbRef = FirebaseDatabase.getInstance().reference
@@ -197,7 +205,14 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        hasMore = intent.getBooleanExtra("hasMore", false)
+//        hasMore = intent.getBooleanExtra("hasMore", false)
+        val hasMoreTemp = intent.extras?.get("hasMore")
+        hasMore = if (hasMoreTemp is String) {
+            hasMoreTemp.toBoolean()
+        } else {
+            intent.getBooleanExtra("hasMore", false)
+        }
+//        hasMore = intent.extras?.get("hasMore") as Boolean
 
 //        friendUid = intent.getSerializableExtra("uidFriend") as String?
 //
@@ -207,8 +222,8 @@ class ChatActivity : AppCompatActivity() {
         val userFriendTemp = intent.extras?.get("userFriend")
 
         if (userFriendTemp is JsonObject || userFriendTemp is JsonArray || userFriendTemp is String) {
-            userLogin = parseJSON(userLoginTemp as String)
-            userFriend = parseJSON(userFriendTemp as String)
+            userLogin = parseJSON(userFriendTemp as String)
+            userFriend = parseJSON(userLoginTemp as String)
         } else {
             userLogin = intent.getSerializableExtra("userLogin") as User
 
@@ -224,6 +239,8 @@ class ChatActivity : AppCompatActivity() {
             //loadDataRoomReceive()
             //room()
 
+        } else {
+            Toast.makeText(this@ChatActivity, "hasMore is false, please check", Toast.LENGTH_LONG).show()
         }
 
         statusAndCall()
