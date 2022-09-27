@@ -274,7 +274,7 @@ class ChatActivity : AppCompatActivity() {
         if (title != null) {
             if (title.isNotEmpty() && message.isNotEmpty()) {
                 for (token in listToken) {
-                    PushNotification(NotificationData(userLogin, userFriend, hasMore, title, message), Notification(title, message, "View"), token, "high")
+                    PushNotification(NotificationData(userLogin, userFriend, hasMore, title, message), token, "high")
                         .also {
                             sendNotification(it)
                         }
