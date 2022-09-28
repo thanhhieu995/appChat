@@ -61,7 +61,7 @@ class SetUpActivity : AppCompatActivity() {
         uid = intent.getStringExtra("uid").toString()
 
         btn_Continue.setOnClickListener {
-            val intent = Intent(this@SetUpActivity, MainActivity::class.java)
+            val intent = Intent(this@SetUpActivity, LogIn::class.java)
             //intent.putExtra("name", mAuth.currentUser?.displayName)
             intent.putExtra("uid", uid)
             intent.putExtra("hasMore", true)
