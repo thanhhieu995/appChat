@@ -25,6 +25,7 @@ import com.example.chatapp.accountLogin.LogIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
+import java.util.HashMap
 
 
 class MainActivity : AppCompatActivity() {
@@ -87,13 +88,14 @@ class MainActivity : AppCompatActivity() {
             newToken = instanceIdResult.token
         }
 
-        statusAccount(mAuth.uid)
+//        statusAccount(mAuth.uid)
         addFriendUser()
     }
 
     override fun onResume() {
         super.onResume()
         hasMore = intent.getBooleanExtra("hasMore", false)
+        statusAccount(mAuth.uid)
     }
 
 
@@ -258,7 +260,11 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(Intent.ACTION_MAIN)
                 intent.addCategory(Intent.CATEGORY_HOME)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid!!).child("status").setValue("offline")
+                val hashMap: HashMap<String, String> = HashMap()
+                hashMap.put("status", "offline")
+                //.ref.updateChildren(hashMap as Map<String, Any>)
+                FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid!!).updateChildren(
+                    hashMap as Map<String, Any>)
                 startActivity(intent)
                 finish()
             }).setNegativeButton("no", null).show()
