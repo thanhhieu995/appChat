@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.iid.FirebaseInstanceIdReceiver
 
 
 class MainActivity : AppCompatActivity() {
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     var userLogin: User = User()
 
-    var tokenReload: String? = null
+//    var tokenReload: String? = null
 
 //    var logging: Boolean = true
     val TIME_INTERVAL = 2000
@@ -188,19 +189,26 @@ class MainActivity : AppCompatActivity() {
 //            tokenReloadtokenReload?.let { userLogin.listToken!!.remove(it) }
 
             for (token in userLogin.listToken!!) {
-                if (token == tokenReload) {
-//                    listTokenTem.addAll(userLogin.listToken!!)
-//                    listTokenTem.remove(token)
-//                    userLogin.listToken!!.remove(token)
-//                    val hashMap : HashMap<ArrayList<String>, String> = HashMap()
-//                    hashMap.put(userLogin.listToken!!, "listToken")
-                    //mDbRef.child("user").child(userLogin.uid.toString()).updateChildren()
-//                    val hashMap : HashMap<ArrayList<String>, String> = HashMap()
-//                    hashMap.put(userLogin.listToken!!, "listToken")
 
-                    mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
-
+                FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+                    if (token == it.token) {
+                        mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
+                    }
                 }
+
+//                if (token == tokenReload) {
+////                    listTokenTem.addAll(userLogin.listToken!!)
+////                    listTokenTem.remove(token)
+////                    userLogin.listToken!!.remove(token)
+////                    val hashMap : HashMap<ArrayList<String>, String> = HashMap()
+////                    hashMap.put(userLogin.listToken!!, "listToken")
+//                    //mDbRef.child("user").child(userLogin.uid.toString()).updateChildren()
+////                    val hashMap : HashMap<ArrayList<String>, String> = HashMap()
+////                    hashMap.put(userLogin.listToken!!, "listToken")
+//
+//                    mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
+//
+//                }
             }
 
 
@@ -297,18 +305,28 @@ class MainActivity : AppCompatActivity() {
                         userLogin = postSnapshot.getValue(User::class.java)!!
                         adapter.addUserLogin(userLogin)
 
-                        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this@MainActivity, OnSuccessListener {
-                            tokenReload = it.token
-
-                            if (!userLogin.listToken!!.contains(tokenReload) && userLogin.status == "online") {
-                                userLogin.listToken!!.add(tokenReload!!)
-//                                tokenReload.let { userLogin.listToken!!.add(it) }
+//                        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this@MainActivity, OnSuccessListener {
+//                            tokenReload = it.token
+//
+//                            if (!userLogin.listToken!!.contains(tokenReload) && userLogin.status == "online") {
+//                                userLogin.listToken!!.add(tokenReload!!)
+////                                tokenReload.let { userLogin.listToken!!.add(it) }
+////                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
 //                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
-                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
+//                            } else {
+//                                Log.d("token", tokenReload.toString())
+//                            }
+//                        })
+                        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+
+
+                            if (!userLogin.listToken?.contains(it.token)!! && userLogin.status == "online") {
+                                userLogin.listToken?.add(it.token)
+                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(it.token)
                             } else {
-                                Log.d("token", tokenReload.toString())
+                                Log.d("token", it.token)
                             }
-                        })
+                        }
 
                     }
                 }
