@@ -25,7 +25,6 @@ import com.example.chatapp.accountLogin.LogIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
-import java.util.HashMap
 
 
 class MainActivity : AppCompatActivity() {
@@ -183,11 +182,14 @@ class MainActivity : AppCompatActivity() {
                 if (token == newToken) {
 //                    listTokenTem.addAll(userLogin.listToken!!)
 //                    listTokenTem.remove(token)
-                    userLogin.listToken!!.remove(token)
+//                    userLogin.listToken!!.remove(token)
 //                    val hashMap : HashMap<ArrayList<String>, String> = HashMap()
 //                    hashMap.put(userLogin.listToken!!, "listToken")
                     //mDbRef.child("user").child(userLogin.uid.toString()).updateChildren()
-                    mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
+//                    val hashMap : HashMap<ArrayList<String>, String> = HashMap()
+//                    hashMap.put(userLogin.listToken!!, "listToken")
+
+                    mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
 
                 }
             }
