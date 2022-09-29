@@ -22,6 +22,7 @@ import com.example.chatapp.ProfileLoginActivity
 import com.example.chatapp.R
 import com.example.chatapp.User
 import com.example.chatapp.accountLogin.LogIn
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
     var userLogin: User = User()
 
-    var newToken: String? = null
+    var tokenReload: String? = null
 
 //    var logging: Boolean = true
     val TIME_INTERVAL = 2000
@@ -82,19 +83,27 @@ class MainActivity : AppCompatActivity() {
 
         userList.clear()
 
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this
-        ) { instanceIdResult ->
-            newToken = instanceIdResult.token
-        }
+//        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this@MainActivity, OnSuccessListener {
+//            tokenReloadtokenReload = it.token
+//
+////            if (!userLogin.listToken!!.contains(tokenReloadtokenReload)) {
+//////                                tokenReload.let { userLogin.listToken!!.add(it) }
+//////                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
+////                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(tokenReloadtokenReload)
+////            } else {
+////                Log.d("token", tokenReloadtokenReload.toString())
+////            }
+//        })
 
-//        statusAccount(mAuth.uid)
-        addFriendUser()
+        statusAccount(mAuth.uid)
+//        addFriendUser()
     }
 
     override fun onResume() {
         super.onResume()
         hasMore = intent.getBooleanExtra("hasMore", false)
-        statusAccount(mAuth.uid)
+//        statusAccount(mAuth.uid)
+        addFriendUser()
     }
 
 
@@ -169,17 +178,17 @@ class MainActivity : AppCompatActivity() {
             editor.commit()
 
 //            for (token in userLogin.listToken!!) {
-//                if (token == newToken) {
+//                if (token == tokenReloadtokenReload) {
 ////                    userLogin.listToken!!.remove(token)
 ////                    mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
 ////                    deleteToken = true
 //                    userLogin.listToken!!.remove(token)
 //                }
 //            }
-//            newToken?.let { userLogin.listToken!!.remove(it) }
+//            tokenReloadtokenReload?.let { userLogin.listToken!!.remove(it) }
 
             for (token in userLogin.listToken!!) {
-                if (token == newToken) {
+                if (token == tokenReload) {
 //                    listTokenTem.addAll(userLogin.listToken!!)
 //                    listTokenTem.remove(token)
 //                    userLogin.listToken!!.remove(token)
@@ -288,13 +297,19 @@ class MainActivity : AppCompatActivity() {
                         userLogin = postSnapshot.getValue(User::class.java)!!
                         adapter.addUserLogin(userLogin)
 
+                        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this@MainActivity, OnSuccessListener {
+                            tokenReload = it.token
 
-                        if (!userLogin.listToken!!.contains(newToken) && userLogin.status == "online") {
-                            newToken?.let { userLogin.listToken!!.add(it) }
-                            mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
-                        } else {
-                            Log.d("token", newToken.toString())
-                        }
+                            if (!userLogin.listToken!!.contains(tokenReload) && userLogin.status == "online") {
+                                userLogin.listToken!!.add(tokenReload!!)
+//                                tokenReload.let { userLogin.listToken!!.add(it) }
+//                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
+                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
+                            } else {
+                                Log.d("token", tokenReload.toString())
+                            }
+                        })
+
                     }
                 }
                 if (userList.isEmpty()) {
@@ -310,8 +325,8 @@ class MainActivity : AppCompatActivity() {
     }
 
 //    fun String.containsAnyOfIgnoreCase(listToken: ArrayList<String>): Boolean {
-//        for (newToken in listToken) {
-//            if (this.contains(newToken, true)) return true
+//        for (tokenReloadtokenReload in listToken) {
+//            if (this.contains(tokenReloadtokenReload, true)) return true
 //        }
 //        return false
 //    }
