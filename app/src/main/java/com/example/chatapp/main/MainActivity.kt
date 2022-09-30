@@ -321,8 +321,12 @@ class MainActivity : AppCompatActivity() {
 
 
                             if (!userLogin.listToken?.contains(it.token)!! && userLogin.status == "online") {
-                                userLogin.listToken?.add(it.token)
-                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(it.token)
+
+                                val listToken = ArrayList<String>()
+                                listToken.add(it.token)
+
+//                                userLogin.listToken?.add(it.token)
+                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(listToken)
                             } else {
                                 Log.d("token", it.token)
                             }
