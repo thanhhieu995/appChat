@@ -106,6 +106,11 @@ class MainActivity : AppCompatActivity() {
 //        statusAccount(mAuth.uid)
         addFriendUser()
 
+//        if (userLogin.status == "offline") {
+//            mDbRef.child("user").child(userLogin.uid.toString()).child("status").setValue("online")
+//        }
+
+
         FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 newToken = task.result.token
