@@ -15,6 +15,7 @@ import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_log_in.*
 
+
 class SignUp : AppCompatActivity() {
 
     private lateinit var edtName: EditText
@@ -49,13 +50,13 @@ class SignUp : AppCompatActivity() {
         edtName = findViewById(R.id.edt_name_signUp)
        // avatar = findViewById(R.id.imgAva_main)
 
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this
-        ) { instanceIdResult ->
-           val newToken = instanceIdResult.token
-            if (listToken?.contains(newToken) == false|| listToken!!.isEmpty()) {
-                listToken!!.add(newToken)
-            }
-        }
+//        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this
+//        ) { instanceIdResult ->
+//           val newToken = instanceIdResult.token
+//            if (listToken?.contains(newToken) == false|| listToken!!.isEmpty()) {
+//                listToken!!.add(newToken)
+//            }
+//        }
 
         mAuth = FirebaseAuth.getInstance()
 
@@ -63,6 +64,13 @@ class SignUp : AppCompatActivity() {
             val email = edtEmail.text.toString().trim()
             val password = edtPassword.text.toString()
             val name = edtName.text.toString().trim()
+
+            FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener { instanceIdResult ->
+                val newToken = instanceIdResult.token
+                if (listToken?.contains(newToken) == false|| listToken!!.isEmpty()) {
+                listToken!!.add(newToken)
+            }
+            }
 
             listToken?.let { it1 ->
                 signUp(email, password, name, status.toString(), avatar, isCalling, acceptCall,

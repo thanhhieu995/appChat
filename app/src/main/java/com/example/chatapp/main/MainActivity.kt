@@ -26,7 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.iid.FirebaseInstanceIdReceiver
+import com.google.firebase.iid.InstanceIdResult
 
 
 class MainActivity : AppCompatActivity() {
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     var userLogin: User = User()
 
-//    var tokenReload: String? = null
+    var newToken: String? = null
 
 //    var logging: Boolean = true
     val TIME_INTERVAL = 2000
@@ -105,6 +105,13 @@ class MainActivity : AppCompatActivity() {
         hasMore = intent.getBooleanExtra("hasMore", false)
 //        statusAccount(mAuth.uid)
         addFriendUser()
+
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                newToken = task.result.token
+            } else
+                Toast.makeText(this, "token from firebase fail!!!", Toast.LENGTH_LONG).show()
+        }
     }
 
 
@@ -172,7 +179,69 @@ class MainActivity : AppCompatActivity() {
             if (mAuth.uid != null) {
                 FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString())
                     .child("status").setValue("offline")
+
+                if (mAuth.uid.toString() == userLogin.uid.toString() && userLogin.listToken != null) {
+//                    for (token in userLogin.listToken!!) {
+//                        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+//                            if (token == it.token) {
+//                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
+//                            }
+//                        }
+//                    }
+
+//                    FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this@MainActivity,
+//                        OnSuccessListener<InstanceIdResult> { instanceIdResult ->
+//                            val tokenFirebase = instanceIdResult.token
+//                            for (token in userLogin.listToken!!) {
+//                                if (token == tokenFirebase) {
+//                                    mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
+//                                }
+//                            }
+//                        })
+
+//                    FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener { instanceIdResult ->
+//                        val newToken = instanceIdResult.token
+//                       for (token in userLogin.listToken!!) {
+//                           if (token == newToken) {
+//                               mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
+//                           } else {
+//                               Log.d("listToken not remove", newToken)
+//                           }
+//                       }
+//                    }
+
+
+
+
+
+//                    FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task ->
+//                        if (task.isSuccessful) {
+//                            val newToken = task.result.token
+//                            for (token in userLogin.listToken!!) {
+//                                if (token == newToken) {
+//                                    mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
+//                                }
+//                            }
+//                        } else
+//                            Toast.makeText(this, "token from firebase fail!!!", Toast.LENGTH_LONG).show()
+//                    }
+                    for (token in userLogin.listToken!!) {
+                        if (token == newToken) {
+                            mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
+                        }
+                    }
+
+                }
+//                val token = FirebaseInstanceId.getInstance().instanceId
             }
+//            for (token in userLogin.listToken!!) {
+//
+//                FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+//                    if (token == it.token) {
+//                        mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
+//                    }
+//                }
+//            }
             mAuth.signOut()
 
             editor.putBoolean("logging_Success", false)
@@ -187,29 +256,6 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 //            tokenReloadtokenReload?.let { userLogin.listToken!!.remove(it) }
-
-            for (token in userLogin.listToken!!) {
-
-                FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-                    if (token == it.token) {
-                        mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
-                    }
-                }
-
-//                if (token == tokenReload) {
-////                    listTokenTem.addAll(userLogin.listToken!!)
-////                    listTokenTem.remove(token)
-////                    userLogin.listToken!!.remove(token)
-////                    val hashMap : HashMap<ArrayList<String>, String> = HashMap()
-////                    hashMap.put(userLogin.listToken!!, "listToken")
-//                    //mDbRef.child("user").child(userLogin.uid.toString()).updateChildren()
-////                    val hashMap : HashMap<ArrayList<String>, String> = HashMap()
-////                    hashMap.put(userLogin.listToken!!, "listToken")
-//
-//                    mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
-//
-//                }
-            }
 
 
             val intent = Intent(this@MainActivity, LogIn::class.java)
