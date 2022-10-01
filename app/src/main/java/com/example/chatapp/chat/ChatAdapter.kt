@@ -60,19 +60,32 @@ class ChatAdapter(val context: Context) :
 
             val viewHolder = holder
             viewHolder.sentMessage.text = currentMessage.message
-            if (currentMessage.time != null) {
-                viewHolder.time_sent.text = currentMessage.time
-            }
+//            if (currentMessage.time != null) {
+//                viewHolder.time_sent.text = currentMessage.time
+//            }
 
             if (currentMessage.noAvatarMessage) {
                 viewHolder.img_avatarSent.visibility = View.GONE
+                viewHolder.time_sent.visibility = View.GONE
             } else {
                 viewHolder.img_avatarSent.visibility = View.VISIBLE
+                viewHolder.time_sent.visibility = View.VISIBLE
+                viewHolder.time_sent.text = currentMessage.time
                 FirebaseStorage.getInstance().reference.child("images")
                     .child(loginUid).downloadUrl.addOnSuccessListener { it ->
                         Picasso.get().load(it).into(viewHolder.img_avatarSent)
                     }
             }
+
+//            if (position != messageList.size - 1) {
+                viewHolder.img_Avatar_Status.visibility = View.GONE
+                viewHolder.status_Sent.visibility = View.GONE
+//            } else {
+//                viewHolder.img_Avatar_Status.visibility = View.VISIBLE
+//                viewHolder.status_Sent.visibility = View.VISIBLE
+//            }
+
+
 
 
 //            if (currentMessage.seen) {
@@ -113,12 +126,15 @@ class ChatAdapter(val context: Context) :
             Log.d("Hieu", "$viewHolder - bind ${currentMessage.message}")
 
             viewHolder.receiveMessage.text = currentMessage.message
-            viewHolder.time_receive.text = currentMessage.time
+
 
             if (currentMessage.noAvatarMessage) {
                 viewHolder.img_avatar.visibility = View.GONE
+                viewHolder.time_receive.visibility = View.GONE
             } else {
                 viewHolder.img_avatar.visibility = View.VISIBLE
+                viewHolder.time_receive.visibility = View.VISIBLE
+                viewHolder.time_receive.text = currentMessage.time
                 val friendUid = friendUid
                 if (friendUid != null) {
                     FirebaseStorage.getInstance().reference.child("images")

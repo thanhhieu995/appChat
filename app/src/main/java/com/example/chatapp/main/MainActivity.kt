@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+                Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
             }
 
         })
@@ -299,7 +299,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+                Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
             }
         })
     }
@@ -391,7 +391,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+                Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
             }
 
         })
@@ -423,7 +423,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+                Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
             }
 
         })
@@ -450,7 +450,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+                Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
             }
 
         })
