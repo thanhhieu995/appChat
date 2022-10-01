@@ -385,8 +385,8 @@ class MainActivity : AppCompatActivity() {
 
                     }
                 }
-                if (userList.isEmpty()) {
-                    Toast.makeText(this@MainActivity, "No Friend Found", Toast.LENGTH_LONG).show()
+                if (userList.isEmpty() && hasMore) {
+                    Toast.makeText(this@MainActivity, "No Friend Found", Toast.LENGTH_SHORT).show()
                 }
             }
 

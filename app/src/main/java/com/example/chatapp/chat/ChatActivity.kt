@@ -593,6 +593,7 @@ class ChatActivity : AppCompatActivity() {
                 Log.d("Hieu", "Response: ${Gson().toJson(response)}")
             } else {
                 Log.e("Hieu", response.errorBody().toString())
+                Toast.makeText(this@ChatActivity, "Check your internet connection!!!", Toast.LENGTH_LONG).show()
             }
         }catch (e: java.lang.Exception) {
             Log.e("Hieu", e.toString())

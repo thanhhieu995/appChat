@@ -13,14 +13,18 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.chatapp.R
 import com.example.chatapp.main.MainActivity
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_log_in.*
 
+
 class LogIn : AppCompatActivity() {
 
-    var hasMore : Boolean = false
+    var hasMore: Boolean = false
 
     private lateinit var edtEmail: EditText
     private lateinit var edtPassword: EditText
@@ -87,26 +91,57 @@ class LogIn : AppCompatActivity() {
     private fun login(email: String, password: String) {
 
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            Toast.makeText(this@LogIn, "Please enter your name and password!!!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@LogIn, "Please enter your name and password!!!", Toast.LENGTH_LONG)
+                .show()
         } else {
             mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, OnCompleteListener { task ->
-                    if (task.isSuccessful) {
+//                    if (task.isSuccessful) {
+//
+//                        FirebaseDatabase.getInstance().getReference("user")
+//                            .child(mAuth.uid.toString())
+//                            .child("status").setValue("online")
+//
+//                        Toast.makeText(this, "Successfully Logged In", Toast.LENGTH_LONG).show()
+//
+//                        editor.putBoolean("logging_Success", true)
+//                        editor.commit()
+//
+//                        val intent = Intent(this, MainActivity::class.java)
+//                        startActivity(intent)
+//                        finish()
+//                    } else {
+//                        val e: Exception? = task.exception
+//                        if (e != null) {
+//                            Toast.makeText(this, "Login Failed" + e.message, Toast.LENGTH_LONG)
+//                                .show()
+//                        }
+//                    }
 
-                        FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString())
-                            .child("status").setValue("online")
+                    try {
+                        if (task.isSuccessful) {
+                            FirebaseDatabase.getInstance().getReference("user")
+                                .child(mAuth.uid.toString())
+                                .child("status").setValue("online")
 
-                        Toast.makeText(this, "Successfully Logged In", Toast.LENGTH_LONG).show()
+                            Toast.makeText(this, "Successfully Logged In", Toast.LENGTH_LONG).show()
 
-                        editor.putBoolean("logging_Success", true)
-                        editor.commit()
+                            editor.putBoolean("logging_Success", true)
+                            editor.commit()
 
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    } else {
-                       Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show()
+                            val intent = Intent(this, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                    } catch (e: FirebaseNetworkException) {
+
+                        Toast.makeText(this@LogIn, "LogIn failed: " + e.message, Toast.LENGTH_LONG)
+                            .show()
                     }
+
+                })
+                .addOnFailureListener(this, OnFailureListener{
+                    Toast.makeText(this@LogIn, it.message.toString(), Toast.LENGTH_LONG).show()
                 })
         }
     }
