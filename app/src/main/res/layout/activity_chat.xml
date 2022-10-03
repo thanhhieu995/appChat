@@ -10,11 +10,22 @@
         android:id="@+id/chatRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/constraintLayout"
+        android:layout_above="@+id/textTyping"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="5dp"
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="1dp" />
+
+    <TextView
+        android:id="@+id/textTyping"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/constraintLayout"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="33dp"
+        android:layout_marginBottom="3dp"
+        android:text=""
+        android:textSize="10sp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"

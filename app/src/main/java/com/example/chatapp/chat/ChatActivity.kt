@@ -9,8 +9,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.*
@@ -38,6 +40,8 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var sentButton: ImageView
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var mDbRef: DatabaseReference
+
+    lateinit var textTyping: TextView
 
     private var roomSender: String? = null
     private var roomReceiver: String? = null
@@ -112,6 +116,9 @@ class ChatActivity : AppCompatActivity() {
 
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
         messageBox = findViewById(R.id.messageBox)
+
+        textTyping = findViewById(R.id.textTyping)
+
         sentButton = findViewById(R.id.img_sent)
 
         chatAdapter = ChatAdapter(this)
@@ -148,6 +155,8 @@ class ChatActivity : AppCompatActivity() {
             chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
 
         }
+
+        checkTyping(messageBox)
     }
 
     override fun onResume() {
@@ -491,6 +500,16 @@ class ChatActivity : AppCompatActivity() {
                     Toast.makeText(this@ChatActivity, "fail isSeen message!!!", Toast.LENGTH_LONG).show()
                 }
             })
+    }
+
+    fun checkTyping(messageBox: EditText) {
+        messageBox.addTextChangedListener {
+            if (it.toString().trim().isEmpty()) {
+                textTyping.text = ""
+            } else {
+                textTyping.text = "Typing...."
+            }
+        }
     }
 }
 
