@@ -252,12 +252,12 @@ class ChatActivity : AppCompatActivity() {
 
                         val message = postSnapshot.getValue(Message::class.java)
 
-                        if (message != null && hasMore) {
-                            if (!seen && message.senderId == userFriend.uid) {
+                        if (message != null && hasMore && message.receiveId == userLogin.uid && !seen) {
+//                            if (!seen && message.senderId == userFriend.uid) {
                                 val hashMap: HashMap<String, Boolean> = HashMap()
                                 hashMap.put("seen", true)
                                 postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-                            }
+//                            }
                         }
 
                         if (message != null && message.senderId == userLogin.uid) {
@@ -313,6 +313,7 @@ class ChatActivity : AppCompatActivity() {
                 }
 
             })
+        isSeen()
     }
 
 
@@ -472,5 +473,24 @@ class ChatActivity : AppCompatActivity() {
         })
     }
 
+    fun isSeen() {
+        mDbRef.child("chats").child(roomReceiver!!).child("messages")
+            .addValueEventListener(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (postSnapshot in snapshot.children) {
+                        val message = postSnapshot.getValue(Message::class.java)
+                        if (message != null && hasMore && message.receiveId == userLogin.uid && message.senderId == userFriend.uid && !seen) {
+                            val hashMap: HashMap<String, Boolean> = HashMap()
+                            hashMap.put("seen", true)
+                            postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(this@ChatActivity, "fail isSeen message!!!", Toast.LENGTH_LONG).show()
+                }
+            })
+    }
 }
 

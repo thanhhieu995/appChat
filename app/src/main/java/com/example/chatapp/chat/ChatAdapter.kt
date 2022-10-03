@@ -78,8 +78,23 @@ class ChatAdapter(val context: Context) :
             }
 
             if (currentMessage.seen) {
-                viewHolder.img_Avatar_Status.visibility  = View.GONE
+//                viewHolder.img_Avatar_Status.visibility  = View.GONE
                 viewHolder.status_Sent.visibility = View.GONE
+                if (position == messageList.size - 1) {
+                    viewHolder.img_Avatar_Status.visibility = View.VISIBLE
+                    friendUid?.let { it ->
+                        FirebaseStorage.getInstance().reference.child("images")
+                            .child(it).downloadUrl.addOnSuccessListener {
+                                Picasso.get().load(it).into(viewHolder.img_Avatar_Status)
+                            }
+                    }
+                } else {
+                    viewHolder.img_Avatar_Status.visibility = View.GONE
+                }
+            } else {
+                viewHolder.status_Sent.visibility = View.VISIBLE
+                viewHolder.img_Avatar_Status.visibility = View.GONE
+                viewHolder.status_Sent.text = "sent"
             }
 
 //            if (position != messageList.size - 1) {
