@@ -77,9 +77,14 @@ class ChatAdapter(val context: Context) :
                     }
             }
 
-//            if (position != messageList.size - 1) {
-                viewHolder.img_Avatar_Status.visibility = View.GONE
+            if (currentMessage.seen) {
+                viewHolder.img_Avatar_Status.visibility  = View.GONE
                 viewHolder.status_Sent.visibility = View.GONE
+            }
+
+//            if (position != messageList.size - 1) {
+//                viewHolder.img_Avatar_Status.visibility = View.GONE
+//                viewHolder.status_Sent.visibility = View.GONE
 //            } else {
 //                viewHolder.img_Avatar_Status.visibility = View.VISIBLE
 //                viewHolder.status_Sent.visibility = View.VISIBLE

@@ -9,6 +9,7 @@ data class Message (
     var receiveId: String? = null,
     var time: String?= null,
     var noAvatarMessage: Boolean = false,
+    var seen: Boolean = false,
     var avatarSendUrl: String? = null,
     var avatarReceiveUrl: String? = null
 ) {
