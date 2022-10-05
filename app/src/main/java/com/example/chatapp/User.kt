@@ -10,10 +10,11 @@ class User: Serializable {
     var avatar: String? = ""
     var calling: Boolean = false
     var acceptCall: Boolean = false
+    var isTyping: Boolean = false
     var listToken: ArrayList<String>? = ArrayList()
 
     constructor() {}
-    constructor(name: String?, email: String?, uid: String?, status: String?, avatar: String?, calling: Boolean, acceptCall: Boolean, listToken: ArrayList<String>) {
+    constructor(name: String?, email: String?, uid: String?, status: String?, avatar: String?, calling: Boolean, acceptCall: Boolean, isTyping: Boolean, listToken: ArrayList<String>) {
         this.name = name
         this.email = email
         this.uid = uid
@@ -21,6 +22,7 @@ class User: Serializable {
         this.avatar = avatar
         this.calling = calling
         this.acceptCall = acceptCall
+        this.isTyping = isTyping
         this.listToken = listToken
     }
 }

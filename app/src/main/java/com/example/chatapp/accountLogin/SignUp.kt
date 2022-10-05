@@ -35,6 +35,8 @@ class SignUp : AppCompatActivity() {
 
     var isCalling: Boolean = false
 
+    var isTyping: Boolean = false
+
     var acceptCall: Boolean = false
 
     var listToken: ArrayList<String>? = ArrayList()
@@ -74,7 +76,7 @@ class SignUp : AppCompatActivity() {
 
             listToken?.let { it1 ->
                 signUp(
-                    email, password, name, status.toString(), avatar, isCalling, acceptCall,
+                    email, password, name, status.toString(), avatar, isCalling, acceptCall, isTyping,
                     it1
                 )
             }
@@ -96,6 +98,7 @@ class SignUp : AppCompatActivity() {
         avatar: String?,
         isCalling: Boolean,
         acceptCall: Boolean,
+        isTyping: Boolean,
         listToken: ArrayList<String>
     ) {
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(name)) {
@@ -112,6 +115,7 @@ class SignUp : AppCompatActivity() {
                             avatar,
                             isCalling,
                             acceptCall,
+                            isTyping,
                             listToken
                         )
                         val intent = Intent(this@SignUp, SetUpActivity::class.java)
@@ -131,12 +135,13 @@ class SignUp : AppCompatActivity() {
         avatar: String?,
         isCalling: Boolean,
         acceptCall: Boolean,
+        isTyping: Boolean,
         listToken: ArrayList<String>
     ) {
         mDbRef = FirebaseDatabase.getInstance().reference
 
         mDbRef.child("user").child(uid)
-            .setValue(User(name, email, uid, status, avatar, isCalling, acceptCall, listToken))
+            .setValue(User(name, email, uid, status, avatar, isCalling, acceptCall, isTyping,listToken))
     }
 
     private fun checkUserExist(email: String?) {

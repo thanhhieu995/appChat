@@ -59,9 +59,13 @@ class LogIn : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
 
         if (sharedPreferences.getBoolean("logging_Success", false)) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            if (mAuth.uid != null) {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                Toast.makeText(this@LogIn, "Account is not exist!!!", Toast.LENGTH_LONG).show()
+            }
         }
 
         checkSharedPreference()
@@ -120,9 +124,11 @@ class LogIn : AppCompatActivity() {
 
                     try {
                         if (task.isSuccessful) {
+                            val hashMap: HashMap<String, String> = HashMap()
+                            hashMap.put("status", "online")
                             FirebaseDatabase.getInstance().getReference("user")
                                 .child(mAuth.uid.toString())
-                                .child("status").setValue("online")
+                                .updateChildren(hashMap as Map<String, Any>)
 
                             Toast.makeText(this, "Successfully Logged In", Toast.LENGTH_LONG).show()
 

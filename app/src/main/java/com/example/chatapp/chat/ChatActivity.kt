@@ -29,9 +29,11 @@ import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 class ChatActivity : AppCompatActivity() {
 
@@ -156,7 +158,7 @@ class ChatActivity : AppCompatActivity() {
 
         }
 
-        checkTyping(messageBox)
+//        checkTyping(messageBox)
     }
 
     override fun onResume() {
@@ -186,9 +188,14 @@ class ChatActivity : AppCompatActivity() {
 
             loadDataRoomSend()
 
+//            checkTyping(messageBox)
+
         } else {
             Toast.makeText(this@ChatActivity, "hasMore is false, please check", Toast.LENGTH_LONG).show()
         }
+
+//        checkTyping(messageBox)
+        showTyping(messageBox)
 
         statusAndCall()
         statusAccount(userLogin.uid)
@@ -315,6 +322,13 @@ class ChatActivity : AppCompatActivity() {
                     userLogin.uid?.let { userFriend.uid?.let { it1 -> chatAdapter.addUid(it, it1) } }
                     chatAdapter.updateData(messageList)
                     chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
+
+//                    checkTyping(messageBox)
+//                    if (userFriend.isTyping) {
+//                        textTyping.text = "typing...."
+//                    } else {
+//                        textTyping.text = ""
+//                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -504,12 +518,53 @@ class ChatActivity : AppCompatActivity() {
 
     fun checkTyping(messageBox: EditText) {
         messageBox.addTextChangedListener {
-            if (it.toString().trim().isEmpty()) {
-                textTyping.text = ""
+            val hashMap: HashMap<String, Boolean> = HashMap()
+            if (it.toString().trim().isNotEmpty()) {
+                hashMap.put("isTyping", true)
+//                mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+                mDbRef.child("user").child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
             } else {
-                textTyping.text = "Typing...."
+                hashMap.put("isTyping", false)
+                mDbRef.child("user").child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
             }
         }
+    }
+
+    fun showTyping(messageBox: EditText) {
+
+        messageBox.addTextChangedListener {
+            val hashMap: HashMap<String, Boolean> = HashMap()
+            if (it.toString().trim().isNotEmpty()) {
+                hashMap.put("typing", true)
+//                mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+                mDbRef.child("user").child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+            } else {
+                hashMap.put("typing", false)
+                mDbRef.child("user").child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+            }
+        }
+
+        mDbRef.child("user").addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+               for (postSnapshot in snapshot.children) {
+                   val postUser = postSnapshot.getValue(User::class.java)
+                   if (postUser != null ) {
+                       if (postUser.uid == userFriend.uid) {
+                           if (postUser.isTyping) {
+                               textTyping.text = "Typing..."
+                           } else {
+                               textTyping.text = ""
+                           }
+                       }
+
+                   }
+               }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
     }
 }
 

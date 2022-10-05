@@ -182,8 +182,10 @@ class MainActivity : AppCompatActivity() {
         if(item.itemId == R.id.logout) {
             //hasMore = true
             if (mAuth.uid != null) {
+                val hashMap: HashMap<String, String> = HashMap()
+                hashMap.put("status", "offline")
                 FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString())
-                    .child("status").setValue("offline")
+                    .updateChildren(hashMap as Map<String, Any>)
 
                 if (mAuth.uid.toString() == userLogin.uid.toString() && userLogin.listToken != null) {
 //                    for (token in userLogin.listToken!!) {
@@ -290,11 +292,15 @@ class MainActivity : AppCompatActivity() {
         connectedRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val connected = snapshot.getValue(Boolean::class.java)!!
+                val hashMap1 : HashMap<String, String> = HashMap()
+                hashMap1.put("status", "offline")
+                val hashMap2: HashMap<String, String> = HashMap()
+                hashMap2.put("status", "online")
                 if (connected) {
-                    studentRef.child("status").onDisconnect().setValue("offline")
-                    studentRef.child("status").setValue("online")
+                    studentRef.onDisconnect().updateChildren(hashMap1 as Map<String, Any>)
+                    studentRef.updateChildren(hashMap2 as Map<String, Any>)
                 }else {
-                    studentRef.child("status").setValue("offline")
+                    studentRef.updateChildren(hashMap1 as Map<String, Any>)
                     }
             }
 
