@@ -406,6 +406,9 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 adapter.addUserList(userList)
+                if (userList.isEmpty()) {
+                    Toast.makeText(this@MainActivity, "No Friend to show", Toast.LENGTH_LONG).show()
+                }
                 adapter.notifyDataSetChanged()
             }
 
