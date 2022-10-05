@@ -132,31 +132,12 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
         notifyDataSetChanged()
     }
 
-    fun filter(text: String) {
-        var filterList = ArrayList<User>()
-        if (text.isEmpty()) {
-            filterList = userList
-        } else {
-            for (data in userList) {
-                if (data.name?.toLowerCase()?.contains(text.toLowerCase()) == true) {
-
-                }
-            }
-            //userList = filterList
-        }
-        notifyDataSetChanged()
-    }
-
-    fun addAvatar() {
-
-        val One_Megabyte: Long = 1024 * 1024
-
-//        islandRef.downloadUrl.addOnSuccessListener {
-//            Toast.makeText(context, "load success", Toast.LENGTH_LONG).show()
-//        }
-    }
 
     fun addUserLogin(userLogin: User) {
         this.userLogin = userLogin
+    }
+
+    fun addUserList(userList: ArrayList<User>) {
+        this.userList = userList
     }
 }

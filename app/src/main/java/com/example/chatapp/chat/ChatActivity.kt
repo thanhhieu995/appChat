@@ -594,7 +594,7 @@ class ChatActivity : AppCompatActivity() {
                     if (userTemp != null) {
                         if (userTemp.uid == userFriend.uid) {
                             if (userTemp.isTyping) {
-                                textTyping.text = "Typing................."
+                                textTyping.text = userFriend.name +  " is typing..."
                             } else {
                                 textTyping.text = ""
                             }

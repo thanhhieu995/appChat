@@ -95,7 +95,22 @@ class MainActivity : AppCompatActivity() {
 ////                Log.d("token", tokenReloadtokenReload.toString())
 ////            }
 //        })
-
+//        mDbRef.child("user").addValueEventListener(object : ValueEventListener{
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                for(postSnapshot in snapshot.children) {
+//                    if (postSnapshot.getValue(User::class.java)?.uid == mAuth.uid) {
+//                        statusAccount(mAuth.uid)
+//                    } else {
+//                        Toast.makeText(this@MainActivity, "Account is not in Firebase Database!!!", Toast.LENGTH_LONG).show()
+//                    }
+//                }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                TODO("Not yet implemented")
+//            }
+//
+//        })
         statusAccount(mAuth.uid)
 //        addFriendUser()
     }
@@ -357,7 +372,6 @@ class MainActivity : AppCompatActivity() {
                 for (postSnapshot in snapshot.children) {
                     if (postSnapshot.getValue(User::class.java)?.uid != null && mAuth.uid != null && postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
                         userList.add(postSnapshot.getValue(User::class.java)!!)
-                        adapter.notifyDataSetChanged()
                     } else {
                         userLogin = postSnapshot.getValue(User::class.java)!!
                         adapter.addUserLogin(userLogin)
@@ -391,9 +405,8 @@ class MainActivity : AppCompatActivity() {
 
                     }
                 }
-                if (userList.isEmpty() && hasMore) {
-                    Toast.makeText(this@MainActivity, "No Friend Found", Toast.LENGTH_SHORT).show()
-                }
+                adapter.addUserList(userList)
+                adapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {

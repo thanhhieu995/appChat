@@ -11,14 +11,14 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatapp.R
+import com.example.chatapp.User
 import com.example.chatapp.main.MainActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_log_in.*
 
 
@@ -43,6 +43,8 @@ class LogIn : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
 
+    var hadUer: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
@@ -58,9 +60,15 @@ class LogIn : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
 
+        mDbRef = FirebaseDatabase.getInstance().reference
+
+        val test1 = mAuth.uid
+
         if (sharedPreferences.getBoolean("logging_Success", false)) {
+//            checkUserDatabase()
             if (mAuth.uid != null) {
                 val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("hasMore", true)
                 startActivity(intent)
                 finish()
             } else {
@@ -136,6 +144,7 @@ class LogIn : AppCompatActivity() {
                             editor.commit()
 
                             val intent = Intent(this, MainActivity::class.java)
+                            intent.putExtra("hasMore", true)
                             startActivity(intent)
                             finish()
                         }
