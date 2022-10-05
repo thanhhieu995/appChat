@@ -23,6 +23,7 @@ import com.example.chatapp.notificationTest.Notification
 import com.example.chatapp.notificationTest.PushNotification
 import com.example.chatapp.notificationTest.RetrofitInstance
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -197,6 +198,8 @@ class ChatActivity : AppCompatActivity() {
 //        checkTyping(messageBox)
         showTyping(messageBox)
 
+        userChangeTyping()
+
         statusAndCall()
         statusAccount(userLogin.uid)
         chatAdapter.setValueUser(userLogin, userFriend, hasMore)
@@ -242,6 +245,11 @@ class ChatActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         hasMore = false
+
+        val hashMap: HashMap<String, Boolean> = HashMap()
+        hashMap.put("typing", false)
+        mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("hasMore", hasMore)
         startActivity(intent)
@@ -326,6 +334,12 @@ class ChatActivity : AppCompatActivity() {
 //                    checkTyping(messageBox)
 //                    if (userFriend.isTyping) {
 //                        textTyping.text = "typing...."
+//                    } else {
+//                        textTyping.text = ""
+//                    }
+
+//                    if (userLogin.isTyping) {
+//                        textTyping.text = "Typing........."
 //                    } else {
 //                        textTyping.text = ""
 //                    }
@@ -534,36 +548,72 @@ class ChatActivity : AppCompatActivity() {
 
         messageBox.addTextChangedListener {
             val hashMap: HashMap<String, Boolean> = HashMap()
-            if (it.toString().trim().isNotEmpty()) {
+            if (it.toString().trim().isNotEmpty() && hasMore) {
                 hashMap.put("typing", true)
 //                mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
-                mDbRef.child("user").child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+                mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
             } else {
                 hashMap.put("typing", false)
-                mDbRef.child("user").child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+                    mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
             }
         }
 
-        mDbRef.child("user").addValueEventListener(object: ValueEventListener{
+//        mDbRef.child("user").addValueEventListener(object: ValueEventListener{
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//               for (postSnapshot in snapshot.children) {
+//                   val postUser = postSnapshot.getValue(User::class.java)
+//                   if (postUser != null ) {
+//                       if (postUser.uid == userFriend.uid) {
+//                           if (postUser.isTyping) {
+//
+//                           }
+//                       }
+//
+//                   }
+//               }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//
+//            }
+//        })
+    }
+
+    private fun userChangeTyping() {
+        mDbRef.child("user").addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-               for (postSnapshot in snapshot.children) {
-                   val postUser = postSnapshot.getValue(User::class.java)
-                   if (postUser != null ) {
-                       if (postUser.uid == userFriend.uid) {
-                           if (postUser.isTyping) {
-                               textTyping.text = "Typing..."
-                           } else {
-                               textTyping.text = ""
-                           }
-                       }
 
-                   }
-               }
+//                val userTemp = snapshot.getValue(User::class.java)
+//
+//                for (postSnapshot in snapshot.children) {
+//
+//                }
+                for (postSnapshot in snapshot.children) {
+                    val userTemp = postSnapshot.getValue(User::class.java)
+
+                    if (userTemp != null) {
+                        if (userTemp.uid == userFriend.uid) {
+                            if (userTemp.isTyping) {
+                                textTyping.text = "Typing................."
+                            } else {
+                                textTyping.text = ""
+                            }
+                        }
+                    }
+                }
+
+//                if (userFriend.isTyping) {
+//                    textTyping.text = "Typing......."
+//                } else {
+//                    textTyping.text = ""
+//                }
+
+
             }
-
             override fun onCancelled(error: DatabaseError) {
-
+                Toast.makeText(this@ChatActivity, "typing not run", Toast.LENGTH_LONG).show()
             }
+
         })
     }
 }

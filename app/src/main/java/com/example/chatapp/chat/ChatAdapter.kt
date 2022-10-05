@@ -163,6 +163,12 @@ class ChatAdapter(val context: Context) :
                         }
                 }
             }
+
+//            if (userFriend.isTyping) {
+//                viewHolder.typing.text = "Typing..."
+//            } else {
+//                viewHolder.typing.text = ""
+//            }
         }
     }
 
@@ -185,6 +191,7 @@ class ChatAdapter(val context: Context) :
         val receiveMessage = itemView.findViewById<TextView>(R.id.txt_receive_message)
         val time_receive = itemView.findViewById<TextView>(R.id.time_receive)
         val img_avatar = itemView.findViewById<ImageView>(R.id.img_receiveProfile)
+        val typing = itemView.findViewById<TextView>(R.id.textTyping)
     }
 
     class SentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -214,6 +221,10 @@ class ChatAdapter(val context: Context) :
         this.userLogin = userLogin
         this.userFriend = userFriend
         this.hasMore = hasMore
+    }
+
+    fun typingChange(typing: String) {
+
     }
 }
 
