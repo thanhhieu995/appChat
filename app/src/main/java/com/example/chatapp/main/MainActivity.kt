@@ -406,8 +406,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 adapter.addUserList(userList)
-                if (userList.isEmpty()) {
-                    Toast.makeText(this@MainActivity, "No Friend to show", Toast.LENGTH_LONG).show()
+                if (userList.isEmpty() && hasMore && userLogin.uid == mAuth.uid) {
+                    Toast.makeText(this@MainActivity, "No friend to show", Toast.LENGTH_LONG).show()
                 }
                 adapter.notifyDataSetChanged()
             }
