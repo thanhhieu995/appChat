@@ -31,7 +31,7 @@ class VideoCallIncoming : AppCompatActivity() {
 
     var loginUid: String = ""
     var friendUid: String = ""
-    var hasMore: Boolean = false
+    var hasMore: Boolean = true
     lateinit var userLogin: User
     lateinit var userFriend: User
 
@@ -68,6 +68,7 @@ class VideoCallIncoming : AppCompatActivity() {
                 intent.putExtra("userLogin", userLogin)
                 intent.putExtra("userFriend", userFriend)
                 startActivity(intent)
+                finish()
             }
 
         })

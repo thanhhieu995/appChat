@@ -71,6 +71,7 @@ class VideoCallOutgoing : AppCompatActivity() {
             intent.putExtra("userLogin", userLogin)
             intent.putExtra("userFriend", userFriend)
             startActivity(intent)
+            finish()
         }
     }
 

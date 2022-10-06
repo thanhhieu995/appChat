@@ -196,7 +196,7 @@ class ChatActivity : AppCompatActivity() {
         }
 
 //        checkTyping(messageBox)
-        showTyping(messageBox)
+//        showTyping(messageBox)
 
         userChangeTyping()
 
