@@ -22,34 +22,18 @@
         android:layout_below="@+id/imgLogo"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/edt_background"
         android:hint="Email"
         android:paddingLeft="13dp"
         android:text=""
         android:textSize="16sp" />
 
-    <EditText
-        android:id="@+id/edt_password"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/edt_email"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/edt_background"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:paddingLeft="13dp"
-        android:text=""
-        android:textSize="16sp" />
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edt_password"
+        android:layout_below="@+id/layout_password"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
         android:background="@drawable/btn_background"
         android:text="Log In"
         android:textColor="@color/white"
@@ -62,7 +46,7 @@
         android:layout_below="@id/btn_login"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:background="@drawable/btn_background"
+        android:background="@drawable/button_background"
         android:text="Sign Up"
         android:textColor="@color/white"
         android:textSize="20sp" />
@@ -72,10 +56,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_signup"
-        android:layout_alignStart="@+id/edt_password"
-        android:layout_alignEnd="@+id/edt_password"
-        android:layout_marginStart="56dp"
-        android:layout_marginTop="31dp"
-        android:layout_marginEnd="56dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
         android:text="Remember username and password" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edt_email"
+        android:textColorHint="#B9B8B8"
+        android:hint="Password"
+        app:endIconMode="password_toggle"
+
+        >
+
+        <EditText
+            android:id="@+id/register_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:backgroundTint="#BEBEBE"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:padding="16dp"
+            android:singleLine="true"
+            android:text="123456"
+            android:textSize="18sp" />
+    </com.google.android.material.textfield.TextInputLayout>
 </RelativeLayout>

@@ -15,6 +15,7 @@ import com.example.chatapp.User
 import com.example.chatapp.main.MainActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -45,6 +46,7 @@ class LogIn : AppCompatActivity() {
 
     var hadUer: Boolean = false
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
@@ -52,11 +54,16 @@ class LogIn : AppCompatActivity() {
         supportActionBar?.hide()
 
         edtEmail = findViewById(R.id.edt_email)
-        edtPassword = findViewById(R.id.edt_password)
+        edtPassword = findViewById(R.id.register_password)
         checkBox = findViewById(R.id.checkRemember)
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         editor = sharedPreferences.edit()
+
+        val password: TextInputLayout? = findViewById<TextInputLayout>(R.id.layout_password)
+        if (password != null) {
+            password.editText?.text.toString()
+        }
 
         mAuth = FirebaseAuth.getInstance()
 
