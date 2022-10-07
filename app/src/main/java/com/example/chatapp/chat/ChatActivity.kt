@@ -62,10 +62,6 @@ class ChatActivity : AppCompatActivity() {
 
     var hasMore: Boolean = false
 
-//    var friendUid: String? = ""
-//
-//    var loginUid: String? = ""
-
     var nameFriend: String = ""
 
     lateinit var date: Date
@@ -76,16 +72,6 @@ class ChatActivity : AppCompatActivity() {
     var avatarReceiveUrl: String? = ""
 
     var listToken: ArrayList<String> = ArrayList()
-
-//    var messageEXReceive: Message? = Message("", "", "", null,
-//        seen = false,
-//        noAvatarMessage = false, "", ""
-//    )
-//
-//    var messageSender: Message? = Message("", "", "", "2020-06-06 10:10:10",
-//        seen = false,
-//        noAvatarMessage = false, "", ""
-//    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -189,16 +175,11 @@ class ChatActivity : AppCompatActivity() {
 
             loadDataRoomSend()
 
-//            checkTyping(messageBox)
-
         } else {
             Toast.makeText(this@ChatActivity, "hasMore is false, please check", Toast.LENGTH_LONG).show()
         }
 
-//        checkTyping(messageBox)
-//        showTyping(messageBox)
-
-        userChangeTyping()
+//        userChangeTyping()
 
         statusAndCall()
         statusAccount(userLogin.uid)
@@ -214,6 +195,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun sendChatMessage(loginUid: String?, currentDate: String?, friendUid: String?, seen: Boolean, noAvatarMessage: Boolean, avatarSendUrl: String, avatarReceiveUrl: String) {
         val message = messageBox.text.toString()
+        showTyping(messageBox)
         val messageObject = Message(message, loginUid, friendUid, currentDate, noAvatarMessage, seen, avatarSendUrl, avatarReceiveUrl)
         if (loginUid != null && message.trim().isNotEmpty()) {
             mDbRef.child("chats").child(roomSender!!).child("messages").push()
@@ -434,18 +416,16 @@ class ChatActivity : AppCompatActivity() {
 
 
     private fun statusAndCall() {
+//        showTyping(messageBox)
         mDbRef.child("user").child(userFriend.uid.toString())
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
                     val user: User? = snapshot.getValue(User::class.java)
                     if ((user != null) && (user.uid == userFriend.uid)) {
-                        //statusFriend = user.status
                         addStatusFriend(user.status)
                         listToken.clear()
-
                         listToken = user.listToken!!
-                        //isCalled = user.calling
                         if (user.calling) {
                             val intent = Intent(this@ChatActivity, VideoCallIncoming::class.java)
                             intent.putExtra("loginUid", userLogin.uid)
@@ -455,6 +435,12 @@ class ChatActivity : AppCompatActivity() {
                             intent.putExtra("userFriend", userFriend)
                             startActivity(intent)
                         }
+                        if (user.isTyping) {
+                            textTyping.text = userFriend.name +  " is typing..."
+                        } else {
+                            textTyping.text = ""
+                        }
+
                     }
                 }
 
@@ -579,43 +565,43 @@ class ChatActivity : AppCompatActivity() {
 //        })
     }
 
-    private fun userChangeTyping() {
-        showTyping(messageBox)
-        mDbRef.child("user").addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-
-//                val userTemp = snapshot.getValue(User::class.java)
+//    private fun userChangeTyping() {
+//        showTyping(messageBox)
+//        mDbRef.child("user").addValueEventListener(object : ValueEventListener{
+//            override fun onDataChange(snapshot: DataSnapshot) {
 //
+////                val userTemp = snapshot.getValue(User::class.java)
+////
+////                for (postSnapshot in snapshot.children) {
+////
+////                }
 //                for (postSnapshot in snapshot.children) {
+//                    val userTemp = postSnapshot.getValue(User::class.java)
 //
+//                    if (userTemp != null) {
+//                        if (userTemp.uid == userFriend.uid) {
+//                            if (userTemp.isTyping) {
+//                                textTyping.text = userFriend.name +  " is typing..."
+//                            } else {
+//                                textTyping.text = ""
+//                            }
+//                        }
+//                    }
 //                }
-                for (postSnapshot in snapshot.children) {
-                    val userTemp = postSnapshot.getValue(User::class.java)
-
-                    if (userTemp != null) {
-                        if (userTemp.uid == userFriend.uid) {
-                            if (userTemp.isTyping) {
-                                textTyping.text = userFriend.name +  " is typing..."
-                            } else {
-                                textTyping.text = ""
-                            }
-                        }
-                    }
-                }
-
-//                if (userFriend.isTyping) {
-//                    textTyping.text = "Typing......."
-//                } else {
-//                    textTyping.text = ""
-//                }
-
-
-            }
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@ChatActivity, "typing not run", Toast.LENGTH_LONG).show()
-            }
-
-        })
-    }
+//
+////                if (userFriend.isTyping) {
+////                    textTyping.text = "Typing......."
+////                } else {
+////                    textTyping.text = ""
+////                }
+//
+//
+//            }
+//            override fun onCancelled(error: DatabaseError) {
+//                Toast.makeText(this@ChatActivity, "typing not run", Toast.LENGTH_LONG).show()
+//            }
+//
+//        })
+//    }
 }
 
