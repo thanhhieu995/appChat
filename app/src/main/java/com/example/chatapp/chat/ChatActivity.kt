@@ -184,7 +184,7 @@ class ChatActivity : AppCompatActivity() {
             Toast.makeText(this@ChatActivity, "hasMore is false, please check", Toast.LENGTH_LONG).show()
         }
 
-//        userChangeTyping()
+        userChangeTyping()
 
         statusAndCall()
         statusAccount(userLogin.uid)
@@ -200,7 +200,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun sendChatMessage(loginUid: String?, currentDate: String?, friendUid: String?, seen: Boolean, noAvatarMessage: Boolean, avatarSendUrl: String, avatarReceiveUrl: String) {
         val message = messageBox.text.toString()
-        showTyping(messageBox)
+//        showTyping(messageBox)
         val messageObject = Message(message, loginUid, friendUid, currentDate, noAvatarMessage, seen, avatarSendUrl, avatarReceiveUrl)
         if (loginUid != null && message.trim().isNotEmpty()) {
             mDbRef.child("chats").child(roomSender!!).child("messages").push()
@@ -234,8 +234,11 @@ class ChatActivity : AppCompatActivity() {
         hasMore = false
 
         val hashMap: HashMap<String, Boolean> = HashMap()
+        val hashMap1 : HashMap<String, Boolean> = HashMap()
         hashMap.put("typing", false)
+        hashMap1.put("showTyping", false)
         mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+        mDbRef.child("user").child(userFriend.uid.toString()).updateChildren(hashMap1 as Map<String, Any>)
 
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("hasMore", hasMore)
@@ -440,14 +443,16 @@ class ChatActivity : AppCompatActivity() {
                             intent.putExtra("userLogin", userLogin)
                             intent.putExtra("userFriend", userFriend)
                             startActivity(intent)
+                            finish()
                         }
-                        if (user.isTyping) {
-                            textTyping.text = userFriend.name +  " is typing..."
-                        } else {
-                            textTyping.text = ""
-                        }
+//                        if (user.isTyping && userLogin.showTyping) {
+//                            textTyping.text = userFriend.name +  " is typing..."
+//                        } else {
+//                            textTyping.text = ""
+//                        }
 
                     }
+//                    showTyping(messageBox)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -536,17 +541,22 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    fun showTyping(messageBox: EditText) {
+    private fun showTyping(messageBox: EditText) {
 
         messageBox.addTextChangedListener {
             val hashMap: HashMap<String, Boolean> = HashMap()
+            val hashMap1: HashMap<String, Boolean> = HashMap()
             if (it.toString().trim().isNotEmpty() && hasMore) {
                 hashMap.put("typing", true)
+                hashMap1.put("showTyping", true)
 //                mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
                 mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+                mDbRef.child("user").child(userFriend.uid.toString()).updateChildren(hashMap1 as Map<String, Any>)
             } else {
                 hashMap.put("typing", false)
+                hashMap1.put("showTyping", false)
                 mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+                mDbRef.child("user").child(userFriend.uid.toString()).updateChildren(hashMap1 as Map<String, Any>)
             }
         }
 
@@ -571,43 +581,58 @@ class ChatActivity : AppCompatActivity() {
 //        })
     }
 
-//    private fun userChangeTyping() {
-//        showTyping(messageBox)
-//        mDbRef.child("user").addValueEventListener(object : ValueEventListener{
-//            override fun onDataChange(snapshot: DataSnapshot) {
+    private fun userChangeTyping() {
+        mDbRef.child("user").addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                showTyping(messageBox)
+
+//                val userTemp = snapshot.getValue(User::class.java)
 //
-////                val userTemp = snapshot.getValue(User::class.java)
-////
-////                for (postSnapshot in snapshot.children) {
-////
-////                }
 //                for (postSnapshot in snapshot.children) {
-//                    val userTemp = postSnapshot.getValue(User::class.java)
 //
-//                    if (userTemp != null) {
-//                        if (userTemp.uid == userFriend.uid) {
-//                            if (userTemp.isTyping) {
-//                                textTyping.text = userFriend.name +  " is typing..."
-//                            } else {
-//                                textTyping.text = ""
-//                            }
-//                        }
-//                    }
 //                }
-//
-////                if (userFriend.isTyping) {
-////                    textTyping.text = "Typing......."
-////                } else {
-////                    textTyping.text = ""
-////                }
-//
-//
-//            }
-//            override fun onCancelled(error: DatabaseError) {
-//                Toast.makeText(this@ChatActivity, "typing not run", Toast.LENGTH_LONG).show()
-//            }
-//
-//        })
-//    }
+                var boolean1 = false
+                var boolean2 = false
+
+                for (postSnapshot in snapshot.children) {
+                    val userTemp = postSnapshot.getValue(User::class.java)
+
+                    if (userTemp != null) {
+                        if (userTemp.uid == userFriend.uid) {
+                            if (userTemp.isTyping) {
+//                                textTyping.text = userFriend.name +  " is typing..."
+                                boolean1 = true
+                            }
+                        }
+
+                        if (userTemp.uid == userLogin.uid) {
+                            if (userTemp.showTyping) {
+                                boolean2 = true
+                            }
+                        }
+                    }
+                }
+
+                if (boolean1 && boolean2) {
+                    textTyping.text = userFriend.name + " is typing..."
+                } else {
+                    textTyping.text = ""
+                }
+
+//                if (userFriend.isTyping) {
+//                    textTyping.text = "Typing......."
+//                } else {
+//                    textTyping.text = ""
+//                }
+
+
+            }
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@ChatActivity, "typing not run", Toast.LENGTH_LONG).show()
+            }
+
+        })
+    }
 }
 
