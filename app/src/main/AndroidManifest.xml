@@ -102,6 +102,13 @@
             </intent-filter>
         </service>
 
+        <receiver android:name=".NetworkConnectionReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/chatlogo" />

@@ -580,6 +580,7 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun userChangeTyping() {
+        showTyping(messageBox)
         mDbRef.child("user").addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
 

@@ -47,7 +47,7 @@ class VideoCallIncoming : AppCompatActivity() {
 
         loginUid = intent.getStringExtra("loginUid").toString()
         friendUid = intent.getStringExtra("friendUid").toString()
-        hasMore = intent.getBooleanExtra("hasMore", false)
+//        hasMore = intent.getBooleanExtra("hasMore", false)
         userLogin = intent.getSerializableExtra("userLogin") as User
         userFriend = intent.getSerializableExtra("userFriend") as User
 
