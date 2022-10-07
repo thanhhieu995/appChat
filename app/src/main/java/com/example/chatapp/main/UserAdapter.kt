@@ -78,20 +78,18 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
             override fun onClick(v: View?) {
                 val intent = Intent(context, ChatActivity::class.java)
 
-                intent.putExtra("name", currentUser.name)
-                intent.putExtra("uidFriend", currentUser.uid)
+//                intent.putExtra("name", currentUser.name)
+//                intent.putExtra("uidFriend", currentUser.uid)
 
                 hasMore = true
                 intent.putExtra("hasMore", hasMore)
                 //intent.putExtra("statusFriend", currentUser.status.toString())
 
-                intent.putExtra("uidLogin", uidLogin)
+//                intent.putExtra("uidLogin", uidLogin)
 
                 intent.putExtra("userLogin", userLogin)
 
                 intent.putExtra("userFriend", currentUser)
-
-
 
                 context.startActivity(intent)
                 notifyDataSetChanged()

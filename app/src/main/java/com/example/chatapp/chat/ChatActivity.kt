@@ -22,6 +22,7 @@ import com.example.chatapp.notificationTest.NotificationData
 import com.example.chatapp.notificationTest.Notification
 import com.example.chatapp.notificationTest.PushNotification
 import com.example.chatapp.notificationTest.RetrofitInstance
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.google.gson.Gson
@@ -73,9 +74,13 @@ class ChatActivity : AppCompatActivity() {
 
     var listToken: ArrayList<String> = ArrayList()
 
+    lateinit var mAuth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
+
+        mAuth = FirebaseAuth.getInstance()
 
         val hasMoreTemp = intent.extras?.get("hasMore")
         hasMore = if (hasMoreTemp is String) {
@@ -235,6 +240,7 @@ class ChatActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("hasMore", hasMore)
         startActivity(intent)
+        finish()
     }
 
 
@@ -540,7 +546,7 @@ class ChatActivity : AppCompatActivity() {
                 mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
             } else {
                 hashMap.put("typing", false)
-                    mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+                mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
             }
         }
 

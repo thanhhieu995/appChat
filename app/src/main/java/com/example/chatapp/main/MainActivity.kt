@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
 
-    private var hasMore: Boolean = true
+    private var hasMore: Boolean = false
 
     var statusUserLogin: String = ""
 
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-//        hasMore = intent.getBooleanExtra("hasMore", false)
+        hasMore = intent.getBooleanExtra("hasMore", false)
 //        statusAccount(mAuth.uid)
         addFriendUser()
 
