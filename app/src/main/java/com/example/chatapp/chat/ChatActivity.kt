@@ -7,11 +7,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputConnection
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.red
+import androidx.core.graphics.toColorInt
+import androidx.core.os.BuildCompat
+import androidx.core.view.inputmethod.EditorInfoCompat
+import androidx.core.view.inputmethod.InputConnectionCompat
+import androidx.core.view.inputmethod.InputConnectionCompat.OnCommitContentListener
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,23 +27,21 @@ import com.example.chatapp.*
 import com.example.chatapp.R
 import com.example.chatapp.main.MainActivity
 import com.example.chatapp.notificationTest.NotificationData
-import com.example.chatapp.notificationTest.Notification
 import com.example.chatapp.notificationTest.PushNotification
 import com.example.chatapp.notificationTest.RetrofitInstance
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import kotlinx.android.synthetic.main.actionbar_title.*
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
+
 
 class ChatActivity : AppCompatActivity() {
 
@@ -194,6 +200,7 @@ class ChatActivity : AppCompatActivity() {
     private fun addStatusFriend(status: String?) {
         this.statusFriend = status
 
+//        supportActionBar?.title = userLogin.name
         supportActionBar?.subtitle = statusFriend
 
     }
@@ -634,5 +641,33 @@ class ChatActivity : AppCompatActivity() {
 
         })
     }
+
+//    fun typeEditText() {
+//        val editText: EditText = @SuppressLint("AppCompatCustomView")
+//        object : EditText(this) {
+//            override fun onCreateInputConnection(editorInfo: EditorInfo): InputConnection {
+//                val ic = super.onCreateInputConnection(editorInfo)
+//                EditorInfoCompat.setContentMimeTypes(editorInfo, arrayOf("image/png"))
+//                val callback =
+//                    OnCommitContentListener { inputContentInfo, flags, opts ->
+//                        // read and display inputContentInfo asynchronously
+//                        if (BuildCompat.isAtLeastNMR1() && flags and
+//                            InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION != 0
+//                        ) {
+//                            try {
+//                                inputContentInfo.requestPermission()
+//                            } catch (e: java.lang.Exception) {
+//                                return@OnCommitContentListener false // return false if failed
+//                            }
+//                        }
+//
+//                        // read and display inputContentInfo asynchronously.
+//                        // call inputContentInfo.releasePermission() as needed.
+//                        true // return true if succeeded
+//                    }
+//                return InputConnectionCompat.createWrapper(ic, editorInfo, callback)
+//            }
+//        }
+//    }
 }
 

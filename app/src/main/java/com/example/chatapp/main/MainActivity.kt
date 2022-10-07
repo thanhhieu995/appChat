@@ -121,6 +121,11 @@ class MainActivity : AppCompatActivity() {
 //        statusAccount(mAuth.uid)
         addFriendUser()
 
+        val hashMap: HashMap<String, String> = HashMap()
+        hashMap.put("status", "online")
+        FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString())
+            .updateChildren(hashMap as Map<String, Any>)
+
 //        if (userLogin.status == "offline") {
 //            mDbRef.child("user").child(userLogin.uid.toString()).child("status").setValue("online")
 //        }
