@@ -36,6 +36,8 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
     var hasMore: Boolean = false
 
     var userLogin: User = User()
+
+    var userFriend: User = User()
     //private lateinit var mAuth: FirebaseAuth
 
     private val storageRef = FirebaseStorage.getInstance().reference
@@ -61,6 +63,12 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
                     }
             }
         }
+
+        if (currentUser.isTyping && userLogin.showTyping) {
+            holder.typing.text = currentUser.name + " is typing..."
+        } else {
+            holder.typing.text = ""
+        }
         //islandRef.getResult()
 
         //Glide.with(context).load(islandRef).into(holder.imgAvatar)
@@ -73,6 +81,8 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
         } else {
             holder.textStatus.setTextColor(Color.BLACK)
         }
+
+
 
         holder.itemView.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
@@ -106,6 +116,8 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
         val textName = itemView.findViewById<TextView>(R.id.txt_name)
         val textStatus = itemView.findViewById<TextView>(R.id.txt_statusMain)
         var imgAvatar = itemView.findViewById<ImageView>(R.id.imgAva_main)
+        var recentMessage = itemView.findViewById<TextView>(R.id.msg_recently)
+        var typing = itemView.findViewById<TextView>(R.id.main_typing)
     }
 
     fun addItems(item: User?) {
