@@ -22,11 +22,9 @@ import com.example.chatapp.ProfileLoginActivity
 import com.example.chatapp.R
 import com.example.chatapp.User
 import com.example.chatapp.accountLogin.LogIn
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.iid.InstanceIdResult
 
 
 class MainActivity : AppCompatActivity() {
@@ -61,6 +59,8 @@ class MainActivity : AppCompatActivity() {
     var deleteToken: Boolean = false
 
     val listTokenTem: ArrayList<String> = ArrayList()
+
+    var count: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -376,39 +376,44 @@ class MainActivity : AppCompatActivity() {
                 adapter.addUidLogin(mAuth.uid)
 
                 for (postSnapshot in snapshot.children) {
-                    if (postSnapshot.getValue(User::class.java)?.uid != null && mAuth.uid != null && postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
-                        userList.add(postSnapshot.getValue(User::class.java)!!)
-                    } else {
-                        userLogin = postSnapshot.getValue(User::class.java)!!
-                        adapter.addUserLogin(userLogin)
+                    val user = postSnapshot.getValue(User::class.java)
+                    if (user != null) {
+                        if (user.uid != null && mAuth.uid != null && user.uid != mAuth.uid) {
+                            adapter.addCount(user.count)
+                            userList.add(postSnapshot.getValue(User::class.java)!!)
+                        } else {
+                            userLogin = postSnapshot.getValue(User::class.java)!!
+                            adapter.addUserLogin(userLogin)
+//                            adapter.addCount(userLogin.count)
 
-//                        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this@MainActivity, OnSuccessListener {
-//                            tokenReload = it.token
-//
-//                            if (!userLogin.listToken!!.contains(tokenReload) && userLogin.status == "online") {
-//                                userLogin.listToken!!.add(tokenReload!!)
-////                                tokenReload.let { userLogin.listToken!!.add(it) }
-////                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
-//                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
-//                            } else {
-//                                Log.d("token", tokenReload.toString())
-//                            }
-//                        })
-                        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+                //                        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this@MainActivity, OnSuccessListener {
+                //                            tokenReload = it.token
+                //
+                //                            if (!userLogin.listToken!!.contains(tokenReload) && userLogin.status == "online") {
+                //                                userLogin.listToken!!.add(tokenReload!!)
+                ////                                tokenReload.let { userLogin.listToken!!.add(it) }
+                ////                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
+                //                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(userLogin.listToken)
+                //                            } else {
+                //                                Log.d("token", tokenReload.toString())
+                //                            }
+                //                        })
+                            FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
 
 
-                            if (!userLogin.listToken?.contains(it.token)!! && userLogin.status == "online") {
+                                if (!userLogin.listToken?.contains(it.token)!! && userLogin.status == "online") {
 
-                                val listToken = ArrayList<String>()
-                                listToken.add(it.token)
+                                    val listToken = ArrayList<String>()
+                                    listToken.add(it.token)
 
-//                                userLogin.listToken?.add(it.token)
-                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(listToken)
-                            } else {
-                                Log.d("token", it.token)
+                //                                userLogin.listToken?.add(it.token)
+                                    mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(listToken)
+                                } else {
+                                    Log.d("token", it.token)
+                                }
                             }
-                        }
 
+                        }
                     }
                 }
                 adapter.addUserList(userList)
@@ -483,4 +488,32 @@ class MainActivity : AppCompatActivity() {
 
         })
     }
+
+
+
+//    fun lastMessage() {
+//        for (userFriend in userList) {
+//            val romSender = userLogin.uid + userFriend.uid
+//            var lastMessage: Message? = null
+//            mDbRef.child("chats").child(romSender).child("messages").addValueEventListener(object : ValueEventListener{
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    count = 0
+//                    for (postSnapshot in snapshot.children) {
+//                        val message = postSnapshot.getValue(Message::class.java)
+//                        if ((message != null) && !message.seen) {
+//                            count += 1
+//                            adapter.addNumberNotification(count)
+//                        }
+//                        lastMessage = message
+//                    }
+//                    lastMessage?.let { adapter.addLastMessage(it) }
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//                    TODO("Not yet implemented")
+//                }
+//
+//            })
+//        }
+//    }
 }

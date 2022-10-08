@@ -41,6 +41,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 
 class ChatActivity : AppCompatActivity() {
@@ -81,6 +82,8 @@ class ChatActivity : AppCompatActivity() {
     var listToken: ArrayList<String> = ArrayList()
 
     lateinit var mAuth: FirebaseAuth
+
+    var count: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -260,6 +263,8 @@ class ChatActivity : AppCompatActivity() {
                 @SuppressLint("SetTextI18n")
                 override fun onDataChange(snapshot: DataSnapshot) {
 
+                    count = 0
+
                     val messageList = ArrayList<Message>()
 
                     var messageEXReceive: Message? = Message("", "", "", "2019-06-06 10:10:10", noAvatarMessage = false, false ,"", "")
@@ -324,7 +329,24 @@ class ChatActivity : AppCompatActivity() {
                             messageList.add(message)
 
                         }
+
+                        if (message != null) {
+                            if (!message.seen && message.senderId != userLogin.uid) {
+                                count += 1
+                            }
+                        }
                     }
+
+                    if (count != 0) {
+                        val hashMap: HashMap<String, Int> = HashMap()
+                        hashMap.put("count", count)
+                        mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+                    } else {
+                        val hashMap: HashMap<String, Int> = HashMap()
+                        hashMap.put("count", count)
+                        mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+                    }
+
                     userLogin.uid?.let { userFriend.uid?.let { it1 -> chatAdapter.addUid(it, it1) } }
                     chatAdapter.updateData(messageList)
                     chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)

@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.chatapp.Message
 import com.example.chatapp.chat.ChatActivity
 import com.example.chatapp.R
 import com.example.chatapp.Status
@@ -22,6 +23,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.OnPausedListener
 import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_video_call_incoming.view.*
 
 class UserAdapter(val context: Context, private var userList: ArrayList<User>): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
@@ -39,6 +41,9 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 
     var userFriend: User = User()
     //private lateinit var mAuth: FirebaseAuth
+    lateinit var message: Message
+
+    private var count: Int = 0
 
     private val storageRef = FirebaseStorage.getInstance().reference
 //    val islandRef = storageRef.child("images").child(mAuth.uid.toString())
@@ -65,10 +70,34 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
         }
 
         if (currentUser.isTyping && userLogin.showTyping) {
-            holder.typing.text = currentUser.name + " is typing..."
+            holder.typing.text = "Typing..."
         } else {
             holder.typing.text = ""
         }
+
+//        if (count != 0) {
+//            holder.numberNotification.text = count.toString()
+//        } else {
+//            holder.numberNotification.text = ""
+//        }
+
+        if (currentUser.count != 0) {
+            holder.numberNotification.text = currentUser.count.toString()
+        } else {
+            holder.numberNotification.text = ""
+        }
+
+//        if (count != "0") {
+//            holder.numberNotification.text = count
+//        } else {
+//            holder.numberNotification.text = ""
+//        }
+
+//        if (message.senderId == userLogin.uid) {
+//            holder.recentMessage.text = "you: " + message.message.toString()
+//        } else {
+//            holder.recentMessage.text = message.message.toString()
+//        }
         //islandRef.getResult()
 
         //Glide.with(context).load(islandRef).into(holder.imgAvatar)
@@ -118,6 +147,7 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
         var imgAvatar = itemView.findViewById<ImageView>(R.id.imgAva_main)
         var recentMessage = itemView.findViewById<TextView>(R.id.msg_recently)
         var typing = itemView.findViewById<TextView>(R.id.main_typing)
+        val numberNotification = itemView.findViewById<TextView>(R.id.countNumber)
     }
 
     fun addItems(item: User?) {
@@ -149,5 +179,16 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 
     fun addUserList(userList: ArrayList<User>) {
         this.userList = userList
+    }
+
+//    fun addLastMessage(message: Message) {
+//        this.message = message
+//    }
+//
+//    fun addNumberNotification(count : Int) {
+//        this.count = count.toString()
+//    }
+    fun addCount(count: Int) {
+        this.count = count
     }
 }

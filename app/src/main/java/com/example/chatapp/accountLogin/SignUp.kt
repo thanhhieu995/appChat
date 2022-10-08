@@ -39,6 +39,10 @@ class SignUp : AppCompatActivity() {
 
     var showTyping: Boolean = false
 
+    var count: Int = 0
+
+    var lastMsg: String = ""
+
     var acceptCall: Boolean = false
 
     var listToken: ArrayList<String>? = ArrayList()
@@ -78,7 +82,7 @@ class SignUp : AppCompatActivity() {
 
             listToken?.let { it1 ->
                 signUp(
-                    email, password, name, status.toString(), avatar, isCalling, acceptCall, isTyping, showTyping,
+                    email, password, name, status.toString(), avatar, isCalling, acceptCall, isTyping, showTyping, count, lastMsg,
                     it1
                 )
             }
@@ -102,6 +106,8 @@ class SignUp : AppCompatActivity() {
         acceptCall: Boolean,
         isTyping: Boolean,
         showTyping: Boolean,
+        count: Int,
+        lastMsg: String,
         listToken: ArrayList<String>
     ) {
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(name)) {
@@ -120,6 +126,8 @@ class SignUp : AppCompatActivity() {
                             acceptCall,
                             isTyping,
                             showTyping,
+                            count,
+                            lastMsg,
                             listToken
                         )
                         val intent = Intent(this@SignUp, SetUpActivity::class.java)
@@ -141,12 +149,14 @@ class SignUp : AppCompatActivity() {
         acceptCall: Boolean,
         isTyping: Boolean,
         showTyping: Boolean,
+        count: Int,
+        lastMsg: String,
         listToken: ArrayList<String>
     ) {
         mDbRef = FirebaseDatabase.getInstance().reference
 
         mDbRef.child("user").child(uid)
-            .setValue(User(name, email, uid, status, avatar, isCalling, acceptCall, isTyping, showTyping,listToken))
+            .setValue(User(name, email, uid, status, avatar, isCalling, acceptCall, isTyping, showTyping, count, lastMsg,listToken))
     }
 
     private fun checkUserExist(email: String?) {
