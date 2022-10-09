@@ -81,8 +81,8 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 //            holder.numberNotification.text = ""
 //        }
 
-        if (currentUser.count != 0) {
-            holder.numberNotification.text = currentUser.count.toString()
+        if (userLogin.count != 0 && currentUser.uid == userLogin.fromUid) {
+            holder.numberNotification.text = count.toString()
         } else {
             holder.numberNotification.text = ""
         }

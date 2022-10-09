@@ -41,6 +41,8 @@ class SignUp : AppCompatActivity() {
 
     var count: Int = 0
 
+    var fromUid: String = ""
+
     var lastMsg: String = ""
 
     var acceptCall: Boolean = false
@@ -82,7 +84,7 @@ class SignUp : AppCompatActivity() {
 
             listToken?.let { it1 ->
                 signUp(
-                    email, password, name, status.toString(), avatar, isCalling, acceptCall, isTyping, showTyping, count, lastMsg,
+                    email, password, name, status.toString(), avatar, isCalling, acceptCall, isTyping, showTyping, count, fromUid, lastMsg,
                     it1
                 )
             }
@@ -107,6 +109,7 @@ class SignUp : AppCompatActivity() {
         isTyping: Boolean,
         showTyping: Boolean,
         count: Int,
+        fromUid: String,
         lastMsg: String,
         listToken: ArrayList<String>
     ) {
@@ -127,6 +130,7 @@ class SignUp : AppCompatActivity() {
                             isTyping,
                             showTyping,
                             count,
+                            fromUid,
                             lastMsg,
                             listToken
                         )
@@ -150,13 +154,14 @@ class SignUp : AppCompatActivity() {
         isTyping: Boolean,
         showTyping: Boolean,
         count: Int,
+        fromUid: String,
         lastMsg: String,
         listToken: ArrayList<String>
     ) {
         mDbRef = FirebaseDatabase.getInstance().reference
 
         mDbRef.child("user").child(uid)
-            .setValue(User(name, email, uid, status, avatar, isCalling, acceptCall, isTyping, showTyping, count, lastMsg,listToken))
+            .setValue(User(name, email, uid, status, avatar, isCalling, acceptCall, isTyping, showTyping, count, fromUid, lastMsg,listToken))
     }
 
     private fun checkUserExist(email: String?) {

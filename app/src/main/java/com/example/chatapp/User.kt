@@ -13,11 +13,12 @@ class User: Serializable {
     var isTyping: Boolean = false
     var showTyping: Boolean = false
     var count: Int = 0
+    var fromUid: String = ""
     var lastMsg: String = ""
     var listToken: ArrayList<String>? = ArrayList()
 
     constructor() {}
-    constructor(name: String?, email: String?, uid: String?, status: String?, avatar: String?, calling: Boolean, acceptCall: Boolean, isTyping: Boolean, showTyping: Boolean, count: Int, lastMsg: String, listToken: ArrayList<String>) {
+    constructor(name: String?, email: String?, uid: String?, status: String?, avatar: String?, calling: Boolean, acceptCall: Boolean, isTyping: Boolean, showTyping: Boolean, count: Int, fromUid: String, lastMsg: String, listToken: ArrayList<String>) {
         this.name = name
         this.email = email
         this.uid = uid
@@ -28,6 +29,7 @@ class User: Serializable {
         this.isTyping = isTyping
         this.showTyping = showTyping
         this.count = count
+        this.fromUid = fromUid
         this.lastMsg = lastMsg
         this.listToken = listToken
     }
