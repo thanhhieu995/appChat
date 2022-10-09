@@ -379,18 +379,18 @@ class MainActivity : AppCompatActivity() {
                     val user = postSnapshot.getValue(User::class.java)
                     if (user != null) {
                         if (user.uid != null && mAuth.uid != null && user.uid != mAuth.uid) {
-//                            adapter.addCount(user.count)
-//                            if (user.count != 0) {
-//                                adapter.addCount(user.count)
+//                            adapter.addCount(user.unRead)
+//                            if (user.unRead != 0) {
+//                                adapter.addCount(user.unRead)
 //                            }
                             userList.add(user)
                         } else {
                             userLogin = postSnapshot.getValue(User::class.java)!!
-                            if (userLogin.count != 0) {
-                                adapter.addCount(userLogin.count)
+                            if (userLogin.unRead != 0 && userLogin.fromUid != "") {
+                                adapter.addUserLogin(userLogin)
                             }
                             adapter.addUserLogin(userLogin)
-//                            adapter.addCount(userLogin.count)
+//                            adapter.addCount(userLogin.unRead)
 
                 //                        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this@MainActivity, OnSuccessListener {
                 //                            tokenReload = it.token
@@ -503,12 +503,12 @@ class MainActivity : AppCompatActivity() {
 //            var lastMessage: Message? = null
 //            mDbRef.child("chats").child(romSender).child("messages").addValueEventListener(object : ValueEventListener{
 //                override fun onDataChange(snapshot: DataSnapshot) {
-//                    count = 0
+//                    unRead = 0
 //                    for (postSnapshot in snapshot.children) {
 //                        val message = postSnapshot.getValue(Message::class.java)
 //                        if ((message != null) && !message.seen) {
-//                            count += 1
-//                            adapter.addNumberNotification(count)
+//                            unRead += 1
+//                            adapter.addNumberNotification(unRead)
 //                        }
 //                        lastMessage = message
 //                    }

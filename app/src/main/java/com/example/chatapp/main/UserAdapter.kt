@@ -3,27 +3,18 @@ package com.example.chatapp.main
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.chatapp.Message
 import com.example.chatapp.chat.ChatActivity
 import com.example.chatapp.R
-import com.example.chatapp.Status
 import com.example.chatapp.User
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.OnPausedListener
-import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_video_call_incoming.view.*
 
 class UserAdapter(val context: Context, private var userList: ArrayList<User>): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
@@ -75,20 +66,26 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
             holder.typing.text = ""
         }
 
-//        if (count != 0) {
-//            holder.numberNotification.text = count.toString()
+//        if (unRead != 0) {
+//            holder.numberNotification.text = unRead.toString()
 //        } else {
 //            holder.numberNotification.text = ""
 //        }
 
-        if (userLogin.count != 0 && currentUser.uid == userLogin.fromUid) {
-            holder.numberNotification.text = count.toString()
+//        if ( currentUser.uid == userLogin.fromUid) {
+//            holder.numberNotification.text = userLogin.unRead.toString()
+//        } else {
+//            holder.numberNotification.text = ""
+//        }
+
+        if (userLogin.unRead != 0 && currentUser.uid == userLogin.fromUid) {
+            holder.numberNotification.text = userLogin.unRead.toString()
         } else {
             holder.numberNotification.text = ""
         }
 
-//        if (count != "0") {
-//            holder.numberNotification.text = count
+//        if (unRead != "0") {
+//            holder.numberNotification.text = unRead
 //        } else {
 //            holder.numberNotification.text = ""
 //        }
@@ -185,8 +182,8 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 //        this.message = message
 //    }
 //
-//    fun addNumberNotification(count : Int) {
-//        this.count = count.toString()
+//    fun addNumberNotification(unRead : Int) {
+//        this.unRead = unRead.toString()
 //    }
     fun addCount(count: Int) {
         this.count = count

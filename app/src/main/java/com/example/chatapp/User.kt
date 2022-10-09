@@ -12,7 +12,7 @@ class User: Serializable {
     var acceptCall: Boolean = false
     var isTyping: Boolean = false
     var showTyping: Boolean = false
-    var count: Int = 0
+    var unRead: Int = 0
     var fromUid: String = ""
     var lastMsg: String = ""
     var listToken: ArrayList<String>? = ArrayList()
@@ -28,7 +28,7 @@ class User: Serializable {
         this.acceptCall = acceptCall
         this.isTyping = isTyping
         this.showTyping = showTyping
-        this.count = count
+        this.unRead = count
         this.fromUid = fromUid
         this.lastMsg = lastMsg
         this.listToken = listToken
