@@ -123,9 +123,9 @@ class MainActivity : AppCompatActivity() {
 //        statusAccount(mAuth.uid)
         addFriendUser()
 
-        for(user in userList) {
-            unReadChange(user)
-        }
+
+        unReadChange()
+
 
         val hashMap: HashMap<String, String> = HashMap()
         hashMap.put("status", "online")
@@ -388,7 +388,7 @@ class MainActivity : AppCompatActivity() {
 //                            if (user.unRead != 0) {
 //                                adapter.addCount(user.unRead)
 //                            }
-                            unReadData(user)
+//                            unReadData(user)
 //                            unReadChange(user)
                             userList.add(user)
                         } else {
@@ -543,22 +543,24 @@ class MainActivity : AppCompatActivity() {
 //        })
 //    }
 
-    fun unReadData(userFriend: User) {
-        mDbRef.child("unRead").child(mAuth.uid.toString()).child(userFriend.uid.toString()).setValue(Unread(0, "", ""))
-    }
+//    fun unReadData(userFriend: User) {
+//        mDbRef.child("unRead").child(mAuth.uid.toString()).child(userFriend.uid.toString()).setValue(Unread(0, "", ""))
+//    }
 
-   fun unReadChange(userFriend: User) {
-       mDbRef.child("unRead").child(mAuth.uid.toString()).child(userFriend.toString()).addValueEventListener(object : ValueEventListener{
+   private fun unReadChange() {
+       mDbRef.child("unRead").addValueEventListener(object : ValueEventListener{
            override fun onDataChange(snapshot: DataSnapshot) {
                for (postSnapshot in snapshot.children) {
-                   val unRead = postSnapshot.getValue(Unread::class.java)
+                   val unRead: Unread? = postSnapshot.getValue(Unread::class.java)
                    if (unRead != null) {
-                       if (unRead.toUid == mAuth.uid) {
+                       if (unRead.unread != 0 || unRead.fromUid != "" || unRead.toUid != "") {
                            adapter.unRead(unRead)
                        }
 
                    }
                }
+//               val unread = snapshot.getValue(Unread::class.java)
+//               Log.d("unread", unread.toString())
            }
 
            override fun onCancelled(error: DatabaseError) {

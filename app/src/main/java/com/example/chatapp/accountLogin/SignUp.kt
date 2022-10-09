@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatapp.R
+import com.example.chatapp.Unread
 import com.example.chatapp.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -134,6 +135,7 @@ class SignUp : AppCompatActivity() {
                             lastMsg,
                             listToken
                         )
+                        addUnreadToDataBase()
                         val intent = Intent(this@SignUp, SetUpActivity::class.java)
                         intent.putExtra("uid", mAuth.currentUser?.uid)
                         startActivity(intent)
@@ -185,5 +187,9 @@ class SignUp : AppCompatActivity() {
 
             }
         })
+    }
+
+    fun addUnreadToDataBase() {
+        mDbRef.child("unRead").child(mAuth.uid.toString()).setValue(Unread(0, "", ""))
     }
 }

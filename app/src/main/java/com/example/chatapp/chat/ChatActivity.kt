@@ -333,31 +333,41 @@ class ChatActivity : AppCompatActivity() {
 
                         if (message != null) {
                             if (!message.seen && message.senderId == userLogin.uid) {
-                                count =+ 1
-                                fromUid = message.senderId.toString()
-                            } else {
-                                fromUid = ""
+                                count += 1
+//                                fromUid = message.senderId.toString()
                             }
                         }
                     }
 
-                    if (count != 0) {
-                        val hashMap: HashMap<String, Int> = HashMap()
-                        val hashMap1: HashMap<String, String> = HashMap()
-                        hashMap.put("unRead", count)
-                        hashMap1.put("toUid", userFriend.uid.toString())
-//                        mDbRef.child("user").child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
-//                        mDbRef.child("user").child(userFriend.uid.toString()).updateChildren(hashMap1 as Map<String, Any>)
-                        mDbRef.child("unRead").child(userLogin.uid.toString()).child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
-                        mDbRef.child("unRead").child(userLogin.uid.toString()).child(userFriend.uid.toString()).updateChildren(hashMap1 as Map<String, Any>)
+                    if (count != 0 ) {
+                        val unread = Unread(count, userLogin.uid.toString(), userFriend.uid.toString())
+                        val hashMap: HashMap<String, Unread> = HashMap()
+                        hashMap.put(userLogin.uid.toString(), unread)
+                        mDbRef.child("unRead").updateChildren(hashMap as Map<String, Any>)
                     } else {
-                        val hashMap: HashMap<String, Int> = HashMap()
-                        val hashMap1: HashMap<String, String> = HashMap()
-                        hashMap.put("unRead", count)
-                        hashMap1.put("toUid", userFriend.uid.toString())
-                        mDbRef.child("unRead").child(userLogin.uid.toString()).child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
-                        mDbRef.child("unRead").child(userLogin.uid.toString()).child(userFriend.uid.toString()).updateChildren(hashMap1 as Map<String, Any>)
+                        val unread = Unread(count, "", "")
+                        val hashMap: HashMap<String, Unread> = HashMap()
+                        hashMap.put(userLogin.uid.toString(), unread)
+                        mDbRef.child("unRead").updateChildren(hashMap as Map<String, Any>)
                     }
+
+//                    if (count != 0) {
+//                        val hashMap: HashMap<String, Int> = HashMap()
+//                        val hashMap1: HashMap<String, String> = HashMap()
+//                        hashMap.put("unRead", count)
+//                        hashMap1.put("toUid", userFriend.uid.toString())
+////                        mDbRef.child("user").child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+////                        mDbRef.child("user").child(userFriend.uid.toString()).updateChildren(hashMap1 as Map<String, Any>)
+//                        mDbRef.child("unRead").child(userLogin.uid.toString()).child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+//                        mDbRef.child("unRead").child(userLogin.uid.toString()).child(userFriend.uid.toString()).updateChildren(hashMap1 as Map<String, Any>)
+//                    } else {
+//                        val hashMap: HashMap<String, Int> = HashMap()
+//                        val hashMap1: HashMap<String, String> = HashMap()
+//                        hashMap.put("unRead", count)
+//                        hashMap1.put("toUid", userFriend.uid.toString())
+//                        mDbRef.child("unRead").child(userLogin.uid.toString()).child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+//                        mDbRef.child("unRead").child(userLogin.uid.toString()).child(userFriend.uid.toString()).updateChildren(hashMap1 as Map<String, Any>)
+//                    }
 
                     userLogin.uid?.let { userFriend.uid?.let { it1 -> chatAdapter.addUid(it, it1) } }
                     chatAdapter.updateData(messageList)
