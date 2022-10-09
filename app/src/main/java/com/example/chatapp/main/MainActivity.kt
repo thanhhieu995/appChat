@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.ProfileLoginActivity
 import com.example.chatapp.R
+import com.example.chatapp.Unread
 import com.example.chatapp.User
 import com.example.chatapp.accountLogin.LogIn
 import com.google.firebase.auth.FirebaseAuth
@@ -121,6 +122,10 @@ class MainActivity : AppCompatActivity() {
         hasMore = intent.getBooleanExtra("hasMore", false)
 //        statusAccount(mAuth.uid)
         addFriendUser()
+
+        for(user in userList) {
+            unReadChange(user)
+        }
 
         val hashMap: HashMap<String, String> = HashMap()
         hashMap.put("status", "online")
@@ -383,6 +388,8 @@ class MainActivity : AppCompatActivity() {
 //                            if (user.unRead != 0) {
 //                                adapter.addCount(user.unRead)
 //                            }
+                            unReadData(user)
+//                            unReadChange(user)
                             userList.add(user)
                         } else {
                             userLogin = postSnapshot.getValue(User::class.java)!!
@@ -522,4 +529,42 @@ class MainActivity : AppCompatActivity() {
 //            })
 //        }
 //    }
+
+//    fun unReadData() {
+//        mDbRef.child("user").addValueEventListener(object : ValueEventListener{
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                TODO("Not yet implemented")
+//            }
+//
+//        })
+//    }
+
+    fun unReadData(userFriend: User) {
+        mDbRef.child("unRead").child(mAuth.uid.toString()).child(userFriend.uid.toString()).setValue(Unread(0, "", ""))
+    }
+
+   fun unReadChange(userFriend: User) {
+       mDbRef.child("unRead").child(mAuth.uid.toString()).child(userFriend.toString()).addValueEventListener(object : ValueEventListener{
+           override fun onDataChange(snapshot: DataSnapshot) {
+               for (postSnapshot in snapshot.children) {
+                   val unRead = postSnapshot.getValue(Unread::class.java)
+                   if (unRead != null) {
+                       if (unRead.toUid == mAuth.uid) {
+                           adapter.unRead(unRead)
+                       }
+
+                   }
+               }
+           }
+
+           override fun onCancelled(error: DatabaseError) {
+               TODO("Not yet implemented")
+           }
+
+       })
+   }
 }

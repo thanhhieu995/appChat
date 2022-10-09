@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chatapp.Message
 import com.example.chatapp.chat.ChatActivity
 import com.example.chatapp.R
+import com.example.chatapp.Unread
 import com.example.chatapp.User
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
@@ -38,6 +39,7 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 
     private val storageRef = FirebaseStorage.getInstance().reference
 //    val islandRef = storageRef.child("images").child(mAuth.uid.toString())
+    var unRead: Unread = Unread(0, "", "")
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -78,8 +80,22 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 //            holder.numberNotification.text = ""
 //        }
 
-        if (userLogin.unRead != 0 && currentUser.uid == userLogin.fromUid) {
-            holder.numberNotification.text = userLogin.unRead.toString()
+//        if (userLogin.unRead != 0 && currentUser.uid == userLogin.fromUid) {
+//            holder.numberNotification.text = userLogin.unRead.toString()
+//        } else {
+//            holder.numberNotification.text = ""
+//        }
+
+//        if (currentUser.uid == userLogin.fromUid) {
+//            if (userLogin.unRead != 0) {
+//                holder.numberNotification.text = userLogin.unRead.toString()
+//            } else {
+//                holder.numberNotification.text = ""
+//            }
+//        }
+
+        if (unRead.unread != 0 && unRead.toUid == userLogin.uid && unRead.fromUid == currentUser.uid) {
+            holder.numberNotification.text = unRead.unread.toString()
         } else {
             holder.numberNotification.text = ""
         }
@@ -187,5 +203,9 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 //    }
     fun addCount(count: Int) {
         this.count = count
+    }
+
+    fun unRead(unRead: Unread) {
+        this.unRead = unRead
     }
 }
