@@ -37,6 +37,8 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 
     private var count: Int = 0
 
+    var lastMsg: String? = null
+
     private val storageRef = FirebaseStorage.getInstance().reference
 //    val islandRef = storageRef.child("images").child(mAuth.uid.toString())
     var unRead: Unread = Unread(0, "", "")
@@ -66,6 +68,12 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
             holder.typing.text = "Typing..."
         } else {
             holder.typing.text = ""
+        }
+
+        if (currentUser.lastMsg != null) {
+            holder.recentMessage.text = lastMsg.toString()
+        } else {
+            holder.recentMessage.text = ""
         }
 
 //        if (unRead != 0) {
@@ -207,5 +215,9 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 
     fun unRead(unRead: Unread) {
         this.unRead = unRead
+    }
+
+    fun addLastMsg(lastMsg: String) {
+        this.lastMsg = lastMsg
     }
 }

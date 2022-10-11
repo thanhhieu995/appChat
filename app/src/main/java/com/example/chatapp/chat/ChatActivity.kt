@@ -86,6 +86,8 @@ class ChatActivity : AppCompatActivity() {
     var count: Int = 0
     var fromUid: String = ""
 
+    var lastMsg: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -337,6 +339,16 @@ class ChatActivity : AppCompatActivity() {
 //                                fromUid = message.senderId.toString()
                             }
                         }
+
+                        if (message != null) {
+                            lastMsg = message.message
+                        }
+                    }
+
+                    if (lastMsg != null) {
+                        val hashMap: HashMap<String, String> = HashMap()
+                        hashMap.put("lastMsg", lastMsg!!)
+                        mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
                     }
 
                     if (count != 0 ) {

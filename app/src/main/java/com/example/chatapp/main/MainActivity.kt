@@ -390,6 +390,11 @@ class MainActivity : AppCompatActivity() {
 //                            }
 //                            unReadData(user)
 //                            unReadChange(user)
+
+                            if (user.lastMsg != null) {
+                                adapter.addLastMsg(user.lastMsg.toString())
+                            }
+
                             userList.add(user)
                         } else {
                             userLogin = postSnapshot.getValue(User::class.java)!!
@@ -552,15 +557,13 @@ class MainActivity : AppCompatActivity() {
            override fun onDataChange(snapshot: DataSnapshot) {
                for (postSnapshot in snapshot.children) {
                    val unRead: Unread? = postSnapshot.getValue(Unread::class.java)
-                   if (unRead != null) {
-                       if (unRead.unread != 0 || unRead.fromUid != "" || unRead.toUid != "") {
+                   if (unRead != null && postSnapshot.key != userLogin.uid) {
+                       if (unRead.unread != 0 || unRead.fromUid != "" || unRead.toUid != ""&& unRead.toUid == userLogin.uid) {
                            adapter.unRead(unRead)
                        }
 
                    }
                }
-//               val unread = snapshot.getValue(Unread::class.java)
-//               Log.d("unread", unread.toString())
            }
 
            override fun onCancelled(error: DatabaseError) {

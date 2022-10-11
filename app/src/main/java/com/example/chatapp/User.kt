@@ -3,18 +3,18 @@ package com.example.chatapp
 import java.io.Serializable
 
 class User: Serializable {
-    var name: String? = ""
-    var email: String? = ""
-    var uid: String? = ""
-    var status: String? = ""
-    var avatar: String? = ""
+    var name: String? = null
+    var email: String? = null
+    var uid: String? = null
+    var status: String? = null
+    var avatar: String? = null
     var calling: Boolean = false
     var acceptCall: Boolean = false
     var isTyping: Boolean = false
     var showTyping: Boolean = false
     var unRead: Int = 0
-    var fromUid: String = ""
-    var lastMsg: String = ""
+    var fromUid: String? = null
+    var lastMsg: String? = null
     var listToken: ArrayList<String>? = ArrayList()
 
     constructor() {}
