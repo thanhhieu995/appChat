@@ -102,10 +102,10 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 //            }
 //        }
 
-        if (unRead.unread != 0 && currentUser.uid == unRead.fromUid && userLogin.uid == unRead.toUid) {
+        if (currentUser.uid == unRead.fromUid && userLogin.uid == unRead.toUid) {
             holder.numberNotification.text = unRead.unread.toString()
         } else {
-            holder.numberNotification.text = ""
+//            holder.numberNotification.text = ""
         }
 
 //        if (unRead != "0") {

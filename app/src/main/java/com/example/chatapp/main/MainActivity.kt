@@ -126,7 +126,6 @@ class MainActivity : AppCompatActivity() {
 
         unReadChange()
 
-
         val hashMap: HashMap<String, String> = HashMap()
         hashMap.put("status", "online")
         FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString())
@@ -558,7 +557,7 @@ class MainActivity : AppCompatActivity() {
                for (postSnapshot in snapshot.children) {
                    val unRead: Unread? = postSnapshot.getValue(Unread::class.java)
                    if (unRead != null && postSnapshot.key != userLogin.uid) {
-                       if (unRead.unread != 0 || unRead.fromUid != "" || unRead.toUid != ""&& unRead.toUid == userLogin.uid) {
+                       if (unRead.fromUid != "" || unRead.toUid != ""&& unRead.toUid == userLogin.uid) {
                            adapter.unRead(unRead)
                        }
 
