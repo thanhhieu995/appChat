@@ -104,8 +104,9 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 
         if (currentUser.uid == unRead.fromUid && userLogin.uid == unRead.toUid) {
             holder.numberNotification.text = unRead.unread.toString()
-        } else {
-//            holder.numberNotification.text = ""
+            if (unRead.unread == 0) {
+                holder.numberNotification.text = ""
+            }
         }
 
 //        if (unRead != "0") {
