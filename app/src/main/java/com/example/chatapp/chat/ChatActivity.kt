@@ -261,6 +261,9 @@ class ChatActivity : AppCompatActivity() {
 
 
     private fun loadDataRoomSend() {
+
+        var messageTemp: Message = Message()
+
         mDbRef.child("chats").child(roomSender!!).child("messages")
             .addValueEventListener(object : ValueEventListener {
                 @SuppressLint("SetTextI18n")
@@ -342,10 +345,11 @@ class ChatActivity : AppCompatActivity() {
 
                         if (message != null) {
                             lastMsg = message.message
+                            messageTemp = message
                         }
                     }
 
-                    if (lastMsg != null) {
+                    if (lastMsg != null && messageTemp.message != null && messageTemp.senderId == userLogin.uid || messageTemp.senderId == userFriend.uid) {
                         val hashMap: HashMap<String, String> = HashMap()
                         hashMap.put("lastMsg", lastMsg!!)
                         mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
