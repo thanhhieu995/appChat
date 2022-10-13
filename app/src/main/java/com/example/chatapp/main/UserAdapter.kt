@@ -73,7 +73,7 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
         if (!currentUser.lastMsg.isNullOrEmpty() && currentUser.uid == currentUser.receiveUid || currentUser.uid == currentUser.sendToUid) {
             holder.recentMessage.text = lastMsg.toString()
         } else {
-//            holder.recentMessage.text = ""
+            holder.recentMessage.text = ""
         }
 
 //        if (unRead != 0) {
