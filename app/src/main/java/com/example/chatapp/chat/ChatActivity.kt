@@ -196,6 +196,8 @@ class ChatActivity : AppCompatActivity() {
 
             loadDataRoomSend()
 
+            isSeen()
+
         } else {
             Toast.makeText(this@ChatActivity, "hasMore is false, please check", Toast.LENGTH_LONG).show()
         }
@@ -205,6 +207,8 @@ class ChatActivity : AppCompatActivity() {
         statusAndCall()
         statusAccount(userLogin.uid)
         chatAdapter.setValueUser(userLogin, userFriend, hasMore)
+
+//        isSeen()
     }
 
     private fun addStatusFriend(status: String?) {
@@ -289,13 +293,13 @@ class ChatActivity : AppCompatActivity() {
 
                         val message = postSnapshot.getValue(Message::class.java)
 
-                        if (message != null && hasMore && message.receiveId == userLogin.uid && !seen) {
-//                            if (!seen && message.senderId == userFriend.uid) {
-                                val hashMap: HashMap<String, Boolean> = HashMap()
-                                hashMap.put("seen", true)
-                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
-//                            }
-                        }
+//                        if (message != null && hasMore && message.receiveId == userLogin.uid && !seen) {
+////                            if (!seen && message.senderId == userFriend.uid) {
+//                                val hashMap: HashMap<String, Boolean> = HashMap()
+//                                hashMap.put("seen", true)
+//                                postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
+////                            }
+//                        }
 
                         if (message != null && message.senderId == userLogin.uid) {
                             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -424,7 +428,7 @@ class ChatActivity : AppCompatActivity() {
                 }
 
             })
-        isSeen()
+//        isSeen()
     }
 
 
@@ -596,7 +600,7 @@ class ChatActivity : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (postSnapshot in snapshot.children) {
                         val message = postSnapshot.getValue(Message::class.java)
-                        if (message != null && hasMore && message.receiveId == userLogin.uid && message.senderId == userFriend.uid && !seen) {
+                        if (message != null && hasMore && message.receiveId == userLogin.uid && message.senderId == userFriend.uid) {
                             val hashMap: HashMap<String, Boolean> = HashMap()
                             hashMap.put("seen", true)
                             postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
