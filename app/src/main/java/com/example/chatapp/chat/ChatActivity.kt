@@ -89,6 +89,9 @@ class ChatActivity : AppCompatActivity() {
     var lastMsg: String? = null
     var room: String? = null
 
+    var senderUid: String? = null
+    var receiveUid: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -340,25 +343,28 @@ class ChatActivity : AppCompatActivity() {
                         if (message != null) {
                             if (!message.seen && message.senderId == userLogin.uid) {
                                 count += 1
-//                                fromUid = message.senderId.toString()
+//                                receiveUid = message.senderId.toString()
                             }
                         }
 
                         if (message != null) {
                             lastMsg = message.message
+
+                            senderUid = message.senderId
+                            receiveUid = message.receiveId
 //                            messageTemp = message
                             room = roomSender
                         }
                     }
 
-                    if (lastMsg != null) {
+                    if (lastMsg != null && senderUid != null && receiveUid != null) {
                         val hashMap: HashMap<String, String> = HashMap()
                         hashMap.put("lastMsg", lastMsg!!)
                         val hashMap1: HashMap<String, String> = HashMap()
-                        hashMap1.put("sendToUid", userFriend.uid.toString())
+                        hashMap1.put("sendToUid", senderUid.toString())
 
                         val hashMap2: HashMap<String, String> = HashMap()
-                        hashMap2.put("fromUid", userLogin.uid.toString())
+                        hashMap2.put("receiveUid", receiveUid.toString())
 
                         mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
                         mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap1 as Map<String, Any>)

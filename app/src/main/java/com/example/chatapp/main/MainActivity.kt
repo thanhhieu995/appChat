@@ -272,7 +272,7 @@ class MainActivity : AppCompatActivity() {
                                 userList.add(user)
                             } else {
                                 userLogin = postSnapshot.getValue(User::class.java)!!
-                                if (userLogin.unRead != 0 && userLogin.fromUid != "") {
+                                if (userLogin.unRead != 0 && userLogin.receiveUid != "") {
                                     adapter.addUserLogin(userLogin)
                                 }
                                 adapter.addUserLogin(userLogin)

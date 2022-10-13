@@ -13,7 +13,7 @@ class User: Serializable {
     var isTyping: Boolean = false
     var showTyping: Boolean = false
     var unRead: Int = 0
-    var fromUid: String? = null
+    var receiveUid: String? = null
     var lastMsg: String? = null
     var listToken: ArrayList<String>? = ArrayList()
     var sendToUid: String? = null
@@ -30,7 +30,7 @@ class User: Serializable {
         this.isTyping = isTyping
         this.showTyping = showTyping
         this.unRead = count
-        this.fromUid = fromUid
+        this.receiveUid = fromUid
         this.lastMsg = lastMsg
         this.listToken = listToken
         this.sendToUid = room

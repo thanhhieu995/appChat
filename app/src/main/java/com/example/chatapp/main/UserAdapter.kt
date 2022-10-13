@@ -70,10 +70,10 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
             holder.typing.text = ""
         }
 
-        if (!currentUser.lastMsg.isNullOrEmpty() && currentUser.sendToUid == userLogin.uid) {
+        if (!currentUser.lastMsg.isNullOrEmpty() && currentUser.uid == currentUser.receiveUid || currentUser.uid == currentUser.sendToUid) {
             holder.recentMessage.text = lastMsg.toString()
         } else {
-            holder.recentMessage.text = ""
+//            holder.recentMessage.text = ""
         }
 
 //        if (unRead != 0) {
@@ -82,19 +82,19 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 //            holder.numberNotification.text = ""
 //        }
 
-//        if ( currentUser.uid == userLogin.fromUid) {
+//        if ( currentUser.uid == userLogin.receiveUid) {
 //            holder.numberNotification.text = userLogin.unRead.toString()
 //        } else {
 //            holder.numberNotification.text = ""
 //        }
 
-//        if (userLogin.unRead != 0 && currentUser.uid == userLogin.fromUid) {
+//        if (userLogin.unRead != 0 && currentUser.uid == userLogin.receiveUid) {
 //            holder.numberNotification.text = userLogin.unRead.toString()
 //        } else {
 //            holder.numberNotification.text = ""
 //        }
 
-//        if (currentUser.uid == userLogin.fromUid) {
+//        if (currentUser.uid == userLogin.receiveUid) {
 //            if (userLogin.unRead != 0) {
 //                holder.numberNotification.text = userLogin.unRead.toString()
 //            } else {
