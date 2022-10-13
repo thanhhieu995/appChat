@@ -351,14 +351,18 @@ class ChatActivity : AppCompatActivity() {
                         }
                     }
 
-                    if (lastMsg != null && room != null) {
+                    if (lastMsg != null) {
                         val hashMap: HashMap<String, String> = HashMap()
                         hashMap.put("lastMsg", lastMsg!!)
-                        val hashMap1: kotlin.collections.HashMap<String, String> = HashMap()
+                        val hashMap1: HashMap<String, String> = HashMap()
                         hashMap1.put("sendToUid", userFriend.uid.toString())
+
+                        val hashMap2: HashMap<String, String> = HashMap()
+                        hashMap2.put("fromUid", userLogin.uid.toString())
 
                         mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
                         mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap1 as Map<String, Any>)
+                        mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap2 as Map<String, Any>)
                     }
 
                     if (count != 0 ) {
