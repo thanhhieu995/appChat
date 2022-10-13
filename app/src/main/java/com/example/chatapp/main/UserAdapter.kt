@@ -153,7 +153,7 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
                 intent.putExtra("userFriend", currentUser)
 
                 context.startActivity(intent)
-                notifyDataSetChanged()
+//                notifyDataSetChanged()
             }
         })
     }
