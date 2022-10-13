@@ -355,7 +355,7 @@ class ChatActivity : AppCompatActivity() {
                         val hashMap: HashMap<String, String> = HashMap()
                         hashMap.put("lastMsg", lastMsg!!)
                         val hashMap1: kotlin.collections.HashMap<String, String> = HashMap()
-                        hashMap1.put("room", room.toString())
+                        hashMap1.put("sendToUid", userFriend.uid.toString())
 
                         mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
                         mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap1 as Map<String, Any>)

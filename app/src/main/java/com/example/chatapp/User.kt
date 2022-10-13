@@ -16,7 +16,7 @@ class User: Serializable {
     var fromUid: String? = null
     var lastMsg: String? = null
     var listToken: ArrayList<String>? = ArrayList()
-    var room: String? = null
+    var sendToUid: String? = null
 
     constructor() {}
     constructor(name: String?, email: String?, uid: String?, status: String?, avatar: String?, calling: Boolean, acceptCall: Boolean, isTyping: Boolean, showTyping: Boolean, count: Int, fromUid: String, lastMsg: String, listToken: ArrayList<String>, room: String) {
@@ -33,6 +33,6 @@ class User: Serializable {
         this.fromUid = fromUid
         this.lastMsg = lastMsg
         this.listToken = listToken
-        this.room = room
+        this.sendToUid = room
     }
 }
