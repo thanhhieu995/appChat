@@ -50,6 +50,8 @@ class SignUp : AppCompatActivity() {
 
     var listToken: ArrayList<String>? = ArrayList()
 
+    var room: String? = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -84,10 +86,13 @@ class SignUp : AppCompatActivity() {
             }
 
             listToken?.let { it1 ->
-                signUp(
-                    email, password, name, status.toString(), avatar, isCalling, acceptCall, isTyping, showTyping, count, fromUid, lastMsg,
-                    it1
-                )
+                room?.let { it2 ->
+                    signUp(
+                        email, password, name, status.toString(), avatar, isCalling, acceptCall, isTyping, showTyping, count, fromUid, lastMsg,
+                        it1,
+                        it2
+                    )
+                }
             }
             hasMore = true
             checkUserExist(email)
@@ -112,7 +117,8 @@ class SignUp : AppCompatActivity() {
         count: Int,
         fromUid: String,
         lastMsg: String,
-        listToken: ArrayList<String>
+        listToken: ArrayList<String>,
+        room: String
     ) {
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(name)) {
             Toast.makeText(this@SignUp, "please fill all the fields", Toast.LENGTH_SHORT).show()
@@ -133,7 +139,8 @@ class SignUp : AppCompatActivity() {
                             count,
                             fromUid,
                             lastMsg,
-                            listToken
+                            listToken,
+                            room
                         )
                         addUnreadToDataBase()
                         val intent = Intent(this@SignUp, SetUpActivity::class.java)
@@ -158,12 +165,13 @@ class SignUp : AppCompatActivity() {
         count: Int,
         fromUid: String,
         lastMsg: String,
-        listToken: ArrayList<String>
+        listToken: ArrayList<String>,
+        room: String
     ) {
         mDbRef = FirebaseDatabase.getInstance().reference
 
         mDbRef.child("user").child(uid)
-            .setValue(User(name, email, uid, status, avatar, isCalling, acceptCall, isTyping, showTyping, count, fromUid, lastMsg,listToken))
+            .setValue(User(name, email, uid, status, avatar, isCalling, acceptCall, isTyping, showTyping, count, fromUid, lastMsg,listToken, room))
     }
 
     private fun checkUserExist(email: String?) {

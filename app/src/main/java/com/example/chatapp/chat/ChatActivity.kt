@@ -87,6 +87,7 @@ class ChatActivity : AppCompatActivity() {
     var fromUid: String = ""
 
     var lastMsg: String? = null
+    var room: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -345,14 +346,19 @@ class ChatActivity : AppCompatActivity() {
 
                         if (message != null) {
                             lastMsg = message.message
-                            messageTemp = message
+//                            messageTemp = message
+                            room = roomSender
                         }
                     }
 
-                    if (lastMsg != null && messageTemp.message != null && messageTemp.senderId == userLogin.uid || messageTemp.senderId == userFriend.uid) {
+                    if (lastMsg != null && room != null) {
                         val hashMap: HashMap<String, String> = HashMap()
                         hashMap.put("lastMsg", lastMsg!!)
+                        val hashMap1: kotlin.collections.HashMap<String, String> = HashMap()
+                        hashMap1.put("room", room.toString())
+
                         mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap as Map<String, Any>)
+                        mDbRef.child("user").child(userLogin.uid.toString()).updateChildren(hashMap1 as Map<String, Any>)
                     }
 
                     if (count != 0 ) {

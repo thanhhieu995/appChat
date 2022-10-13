@@ -70,7 +70,7 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
             holder.typing.text = ""
         }
 
-        if (currentUser.lastMsg != null) {
+        if (!currentUser.lastMsg.isNullOrEmpty() && currentUser.room == currentUser.uid + userLogin.uid) {
             holder.recentMessage.text = lastMsg.toString()
         } else {
             holder.recentMessage.text = ""
