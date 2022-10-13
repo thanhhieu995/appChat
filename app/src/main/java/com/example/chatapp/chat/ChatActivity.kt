@@ -213,7 +213,7 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun sendChatMessage(loginUid: String?, currentDate: String?, friendUid: String?, seen: Boolean, noAvatarMessage: Boolean, avatarSendUrl: String, avatarReceiveUrl: String) {
-        val message = messageBox.text.toString()
+        val message = messageBox.text.toString().trim()
 //        showTyping(messageBox)
         val messageObject = Message(message, loginUid, friendUid, currentDate, noAvatarMessage, seen, avatarSendUrl, avatarReceiveUrl)
         if (loginUid != null && message.trim().isNotEmpty()) {
