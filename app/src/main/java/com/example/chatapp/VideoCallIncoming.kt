@@ -45,25 +45,21 @@ class VideoCallIncoming : AppCompatActivity() {
         btnAccept = findViewById(R.id.btn_accept_incoming)
         btnDecline = findViewById(R.id.btn_decline_incoming)
 
-        loginUid = intent.getStringExtra("loginUid").toString()
-        friendUid = intent.getStringExtra("friendUid").toString()
-//        hasMore = intent.getBooleanExtra("hasMore", false)
+        hasMore = intent.getBooleanExtra("hasMore", false)
         userLogin = intent.getSerializableExtra("userLogin") as User
         userFriend = intent.getSerializableExtra("userFriend") as User
 
         txtName.text = userFriend.name
 
-        FirebaseStorage.getInstance().reference.child("images").child(friendUid).downloadUrl.addOnSuccessListener {
+        FirebaseStorage.getInstance().reference.child("images").child(userFriend.uid.toString()).downloadUrl.addOnSuccessListener {
             Picasso.get().load(it).into(imgAvatarIncoming)
         }
 
         btnDecline.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
-                FirebaseDatabase.getInstance().reference.child("user").child(friendUid).child("calling").setValue(false)
+                FirebaseDatabase.getInstance().reference.child("user").child(userFriend.uid.toString()).child("calling").setValue(false)
 
                 val intent = Intent(this@VideoCallIncoming, ChatActivity::class.java)
-                intent.putExtra("uidLogin", loginUid)
-                intent.putExtra("uidFriend", friendUid)
                 intent.putExtra("hasMore", hasMore)
                 intent.putExtra("userLogin", userLogin)
                 intent.putExtra("userFriend", userFriend)
@@ -75,22 +71,21 @@ class VideoCallIncoming : AppCompatActivity() {
 
         btnAccept.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
-                FirebaseDatabase.getInstance().reference.child("user").child(loginUid).child("acceptCall").setValue(true)
+                FirebaseDatabase.getInstance().reference.child("user").child(userLogin.uid.toString()).child("acceptCall").setValue(true)
             }
         })
 
-        database.reference.child("user").child(friendUid).addValueEventListener(object : ValueEventListener{
+        database.reference.child("user").child(userFriend.uid.toString()).addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user: User? = snapshot.getValue(User::class.java)
-                if (user != null && user.uid == friendUid) {
+                if (user != null && user.uid == userFriend.uid) {
                     if (!user.calling) {
                         val intent = Intent(this@VideoCallIncoming, ChatActivity::class.java)
-                        intent.putExtra("uidLogin", loginUid)
-                        intent.putExtra("uidFriend", friendUid)
                         intent.putExtra("hasMore", hasMore)
                         intent.putExtra("userLogin", userLogin)
                         intent.putExtra("userFriend", userFriend)
                         startActivity(intent)
+                        finish()
                     }
                 }
             }

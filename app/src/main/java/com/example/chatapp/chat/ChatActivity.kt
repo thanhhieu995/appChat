@@ -474,12 +474,11 @@ class ChatActivity : AppCompatActivity() {
             //FirebaseDatabase.getInstance().reference.child("chats")
             Toast.makeText(this, "video call is ready", Toast.LENGTH_SHORT).show()
             val intent = Intent(this@ChatActivity, VideoCallOutgoing::class.java)
-            intent.putExtra("uidLogin", userLogin.uid)
-            intent.putExtra("uidFriend", userFriend.uid)
             intent.putExtra("hasMore", hasMore)
             intent.putExtra("userLogin", userLogin)
             intent.putExtra("userFriend", userFriend)
             startActivity(intent)
+            finish()
             return true
         }
 
@@ -524,8 +523,6 @@ class ChatActivity : AppCompatActivity() {
                         listToken = user.listToken!!
                         if (user.calling) {
                             val intent = Intent(this@ChatActivity, VideoCallIncoming::class.java)
-                            intent.putExtra("loginUid", userLogin.uid)
-                            intent.putExtra("friendUid", userFriend.uid)
                             intent.putExtra("hasMore", hasMore)
                             intent.putExtra("userLogin", userLogin)
                             intent.putExtra("userFriend", userFriend)

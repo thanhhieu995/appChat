@@ -17,8 +17,6 @@ import com.squareup.picasso.Picasso
 class VideoCallOutgoing : AppCompatActivity() {
 
     private lateinit var btnDecline: FloatingActionButton
-    var loginUid: String = ""
-    var friendUid: String = ""
     var hasMore: Boolean = false
     lateinit var userLogin: User
     lateinit var userFriend: User
@@ -40,33 +38,22 @@ class VideoCallOutgoing : AppCompatActivity() {
 
         database = FirebaseDatabase.getInstance()
 
-        loginUid = intent.getSerializableExtra("uidLogin") as String
-        friendUid = intent.getSerializableExtra("uidFriend") as String
         hasMore = intent.getBooleanExtra("hasMore", false)
         userLogin = intent.getSerializableExtra("userLogin") as User
         userFriend = intent.getSerializableExtra("userFriend") as User
 
-//        val bundle: Bundle? = intent.extras
-//
-//        if (bundle != null) {
-//
-//        } else {
-//            Toast.makeText(this, "Data missing", Toast.LENGTH_LONG).show()
-//        }
 
         txtNameOutgoing.text = userFriend.name
 
-       FirebaseStorage.getInstance().reference.child("images").child(friendUid)
+       FirebaseStorage.getInstance().reference.child("images").child(userFriend.uid.toString())
            .downloadUrl.addOnSuccessListener {
                Picasso.get().load(it).into(imgAvatarOutgoing)
            }
 
         btnDecline.setOnClickListener {
-            FirebaseDatabase.getInstance().reference.child("user").child(loginUid).child("calling").setValue(false)
+            FirebaseDatabase.getInstance().reference.child("user").child(userLogin.uid.toString()).child("calling").setValue(false)
 
             val intent = Intent(this@VideoCallOutgoing, ChatActivity::class.java)
-            intent.putExtra("uidLogin", loginUid)
-            intent.putExtra("uidFriend", friendUid)
             intent.putExtra("hasMore", hasMore)
             intent.putExtra("userLogin", userLogin)
             intent.putExtra("userFriend", userFriend)
@@ -77,26 +64,24 @@ class VideoCallOutgoing : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        database.reference.child("user").child(loginUid).addValueEventListener(object : ValueEventListener{
+        database.reference.child("user").child(userLogin.uid.toString()).addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user: User? = snapshot.getValue(User::class.java)
-                if (user != null && user.uid == loginUid) {
+                if (user != null && user.uid == userLogin.uid) {
                     if (!user.calling) {
                         val intent = Intent(this@VideoCallOutgoing, ChatActivity::class.java)
-                        intent.putExtra("uidLogin", loginUid)
-                        intent.putExtra("uidFriend", friendUid)
                         intent.putExtra("hasMore", hasMore)
                         intent.putExtra("userLogin", userLogin)
                         intent.putExtra("userFriend", userFriend)
                         startActivity(intent)
+                        finish()
                     }
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+                Toast.makeText(this@VideoCallOutgoing, error.message, Toast.LENGTH_LONG).show()
             }
-
         })
     }
 }
