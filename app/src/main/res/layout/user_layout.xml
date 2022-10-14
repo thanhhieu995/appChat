@@ -46,7 +46,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:singleLine="true"
-            android:text="recentlyrecentlyrecentlyrecentlyrecentlyrecentlyrecently"
+            android:text=""
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/txt_statusMain"
             app:layout_constraintStart_toStartOf="@+id/txt_name" />

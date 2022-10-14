@@ -70,37 +70,12 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
             holder.typing.text = ""
         }
 
-        if (!currentUser.lastMsg.isNullOrEmpty() && currentUser.uid == currentUser.receiveUid || currentUser.uid == currentUser.sendToUid) {
-            holder.recentMessage.text = lastMsg.toString()
-        } else {
-            holder.recentMessage.text = ""
-        }
-
-//        if (unRead != 0) {
-//            holder.numberNotification.text = unRead.toString()
+//        if (!currentUser.lastMsg.isNullOrEmpty() && currentUser.uid == currentUser.receiveUid || currentUser.uid == currentUser.sendToUid) {
+//            holder.recentMessage.text = lastMsg.toString()
 //        } else {
-//            holder.numberNotification.text = ""
+//            holder.recentMessage.text = ""
 //        }
 
-//        if ( currentUser.uid == userLogin.receiveUid) {
-//            holder.numberNotification.text = userLogin.unRead.toString()
-//        } else {
-//            holder.numberNotification.text = ""
-//        }
-
-//        if (userLogin.unRead != 0 && currentUser.uid == userLogin.receiveUid) {
-//            holder.numberNotification.text = userLogin.unRead.toString()
-//        } else {
-//            holder.numberNotification.text = ""
-//        }
-
-//        if (currentUser.uid == userLogin.receiveUid) {
-//            if (userLogin.unRead != 0) {
-//                holder.numberNotification.text = userLogin.unRead.toString()
-//            } else {
-//                holder.numberNotification.text = ""
-//            }
-//        }
 
         if (currentUser.uid == unRead.fromUid && userLogin.uid == unRead.toUid) {
             holder.numberNotification.text = unRead.unread.toString()
@@ -109,22 +84,6 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
             }
         }
 
-//        if (unRead != "0") {
-//            holder.numberNotification.text = unRead
-//        } else {
-//            holder.numberNotification.text = ""
-//        }
-
-//        if (message.senderId == userLogin.uid) {
-//            holder.recentMessage.text = "you: " + message.message.toString()
-//        } else {
-//            holder.recentMessage.text = message.message.toString()
-//        }
-        //islandRef.getResult()
-
-        //Glide.with(context).load(islandRef).into(holder.imgAvatar)
-        //Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/chat-app-c2e09.appspot.com/o/images%2FZWs9udNel9cbPsInO5iwvZqWzZY2?alt=media&token=e28522cb-86fd-45d9-acd6-1f86a072d7b2").into(holder.imgAvatar)
-       // if (FirebaseAuth.getInstance().currentUser?.uid != currentUser.uid ) {
             holder.textName.text = currentUser.name
         holder.textStatus.text = currentUser.status
         if (holder.textStatus.text == "online") {
