@@ -519,8 +519,8 @@ class ChatActivity : AppCompatActivity() {
                     val user: User? = snapshot.getValue(User::class.java)
                     if ((user != null) && (user.uid == userFriend.uid)) {
                         addStatusFriend(user.status)
-                        listToken.clear()
-                        listToken = user.listToken!!
+//                        listToken.clear()
+//                        listToken = user.listToken!!
                         if (user.calling) {
                             val intent = Intent(this@ChatActivity, VideoCallIncoming::class.java)
                             intent.putExtra("hasMore", hasMore)

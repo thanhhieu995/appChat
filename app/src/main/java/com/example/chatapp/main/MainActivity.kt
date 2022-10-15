@@ -176,7 +176,7 @@ class MainActivity : AppCompatActivity() {
                 FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString())
                     .updateChildren(hashMap as Map<String, Any>)
 
-                if (mAuth.uid.toString() == userLogin.uid.toString() && userLogin.listToken != null) {
+                if (mAuth.uid.toString() == userLogin.uid.toString() && !userLogin.listToken.isNullOrEmpty()) {
 
 
                     for (token in userLogin.listToken!!) {
