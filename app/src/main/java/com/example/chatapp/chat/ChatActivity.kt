@@ -467,19 +467,20 @@ class ChatActivity : AppCompatActivity() {
         if (item.itemId == R.id.videoCall_bar) {
             //isCalled = true
 
-            FirebaseDatabase.getInstance().reference.child("user").child(userLogin.uid.toString()).child("calling").setValue(true)
-            //mDbRef.child("user").child(loginUid.toString())
-
-            //mDbRef.ref.updateChildren(hashMap as Map<String, Any>)
-            //FirebaseDatabase.getInstance().reference.child("chats")
-            Toast.makeText(this, "video call is ready", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this@ChatActivity, VideoCallOutgoing::class.java)
-            intent.putExtra("hasMore", hasMore)
-            intent.putExtra("userLogin", userLogin)
-            intent.putExtra("userFriend", userFriend)
-            startActivity(intent)
-            finish()
-            return true
+//            FirebaseDatabase.getInstance().reference.child("user").child(userLogin.uid.toString()).child("calling").setValue(true)
+//            //mDbRef.child("user").child(loginUid.toString())
+//
+//            //mDbRef.ref.updateChildren(hashMap as Map<String, Any>)
+//            //FirebaseDatabase.getInstance().reference.child("chats")
+//            Toast.makeText(this, "video call is ready", Toast.LENGTH_SHORT).show()
+//            val intent = Intent(this@ChatActivity, VideoCallOutgoing::class.java)
+//            intent.putExtra("hasMore", hasMore)
+//            intent.putExtra("userLogin", userLogin)
+//            intent.putExtra("userFriend", userFriend)
+//            startActivity(intent)
+//            finish()
+//            return true
+            Toast.makeText(this, "This feature is not support right now", Toast.LENGTH_LONG).show()
         }
 
         if (item.itemId == R.id.action_name_title) {
@@ -521,14 +522,14 @@ class ChatActivity : AppCompatActivity() {
                         addStatusFriend(user.status)
 //                        listToken.clear()
 //                        listToken = user.listToken!!
-                        if (user.calling) {
-                            val intent = Intent(this@ChatActivity, VideoCallIncoming::class.java)
-                            intent.putExtra("hasMore", hasMore)
-                            intent.putExtra("userLogin", userLogin)
-                            intent.putExtra("userFriend", userFriend)
-                            startActivity(intent)
-                            finish()
-                        }
+//                        if (user.calling) {
+//                            val intent = Intent(this@ChatActivity, VideoCallIncoming::class.java)
+//                            intent.putExtra("hasMore", hasMore)
+//                            intent.putExtra("userLogin", userLogin)
+//                            intent.putExtra("userFriend", userFriend)
+//                            startActivity(intent)
+//                            finish()
+//                        }
 //                        if (user.isTyping && userLogin.showTyping) {
 //                            textTyping.text = userFriend.name +  " is typing..."
 //                        } else {
