@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.chatapp">
+    package="vn.hieunguyen.chatapp">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -48,7 +48,7 @@
             android:name=".ViewProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".ProfileActivity"
+            android:name="vn.hieunguyen.chatapp.ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".accountLogin.SetUpActivity"
@@ -102,7 +102,7 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".NetworkConnectionReceiver"
+        <receiver android:name="vn.hieunguyen.chatapp.NetworkConnectionReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
