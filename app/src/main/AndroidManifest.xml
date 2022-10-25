@@ -42,6 +42,7 @@
         </activity>
         <activity
             android:name=".ProfileLoginActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".RoomCallActivity"

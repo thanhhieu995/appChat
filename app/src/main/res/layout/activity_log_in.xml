@@ -86,6 +86,7 @@
                 android:id="@+id/lg_btn_login"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
+                android:textAllCaps="false"
                 android:layout_height="wrap_content"
                 style="@style/btn_login"
                 android:text="@string/lg_btn_login" />
@@ -95,6 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:textAllCaps="false"
                 style="@style/btn_signup"
                 android:text="@string/lg_btn_signup"/>
 
