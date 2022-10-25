@@ -3,8 +3,12 @@ package vn.hieunguyen.chatapp.accountLogin
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -22,6 +26,8 @@ class SignUp : AppCompatActivity() {
     private lateinit var edtEmail: EditText
     private lateinit var edtPassword: EditText
     private lateinit var btnSigUp: Button
+    lateinit var imgEye: ImageView
+    var isClicked: Boolean = true
 
     private lateinit var mAuth: FirebaseAuth
 
@@ -61,6 +67,7 @@ class SignUp : AppCompatActivity() {
         edtPassword = findViewById(R.id.su_edt_password)
         edtName = findViewById(R.id.su_edt_name)
         btnSigUp = findViewById(R.id.su_btn_signup)
+        imgEye = findViewById(R.id.su_eye_pass)
         // avatar = findViewById(R.id.imgAva_main)
 
 //        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this
@@ -97,6 +104,20 @@ class SignUp : AppCompatActivity() {
             hasMore = true
             checkUserExist(email)
         }
+
+        imgEye.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                if (isClicked) {
+                    imgEye.setImageResource(R.drawable.ic_baseline_visibility_24)
+                    edtPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                } else {
+                    imgEye.setImageResource(R.drawable.ic_baseline_visibility_off_24)
+                    edtPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+                }
+                isClicked = !isClicked
+            }
+
+        })
     }
 
     override fun onResume() {
