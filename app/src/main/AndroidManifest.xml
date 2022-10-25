@@ -31,10 +31,12 @@
         android:theme="@style/Theme.ChatApp">
         <activity
             android:name=".PlashActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ProfileLoginActivity"
@@ -55,7 +57,7 @@
             android:name=".ViewProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".chatapp.ProfileActivity"
+            android:name=".ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".accountLogin.SetUpActivity"
@@ -81,12 +83,7 @@
             android:exported="false" />
         <activity
             android:name=".accountLogin.LogIn"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="false">
         </activity>
         <activity
             android:name=".main.MainActivity"
@@ -110,7 +107,7 @@
         </service>
 
         <receiver
-            android:name=".chatapp.NetworkConnectionReceiver"
+            android:name=".NetworkConnectionReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

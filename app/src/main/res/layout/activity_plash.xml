@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue"
-    tools:context="vn.hieunguyen.PlashActivity">
+    tools:context="vn.hieunguyen.chatapp.PlashActivity">
 
 
     <ImageView
@@ -16,5 +16,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher_foreground" />
+        app:srcCompat="@mipmap/ic_launcher_foreground"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

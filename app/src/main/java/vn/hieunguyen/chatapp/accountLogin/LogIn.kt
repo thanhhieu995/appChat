@@ -1,5 +1,6 @@
 package vn.hieunguyen.chatapp.accountLogin
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -99,6 +100,14 @@ class LogIn : AppCompatActivity() {
         }
 
         hasMore = true
+    }
+
+
+    companion object {
+        fun start(context: Context) {
+            val intent = Intent(context, LogIn::class.java)
+            context.startActivity(intent)
+        }
     }
 
     override fun onResume() {
