@@ -61,6 +61,7 @@ class SetUpActivity : AppCompatActivity() {
             intent.putExtra("uid", uid)
             intent.putExtra("hasMore", true)
             startActivity(intent)
+            finish()
         }
 
         btn_AddPhotto.setOnClickListener {
