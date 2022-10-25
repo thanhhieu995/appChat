@@ -168,6 +168,8 @@ class SignUp : AppCompatActivity() {
                         intent.putExtra("uid", mAuth.currentUser?.uid)
                         startActivity(intent)
                         finish()
+                    } else {
+                        Toast.makeText(this@SignUp, task.exception.toString(), Toast.LENGTH_LONG).show()
                     }
                 }
         }
@@ -204,7 +206,7 @@ class SignUp : AppCompatActivity() {
                     val user = postSnapshot.getValue(User::class.java)
                     if (user != null) {
                         if (user.email == email && hasMore) {
-                            Toast.makeText(this@SignUp, "Registered account", Toast.LENGTH_LONG)
+                            Toast.makeText(this@SignUp, "Account is registered", Toast.LENGTH_LONG)
                                 .show()
                             hasMore = false
                         }
@@ -213,7 +215,7 @@ class SignUp : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-
+                Toast.makeText(this@SignUp, error.message, Toast.LENGTH_LONG).show()
             }
         })
     }

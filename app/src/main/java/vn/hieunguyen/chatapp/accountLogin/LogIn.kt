@@ -188,13 +188,13 @@ class LogIn : AppCompatActivity() {
                         }
                     } catch (e: FirebaseNetworkException) {
 
-                        Toast.makeText(this@LogIn, "LogIn failed: " + e.message, Toast.LENGTH_LONG)
+                        Toast.makeText(this@LogIn, "LogIn failed: " + e.localizedMessage, Toast.LENGTH_LONG)
                             .show()
                     }
 
                 })
                 .addOnFailureListener(this, OnFailureListener{
-                    Toast.makeText(this@LogIn, it.message.toString(), Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@LogIn, it.localizedMessage, Toast.LENGTH_LONG).show()
                 })
         }
     }
@@ -232,5 +232,6 @@ class LogIn : AppCompatActivity() {
         a.addCategory(Intent.CATEGORY_HOME)
         a.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(a)
+        finish()
     }
 }
