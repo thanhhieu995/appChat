@@ -6,9 +6,12 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.text.TextUtils
+import android.view.View
+import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnCompleteListener
@@ -20,6 +23,8 @@ import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_log_in.*
 import vn.hieunguyen.chatapp.R
 import vn.hieunguyen.chatapp.main.MainActivity
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 
 
 class LogIn : AppCompatActivity() {
@@ -30,6 +35,8 @@ class LogIn : AppCompatActivity() {
     private lateinit var edtPassword: EditText
     private lateinit var btnLogin: Button
     private lateinit var btnSigUp: Button
+    lateinit var imgEye: ImageView
+    var isClicked: Boolean = true
 
     private lateinit var mAuth: FirebaseAuth
 
@@ -57,6 +64,7 @@ class LogIn : AppCompatActivity() {
         checkBox = findViewById(R.id.lg_checkRemember)
         btnLogin = findViewById(R.id.lg_btn_login)
         btnSigUp = findViewById(R.id.lg_btn_signup)
+        imgEye = findViewById(R.id.lg_eye_pass)
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         editor = sharedPreferences.edit()
@@ -100,6 +108,20 @@ class LogIn : AppCompatActivity() {
         }
 
         hasMore = true
+
+        imgEye.setOnClickListener(object : OnClickListener {
+            override fun onClick(v: View?) {
+                if (isClicked) {
+                    imgEye.setImageResource(R.drawable.ic_baseline_visibility_24)
+                    edtPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                } else {
+                    imgEye.setImageResource(R.drawable.ic_baseline_visibility_off_24)
+                    edtPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+                }
+                isClicked = !isClicked
+            }
+
+        })
     }
 
 
