@@ -9,11 +9,13 @@
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/inter_bold</item>
         <item name="android:background">@drawable/bg_btn_blue</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="btn_signup">
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/inter_bold</item>
         <item name="android:background">@drawable/bg_btn_red</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 </resources>

@@ -17,6 +17,5 @@
 
         <item name="titleTextColor">@android:color/white</item>
         <item name="subtitleTextColor">@color/green</item>
-        <item name="fontFamily">@font/inter</item>
     </style>
 </resources>

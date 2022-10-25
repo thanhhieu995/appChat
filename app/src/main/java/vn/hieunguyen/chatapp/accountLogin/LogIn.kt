@@ -27,7 +27,7 @@ class LogIn : AppCompatActivity() {
 
     private lateinit var edtEmail: EditText
     private lateinit var edtPassword: EditText
-    private lateinit var edtLogin: Button
+    private lateinit var btnLogin: Button
     private lateinit var btnSigUp: Button
 
     private lateinit var mAuth: FirebaseAuth
@@ -51,17 +51,19 @@ class LogIn : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        edtEmail = findViewById(R.id.edt_email)
-        edtPassword = findViewById(R.id.register_password)
-        checkBox = findViewById(R.id.checkRemember)
+        edtEmail = findViewById(R.id.lg_edt_email)
+        edtPassword = findViewById(R.id.lg_edt_password)
+        checkBox = findViewById(R.id.lg_checkRemember)
+        btnLogin = findViewById(R.id.lg_btn_login)
+        btnSigUp = findViewById(R.id.lg_btn_signup)
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         editor = sharedPreferences.edit()
 
-        val password: TextInputLayout? = findViewById<TextInputLayout>(R.id.layout_password)
-        if (password != null) {
-            password.editText?.text.toString()
-        }
+//        val password: TextInputLayout? = findViewById<TextInputLayout>(R.id.layout_password)
+//        if (password != null) {
+//            password.editText?.text.toString()
+//        }
 
         mAuth = FirebaseAuth.getInstance()
 
@@ -83,12 +85,12 @@ class LogIn : AppCompatActivity() {
 
         checkSharedPreference()
 
-        btn_signup.setOnClickListener {
+        btnSigUp.setOnClickListener {
             val intent = Intent(this, SignUp::class.java)
             startActivity(intent)
         }
 
-        btn_login.setOnClickListener {
+        btnLogin.setOnClickListener {
             val email = edtEmail.text.toString().trim()
             val password = edtPassword.text.toString()
 

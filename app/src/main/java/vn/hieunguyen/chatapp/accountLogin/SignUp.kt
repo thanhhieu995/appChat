@@ -60,6 +60,7 @@ class SignUp : AppCompatActivity() {
         edtEmail = findViewById(R.id.edt_email_signUp)
         edtPassword = findViewById(R.id.edt_password_signUp)
         edtName = findViewById(R.id.edt_name_signUp)
+        btnSigUp = findViewById(R.id.btn_signup)
         // avatar = findViewById(R.id.imgAva_main)
 
 //        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this
@@ -72,7 +73,7 @@ class SignUp : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
 
-        btn_signup.setOnClickListener {
+        btnSigUp.setOnClickListener {
             val email = edtEmail.text.toString().trim()
             val password = edtPassword.text.toString()
             val name = edtName.text.toString().trim()
