@@ -57,10 +57,10 @@ class SignUp : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        edtEmail = findViewById(R.id.edt_email_signUp)
-        edtPassword = findViewById(R.id.edt_password_signUp)
-        edtName = findViewById(R.id.edt_name_signUp)
-        btnSigUp = findViewById(R.id.btn_signup)
+        edtEmail = findViewById(R.id.su_edt_email)
+        edtPassword = findViewById(R.id.su_edt_password)
+        edtName = findViewById(R.id.su_edt_name)
+        btnSigUp = findViewById(R.id.su_btn_signup)
         // avatar = findViewById(R.id.imgAva_main)
 
 //        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this
