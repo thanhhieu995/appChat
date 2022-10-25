@@ -23,8 +23,7 @@
             android:layout_height="200dp"
             android:layout_marginStart="0dp"
             android:layout_marginTop="0dp"
-            android:background="@drawable/img_avatar_setup"
-            android:src="@drawable/ic_baseline_account_circle_24"
+            android:src="@drawable/ic_baseline_person_24"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:background="@drawable/btn_setup_addphoto_background"
-        android:text="Add a Picture"
+        android:text="@string/setup_photo_add"
         app:layout_constraintStart_toEndOf="@+id/cardSetupAvatar"
         app:layout_constraintTop_toTopOf="@+id/cardSetupAvatar" />
 
@@ -45,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
-        android:text="Take a Photo"
+        android:text="@string/setup_photo_snapshot"
         android:background="@drawable/btn_setup_takephoto_background"
         app:layout_constraintBottom_toBottomOf="@+id/cardSetupAvatar"
         app:layout_constraintStart_toEndOf="@+id/cardSetupAvatar" />
@@ -55,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="100dp"
-        android:text="Continue"
+        android:text="@string/setup_btn"
         android:background="@color/purple_200"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

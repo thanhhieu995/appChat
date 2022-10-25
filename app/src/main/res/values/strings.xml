@@ -9,4 +9,7 @@
     <string name="lg_checkbox_text">Remember username and password</string>
     <string name="lg_txt_forgetPass">Forget password?</string>
     <string name="su_edt_name_hint">Enter your name…</string>
+    <string name="setup_photo_add">Add your avatar</string>
+    <string name="setup_photo_snapshot">Take photo</string>
+    <string name="setup_btn">Continue</string>
 </resources>
