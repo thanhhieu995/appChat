@@ -37,6 +37,7 @@
                 android:drawablePadding="10dp"
                 android:padding="10dp"
                 android:hint="@string/su_edt_name_hint"
+                android:maxLines="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/et_input" />
@@ -48,6 +49,7 @@
                 android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:hint="@string/lg_email_hint"
+                android:maxLines="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/et_input" />

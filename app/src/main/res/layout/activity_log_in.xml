@@ -37,6 +37,7 @@
                 android:drawableStart="@drawable/ic_baseline_email_24"
                 android:drawablePadding="10dp"
                 android:padding="10dp"
+                android:maxLines="1"
                 android:hint="@string/lg_email_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -31,6 +31,7 @@
         android:theme="@style/Theme.ChatApp">
         <activity
             android:name=".PlashActivity"
+            android:screenOrientation="portrait"
             android:noHistory="true"
             android:exported="true">
             <intent-filter>
@@ -44,27 +45,35 @@
             android:exported="false" />
         <activity
             android:name=".RoomCallActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".WebrtcActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".VideoCallOutgoing"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".VideoCallIncoming"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".ViewProfileActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".ProfileActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".accountLogin.SetUpActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".chat.ChatActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
             <intent-filter>
@@ -81,13 +90,16 @@
         </activity>
         <activity
             android:name=".accountLogin.SignUp"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".accountLogin.LogIn"
+            android:screenOrientation="portrait"
             android:exported="false">
         </activity>
         <activity
             android:name=".main.MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
