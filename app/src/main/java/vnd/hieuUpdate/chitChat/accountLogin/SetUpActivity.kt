@@ -25,9 +25,9 @@ import java.util.*
 
 class SetUpActivity : AppCompatActivity() {
 
-    private lateinit var btn_AddPhotto: Button
-    private lateinit var btn_TakePhoto: Button
-    private lateinit var btn_Continue : Button
+   lateinit var imgAddPhoto: ImageView
+   lateinit var imgTakePhoto: ImageView
+    private lateinit var btnContinue : Button
     lateinit var img_Avatar: ImageView
 
     lateinit var mDbRef: DatabaseReference
@@ -48,14 +48,14 @@ class SetUpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_set_up)
 
 
-        btn_AddPhotto = findViewById(R.id.btn_AddPicture)
-        btn_TakePhoto = findViewById(R.id.btn_TakePhoto)
-        btn_Continue = findViewById(R.id.btn_Continue_Setup)
-        img_Avatar = findViewById(R.id.img_setUpAvatar)
+       imgAddPhoto = findViewById(R.id.setup_img_add_photo)
+        imgTakePhoto = findViewById(R.id.setup_img_take_photo)
+        btnContinue = findViewById(R.id.setup_btn_ctn)
+        img_Avatar = findViewById(R.id.setup_img_avatar)
 
         uid = intent.getStringExtra("uid").toString()
 
-        btn_Continue.setOnClickListener {
+        btnContinue.setOnClickListener {
             val intent = Intent(this@SetUpActivity, LogIn::class.java)
             //intent.putExtra("name", mAuth.currentUser?.displayName)
             intent.putExtra("uid", uid)
@@ -64,14 +64,14 @@ class SetUpActivity : AppCompatActivity() {
             finish()
         }
 
-        btn_AddPhotto.setOnClickListener {
+        imgAddPhoto.setOnClickListener {
             val intent = Intent()
             intent.type = "image/*"
             intent.action = Intent.ACTION_GET_CONTENT
             startActivityForResult(Intent.createChooser(intent, "Select picture"), 1)
         }
 
-        btn_TakePhoto.setOnClickListener {
+        imgTakePhoto.setOnClickListener {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             startActivityForResult(intent, 2)
         }

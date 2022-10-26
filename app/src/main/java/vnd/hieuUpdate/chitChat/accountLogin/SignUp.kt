@@ -59,7 +59,7 @@ class SignUp : AppCompatActivity() {
     var room: String? = ""
 
 
-    private val blockCharacter: String = "!@#$%^&*()_=+?/:;{}1234567890 "
+    private val blockCharacter: String = "!@#$%^&*()_=+?/:;{}1234567890"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -148,6 +148,7 @@ class SignUp : AppCompatActivity() {
                             Toast.LENGTH_LONG
                         ).show()
                         val intent = Intent(this@SignUp, SetUpActivity::class.java)
+                        intent.putExtra("uid", mAuth.uid)
                         startActivity(intent)
                         finish()
                     } else {
