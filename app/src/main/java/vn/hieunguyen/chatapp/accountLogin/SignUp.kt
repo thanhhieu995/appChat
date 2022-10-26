@@ -78,8 +78,6 @@ class SignUp : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
 
         getToken()
-        clickEyePass()
-        createAccount()
     }
 
     private fun getToken() {
@@ -138,8 +136,10 @@ class SignUp : AppCompatActivity() {
         }
 
         if (!hasMore) {
+            val email = edtEmail.text.toString()
+            val password = edtPassword.text.toString()
             if (isValidEmail(edtEmail.text.toString()) && findCharacterEmail() && !checkUpperCaseEmail()) {
-                mAuth.createUserWithEmailAndPassword(edtEmail.text.toString(), edtPassword.text.toString()).addOnCompleteListener { it
+                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { it
                     if (it.isSuccessful) {
                         addUserToData(user)
                         addUnreadToDataBase()
@@ -148,7 +148,7 @@ class SignUp : AppCompatActivity() {
                             "Sign up success",
                             Toast.LENGTH_LONG
                         ).show()
-                        val intent = Intent(this@SignUp, LogIn::class.java)
+                        val intent = Intent(this@SignUp, SetUpActivity::class.java)
                         startActivity(intent)
                         finish()
                     } else {
@@ -186,6 +186,8 @@ class SignUp : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         hasTransfer = true
+        createAccount()
+        clickEyePass()
     }
 
 
