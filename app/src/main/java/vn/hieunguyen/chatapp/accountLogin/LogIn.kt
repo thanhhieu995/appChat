@@ -202,7 +202,7 @@ class LogIn : AppCompatActivity() {
     private fun checkBoxChecked() {
         if (checkBox.isChecked) {
             editor.putBoolean("check_Remember", true)
-            strEmail = edtEmail.text.toString()
+            strEmail = edtEmail.text.toString().trim()
             editor.putString("email", strEmail)
             strPassword = edtPassword.text.toString()
             editor.putString("password", strPassword)
@@ -219,7 +219,7 @@ class LogIn : AppCompatActivity() {
         isCheckbox = sharedPreferences.getBoolean("check_Remember", false)
         strEmail = sharedPreferences.getString("email", "").toString()
         strPassword = sharedPreferences.getString("password", "").toString()
-        edtEmail.setText(strEmail)
+        edtEmail.setText(strEmail.trim())
         edtPassword.setText(strPassword)
         //checkBox.isChecked = strCheckbox == "True"
 

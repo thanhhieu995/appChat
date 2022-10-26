@@ -60,7 +60,7 @@ class SignUp : AppCompatActivity() {
     var room: String? = ""
 
 
-    private val blockCharacter: String = "!@#$%^&*()_=+?/:;{}1234567890"
+    private val blockCharacter: String = "!@#$%^&*()_=+?/:;{}1234567890 "
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,9 +136,9 @@ class SignUp : AppCompatActivity() {
         }
 
         if (!hasMore) {
-            val email = edtEmail.text.toString()
+            val email = edtEmail.text.toString().trim()
             val password = edtPassword.text.toString()
-            if (isValidEmail(edtEmail.text.toString()) && findCharacterEmail() && !checkUpperCaseEmail()) {
+            if (isValidEmail(edtEmail.text.toString().trim()) && findCharacterEmail() && !checkUpperCaseEmail()) {
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { it
                     if (it.isSuccessful) {
                         addUserToData(user)
@@ -169,7 +169,7 @@ class SignUp : AppCompatActivity() {
         mDbRef.child("user").child(mAuth.uid.toString())
             .setValue(listToken?.let {
                 room?.let { it1 ->
-                    User(edtName.text.toString(), edtEmail.text.toString(), mAuth.uid, status, avatar, isCalling, acceptCall, isTyping, showTyping, count, fromUid, lastMsg,
+                    User(edtName.text.toString(), edtEmail.text.toString().trim(), mAuth.uid, status, avatar, isCalling, acceptCall, isTyping, showTyping, count, fromUid, lastMsg,
                         it,
                         it1
                     )
