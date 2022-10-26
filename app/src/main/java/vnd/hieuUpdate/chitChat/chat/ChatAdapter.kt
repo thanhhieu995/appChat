@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.receive.view.*
 import vnd.hieuUpdate.chitChat.R
 import vnd.hieuUpdate.chitChat.User
 

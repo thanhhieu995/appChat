@@ -19,7 +19,6 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_log_in.*
 import vnd.hieuUpdate.chitChat.main.MainActivity
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
