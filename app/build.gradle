@@ -14,7 +14,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "vnd.hieunguyenUpdate.chatapp"
+        applicationId "vnd.hieuUpdate.chitChat"
         minSdk 21
         targetSdk 31
         versionCode 1
