@@ -93,6 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 style="@style/btn_signup"
+                android:textAllCaps="false"
                 android:text="@string/lg_btn_signup"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>

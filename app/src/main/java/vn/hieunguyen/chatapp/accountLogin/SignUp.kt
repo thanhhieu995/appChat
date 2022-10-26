@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.util.Patterns
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -33,11 +35,11 @@ class SignUp : AppCompatActivity() {
 
     private lateinit var mDbRef: DatabaseReference
 
+    private var hasTransfer: Boolean = false
+
     var status: String? = ""
 
     var avatar: String? = null
-
-    var hasMore: Boolean = false
 
     var isCalling: Boolean = false
 
@@ -57,6 +59,9 @@ class SignUp : AppCompatActivity() {
 
     var room: String? = ""
 
+
+    private val blockCharacter: String = "!@#$%^&*()_=+?/:;{}1234567890"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
@@ -68,51 +73,35 @@ class SignUp : AppCompatActivity() {
         edtName = findViewById(R.id.su_edt_name)
         btnSigUp = findViewById(R.id.su_btn_signup)
         imgEye = findViewById(R.id.su_eye_pass)
-        // avatar = findViewById(R.id.imgAva_main)
 
-//        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this
-//        ) { instanceIdResult ->
-//           val newToken = instanceIdResult.token
-//            if (listToken?.contains(newToken) == false|| listToken!!.isEmpty()) {
-//                listToken!!.add(newToken)
-//            }
-//        }
-
+        mDbRef = FirebaseDatabase.getInstance().reference
         mAuth = FirebaseAuth.getInstance()
 
-        btnSigUp.setOnClickListener {
-            val email = edtEmail.text.toString().trim()
-            val password = edtPassword.text.toString()
-            val name = edtName.text.toString().trim()
+        getToken()
+        clickEyePass()
+        createAccount()
+    }
 
-            FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener { instanceIdResult ->
-                val newToken = instanceIdResult.token
-                if (listToken?.contains(newToken) == false || listToken!!.isEmpty()) {
-                    listToken!!.add(newToken)
-                }
+    private fun getToken() {
+        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener { instanceIdResult ->
+            val newToken = instanceIdResult.token
+            if (listToken?.contains(newToken) == false || listToken!!.isEmpty()) {
+                listToken!!.add(newToken)
             }
-
-            listToken?.let { it1 ->
-                room?.let { it2 ->
-                    signUp(
-                        email, password, name, status.toString(), avatar, isCalling, acceptCall, isTyping, showTyping, count, fromUid, lastMsg,
-                        it1,
-                        it2
-                    )
-                }
-            }
-            hasMore = true
-            checkUserExist(email)
         }
+    }
 
+    private fun clickEyePass() {
         imgEye.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 if (isClicked) {
                     imgEye.setImageResource(R.drawable.ic_baseline_visibility_24)
-                    edtPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                    edtPassword.transformationMethod =
+                        HideReturnsTransformationMethod.getInstance()
                 } else {
                     imgEye.setImageResource(R.drawable.ic_baseline_visibility_off_24)
-                    edtPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+                    edtPassword.transformationMethod =
+                        PasswordTransformationMethod.getInstance()
                 }
                 isClicked = !isClicked
             }
@@ -120,107 +109,122 @@ class SignUp : AppCompatActivity() {
         })
     }
 
-    override fun onResume() {
-        super.onResume()
-        hasMore = true
-    }
-
-    private fun signUp(
-        email: String,
-        password: String,
-        name: String,
-        status: String,
-        avatar: String?,
-        isCalling: Boolean,
-        acceptCall: Boolean,
-        isTyping: Boolean,
-        showTyping: Boolean,
-        count: Int,
-        fromUid: String,
-        lastMsg: String,
-        listToken: ArrayList<String>,
-        room: String
-    ) {
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(name)) {
-            Toast.makeText(this@SignUp, "please fill all the fields", Toast.LENGTH_SHORT).show()
-        } else {
-            mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        addUserToDatabase(
-                            name,
-                            email,
-                            mAuth.currentUser?.uid!!,
-                            status,
-                            avatar,
-                            isCalling,
-                            acceptCall,
-                            isTyping,
-                            showTyping,
-                            count,
-                            fromUid,
-                            lastMsg,
-                            listToken,
-                            room
-                        )
-                        addUnreadToDataBase()
-                        val intent = Intent(this@SignUp, SetUpActivity::class.java)
-                        intent.putExtra("uid", mAuth.currentUser?.uid)
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        Toast.makeText(this@SignUp, task.exception.toString(), Toast.LENGTH_LONG).show()
-                    }
-                }
-        }
-    }
-
-    private fun addUserToDatabase(
-        name: String,
-        email: String,
-        uid: String,
-        status: String,
-        avatar: String?,
-        isCalling: Boolean,
-        acceptCall: Boolean,
-        isTyping: Boolean,
-        showTyping: Boolean,
-        count: Int,
-        fromUid: String,
-        lastMsg: String,
-        listToken: ArrayList<String>,
-        room: String
-    ) {
-        mDbRef = FirebaseDatabase.getInstance().reference
-
-        mDbRef.child("user").child(uid)
-            .setValue(User(name, email, uid, status, avatar, isCalling, acceptCall, isTyping, showTyping, count, fromUid, lastMsg,listToken, room))
-    }
-
-    private fun checkUserExist(email: String?) {
-        mDbRef = FirebaseDatabase.getInstance().reference
-
-        mDbRef.child("user").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (postSnapshot in snapshot.children) {
-                    val user = postSnapshot.getValue(User::class.java)
-                    if (user != null) {
-                        if (user.email == email && hasMore) {
-                            Toast.makeText(this@SignUp, "Account is registered", Toast.LENGTH_LONG)
-                                .show()
-                            hasMore = false
-                        }
-                    }
+    private fun createAccount() {
+        btnSigUp.setOnClickListener(object : OnClickListener{
+            override fun onClick(v: View?) {
+                if (checkEmpty()) {
+                    countCharacterAndCreateAccount()
+                } else {
+                    Toast.makeText(this@SignUp, "Please fill in all the information to register for an account", Toast.LENGTH_LONG).show()
                 }
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@SignUp, error.message, Toast.LENGTH_LONG).show()
-            }
         })
     }
 
-    fun addUnreadToDataBase() {
+    fun countCharacterAndCreateAccount() {
+        var hasMore: Boolean = false
+        val user = User()
+        for (i in edtName.text) {
+            if (blockCharacter.contains(i)) {
+                Toast.makeText(
+                    this@SignUp,
+                    "Your name is not valid, your name don't contain number and specific character",
+                    Toast.LENGTH_LONG
+                ).show()
+                hasMore = true
+                break
+            }
+        }
+
+        if (!hasMore) {
+            if (isValidEmail(edtEmail.text.toString()) && findCharacterEmail() && !checkUpperCaseEmail()) {
+                mAuth.createUserWithEmailAndPassword(edtEmail.text.toString(), edtPassword.text.toString()).addOnCompleteListener { it
+                    if (it.isSuccessful) {
+                        addUserToData(user)
+                        addUnreadToDataBase()
+                        Toast.makeText(
+                            this@SignUp,
+                            "Sign up success",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        val intent = Intent(this@SignUp, LogIn::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(
+                            this@SignUp,
+                            "Sign up fail: " + (it.exception!!.localizedMessage?.toString() ?: toString()),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            } else {
+                Toast.makeText(this@SignUp, "Your email is not valid, please try again", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+    private fun addUserToData(user: User) {
+//        getToken()
+        mDbRef.child("user").child(mAuth.uid.toString())
+            .setValue(listToken?.let {
+                room?.let { it1 ->
+                    User(edtName.text.toString(), edtEmail.text.toString(), mAuth.uid, status, avatar, isCalling, acceptCall, isTyping, showTyping, count, fromUid, lastMsg,
+                        it,
+                        it1
+                    )
+                }
+            })
+            .addOnSuccessListener {
+                Toast.makeText(this@SignUp, "Account add to data", Toast.LENGTH_LONG).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this@SignUp, it.localizedMessage?.toString(), Toast.LENGTH_LONG).show()
+            }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        hasTransfer = true
+    }
+
+
+    private fun addUnreadToDataBase() {
         mDbRef.child("unRead").child(mAuth.uid.toString()).setValue(Unread(0, "", ""))
+    }
+
+    private fun checkEmpty(): Boolean {
+        return !(edtName.text.isNullOrEmpty() || edtEmail.text.isNullOrEmpty() || edtPassword.text.isNullOrEmpty())
+    }
+
+    private fun findCharacterEmail(): Boolean {
+        val alphabet: String = "qwertyuiopasdfghjklzxcvbnm"
+        for (i in edtEmail.text) {
+            if (blockCharacter.contains(Char(edtEmail.text[0].toInt()))) {
+                return false
+            }
+            if (i.toString() == "@") {
+                break
+            } else {
+                if (alphabet.contains(i)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    private fun checkUpperCaseEmail(): Boolean {
+        val upperCase: String = "QWERTYUIOPASDFGHJKLZXCVBNM"
+        for (i in edtEmail.text) {
+            if (upperCase.contains(i)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 }
