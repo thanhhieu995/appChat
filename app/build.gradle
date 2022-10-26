@@ -14,11 +14,11 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "vn.hieunguyen.chatapp"
+        applicationId "vnd.hieuUpdate.chitChat"
         minSdk 21
         targetSdk 31
-        versionCode 4
-        versionName "4.0"
+        versionCode 1
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
