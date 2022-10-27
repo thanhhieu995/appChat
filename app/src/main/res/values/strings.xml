@@ -12,4 +12,7 @@
     <string name="setup_photo_add">Add your avatar</string>
     <string name="setup_photo_snapshot">Take photo</string>
     <string name="setup_btn">Continue</string>
+    <string name="user_layout_typing">typing…</string>
+    <string name="user_layout_name">Henry</string>
+    <string name="user_layout_status">status</string>
 </resources>

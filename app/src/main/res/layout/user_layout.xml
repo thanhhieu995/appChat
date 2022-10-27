@@ -5,99 +5,127 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/txt_name"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="AbhayAbhayAbhayAbhayAbhayAbhayAbhayAbhayAbhay"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:singleLine="true"
-            app:layout_constraintStart_toEndOf="@+id/cardImageView"
-            app:layout_constraintTop_toTopOf="@+id/cardImageView" />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/crd_user_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:cardCornerRadius="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/txt_statusMain"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="status"
-            android:textSize="8sp"
-            app:layout_constraintEnd_toEndOf="@+id/cardImageView"
-            app:layout_constraintTop_toBottomOf="@+id/cardImageView" />
-
-        <TextView
-            android:id="@+id/countNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
-            android:text=""
-            android:textColor="@color/red"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/txt_name" />
-
-        <TextView
-            android:id="@+id/msg_recently"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:text=""
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/txt_statusMain"
-            app:layout_constraintStart_toStartOf="@+id/txt_name" />
-
-        <TextView
-            android:id="@+id/main_typing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
-            android:text="typing..."
-            android:textColor="@color/green"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <View
-            android:id="@+id/view"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linear_user_layout"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/txt_name"
-            android:background="@color/green"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            app:cardCornerRadius="25dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints">
+            app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/imgAva_main"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginEnd="0dp"
-                    android:layout_marginBottom="0dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_user_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
+                <TextView
+                    android:id="@+id/txt_name"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="@string/user_layout_name"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/cardImageView"
+                    app:layout_constraintTop_toTopOf="@+id/cardImageView" />
+
+                <TextView
+                    android:id="@+id/txt_statusMain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/user_layout_status"
+                    app:layout_constraintEnd_toEndOf="@+id/cardImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/cardImageView" />
+
+                <TextView
+                    android:id="@+id/countNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:text=""
+                    android:textColor="@color/red"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/txt_name" />
+
+                <TextView
+                    android:id="@+id/msg_recently"
+                    android:layout_width="220dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_statusMain"
+                    app:layout_constraintStart_toStartOf="@+id/txt_name" />
+
+                <TextView
+                    android:id="@+id/main_typing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
+                    android:text="@string/user_layout_typing"
+                    android:textColor="@color/green"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:cardCornerRadius="25dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:src="@drawable/ic_baseline_person_24" />
+                    tools:ignore="MissingConstraints">
 
-        </androidx.cardview.widget.CardView>
+                    <ImageView
+                        android:id="@+id/imgAva_main"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginEnd="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:src="@drawable/ic_baseline_person_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/green" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
