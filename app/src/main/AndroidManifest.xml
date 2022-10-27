@@ -31,6 +31,7 @@
         android:theme="@style/Theme.ChatApp">
         <activity
             android:name=".ResetActivity"
+            android:screenOrientation="portrait"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

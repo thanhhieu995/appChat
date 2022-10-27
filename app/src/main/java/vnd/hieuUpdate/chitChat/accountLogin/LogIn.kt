@@ -22,7 +22,9 @@ import com.google.firebase.database.*
 import vnd.hieuUpdate.chitChat.main.MainActivity
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.widget.TextView
 import vnd.hieuUpdate.chitChat.R
+import vnd.hieuUpdate.chitChat.ResetActivity
 
 
 class LogIn : AppCompatActivity() {
@@ -35,6 +37,7 @@ class LogIn : AppCompatActivity() {
     private lateinit var btnSigUp: Button
     lateinit var imgEye: ImageView
     var isClicked: Boolean = true
+    lateinit var txtForgetPass: TextView
 
     private lateinit var mAuth: FirebaseAuth
 
@@ -63,6 +66,7 @@ class LogIn : AppCompatActivity() {
         btnLogin = findViewById(R.id.lg_btn_login)
         btnSigUp = findViewById(R.id.lg_btn_signup)
         imgEye = findViewById(R.id.lg_eye_pass)
+        txtForgetPass = findViewById(R.id.lg_txt_forgetPass)
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         editor = sharedPreferences.edit()
@@ -130,10 +134,21 @@ class LogIn : AppCompatActivity() {
         }
     }
 
+    private fun forgetPass() {
+        txtForgetPass.setOnClickListener(object : OnClickListener{
+            override fun onClick(p0: View?) {
+                val intent = Intent(this@LogIn, ResetActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+
+        })
+    }
+
     override fun onResume() {
         super.onResume()
         hasMore = true
-
+        forgetPass()
     }
 
     private fun login(email: String, password: String) {
