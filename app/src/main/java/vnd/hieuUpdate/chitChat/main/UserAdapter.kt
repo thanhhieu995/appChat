@@ -49,18 +49,12 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        //val currentUser = dataList[position]
         val currentUser = userList[position]
-        //val statusList = statusList[position]
-        //holder.imgAvatar.setImageURI(islandRef)
-        if (holder.imgAvatar.drawable == null) {
-            currentUser.uid?.let {
-                storageRef.child("images").child(it)
-                    .downloadUrl.addOnSuccessListener {
-                        //holder.imgAvatar.setImageURI(it)
-                        Picasso.get().load(it).into(holder.imgAvatar)
-                    }
-            }
+        currentUser.uid?.let {
+            storageRef.child("images").child(it)
+                .downloadUrl.addOnSuccessListener {
+                    Picasso.get().load(it).into(holder.imgAvatar)
+                }
         }
 
         if (currentUser.isTyping && userLogin.showTyping) {
@@ -68,13 +62,6 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
         } else {
             holder.typing.text = ""
         }
-
-//        if (!currentUser.lastMsg.isNullOrEmpty() && currentUser.uid == currentUser.receiveUid || currentUser.uid == currentUser.sendToUid) {
-//            holder.recentMessage.text = lastMsg.toString()
-//        } else {
-//            holder.recentMessage.text = ""
-//        }
-
 
         if (currentUser.uid == unRead.fromUid && userLogin.uid == unRead.toUid) {
             holder.numberNotification.text = unRead.unread.toString()
@@ -97,27 +84,21 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
             override fun onClick(v: View?) {
                 val intent = Intent(context, ChatActivity::class.java)
 
-//                intent.putExtra("name", currentUser.name)
-//                intent.putExtra("uidFriend", currentUser.uid)
 
                 hasMore = true
                 intent.putExtra("hasMore", hasMore)
-                //intent.putExtra("statusFriend", currentUser.status.toString())
 
-//                intent.putExtra("uidLogin", uidLogin)
 
                 intent.putExtra("userLogin", userLogin)
 
                 intent.putExtra("userFriend", currentUser)
 
                 context.startActivity(intent)
-//                notifyDataSetChanged()
             }
         })
     }
 
     override fun getItemCount(): Int {
-        //return dataList.size
         return userList.size
     }
 
@@ -159,17 +140,6 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 
     fun addUserList(userList: ArrayList<User>) {
         this.userList = userList
-    }
-
-//    fun addLastMessage(message: Message) {
-//        this.message = message
-//    }
-//
-//    fun addNumberNotification(unRead : Int) {
-//        this.unRead = unRead.toString()
-//    }
-    fun addCount(count: Int) {
-        this.count = count
     }
 
     fun unRead(unRead: Unread) {
