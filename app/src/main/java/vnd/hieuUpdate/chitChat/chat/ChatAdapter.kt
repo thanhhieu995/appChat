@@ -126,6 +126,13 @@ class ChatAdapter(val context: Context) :
 //                viewHolder.status_Sent.text = "sent"
 //                viewHolder.img_Avatar_Status.visibility = View.GONE
 //            }
+            if (currentMessage.hadImage) {
+                FirebaseStorage.getInstance().reference.child("chats").child(userLogin.uid + userFriend.uid)
+                    .child(currentMessage.time.toString()).downloadUrl.addOnSuccessListener {
+                        Picasso.get().load(it).into(holder.img_send)
+                    }
+            }
+
 
         } else {
             val viewHolder = holder as ReceiveViewHolder
@@ -167,6 +174,12 @@ class ChatAdapter(val context: Context) :
 //            } else {
 //                viewHolder.typing.text = ""
 //            }
+            if (currentMessage.hadImage) {
+                FirebaseStorage.getInstance().reference.child("chats").child(userFriend.uid + userLogin.uid)
+                    .child(currentMessage.time.toString()).downloadUrl.addOnSuccessListener {
+                        Picasso.get().load(it).into(holder.img_receive)
+                    }
+            }
         }
     }
 
