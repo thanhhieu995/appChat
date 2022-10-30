@@ -190,6 +190,7 @@ class ChatAdapter(val context: Context) :
         val time_receive = itemView.findViewById<TextView>(R.id.time_receive)
         val img_avatar = itemView.findViewById<ImageView>(R.id.img_receiveProfile)
         val typing = itemView.findViewById<TextView>(R.id.textTyping)
+        val img_receive = itemView.findViewById<ImageView>(R.id.img_receive_layout_receive)
     }
 
     class SentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -198,6 +199,7 @@ class ChatAdapter(val context: Context) :
         val time_sent = itemView.findViewById<TextView>(R.id.time_sent)
         val status_Sent = itemView.findViewById<TextView>(R.id.status_messageSent)
         val img_Avatar_Status = itemView.findViewById<ImageView>(R.id.img_Avatar_Status)
+        val img_send = itemView.findViewById<ImageView>(R.id.img_sent_layout_sent)
     }
 
 

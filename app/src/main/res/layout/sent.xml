@@ -28,18 +28,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="This is sent message "
+            tools:text="This is sent message "
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_sent_layout_sent"
+            tools:src="@mipmap/ic_image_load"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/time_sent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="time message sent"
+            tools:text="time message sent"
             app:layout_constraintStart_toStartOf="@+id/txt_sent_message"
             app:layout_constraintTop_toBottomOf="@+id/txt_sent_message" />
 
@@ -49,7 +55,7 @@
         android:id="@+id/status_messageSent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="status message sent"
+        tools:text="status message sent"
         app:layout_constraintEnd_toEndOf="@+id/RL_sentLayout"
         app:layout_constraintTop_toBottomOf="@+id/RL_sentLayout" />
 

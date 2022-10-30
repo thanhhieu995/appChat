@@ -1,12 +1,15 @@
 package vnd.hieuUpdate.chitChat.chat
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.View.OnClickListener
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,6 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -41,8 +47,12 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var chatRecyclerView: RecyclerView
     private lateinit var messageBox: EditText
     private lateinit var sentButton: ImageView
+
+    lateinit var sendImage: ImageView
+
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var mDbRef: DatabaseReference
+    lateinit var firebaseStorage: FirebaseStorage
 
     lateinit var textTyping: TextView
 
@@ -121,7 +131,9 @@ class ChatActivity : AppCompatActivity() {
 
         textTyping = findViewById(R.id.textTyping)
 
-        sentButton = findViewById(R.id.img_sent)
+        sentButton = findViewById(R.id.img_sent_chat)
+
+        sendImage = findViewById(R.id.img_attach)
 
         chatAdapter = ChatAdapter(this)
 
@@ -135,6 +147,15 @@ class ChatActivity : AppCompatActivity() {
 
 
         date = Calendar.getInstance().time
+
+        sendImage.setOnClickListener(object : OnClickListener{
+            override fun onClick(p0: View?) {
+                val intent = Intent()
+                intent.type = "image/*"
+                intent.action = Intent.ACTION_GET_CONTENT
+                startActivityForResult(Intent.createChooser(intent, "Select picture"), 1)
+            }
+        })
 
 
         sentButton.setOnClickListener {
@@ -757,32 +778,35 @@ class ChatActivity : AppCompatActivity() {
         })
     }
 
-//    fun typeEditText() {
-//        val editText: EditText = @SuppressLint("AppCompatCustomView")
-//        object : EditText(this) {
-//            override fun onCreateInputConnection(editorInfo: EditorInfo): InputConnection {
-//                val ic = super.onCreateInputConnection(editorInfo)
-//                EditorInfoCompat.setContentMimeTypes(editorInfo, arrayOf("image/png"))
-//                val callback =
-//                    OnCommitContentListener { inputContentInfo, flags, opts ->
-//                        // read and display inputContentInfo asynchronously
-//                        if (BuildCompat.isAtLeastNMR1() && flags and
-//                            InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION != 0
-//                        ) {
-//                            try {
-//                                inputContentInfo.requestPermission()
-//                            } catch (e: java.lang.Exception) {
-//                                return@OnCommitContentListener false // return false if failed
-//                            }
-//                        }
-//
-//                        // read and display inputContentInfo asynchronously.
-//                        // call inputContentInfo.releasePermission() as needed.
-//                        true // return true if succeeded
-//                    }
-//                return InputConnectionCompat.createWrapper(ic, editorInfo, callback)
-//            }
-//        }
-//    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK && requestCode == 1 && data != null) {
+            if (data.data != null) {
+//                val selectImage = data.data
+//                val storage = Firebase.storage
+//                val storageRef = storage.reference
+                pushImageToFirebase(data.data!!)
+
+            }
+        }
+    }
+
+    private fun pushImageToFirebase(imageUri: Uri) {
+
+        val storeRef = Firebase.storage.reference.child("chats").child(roomSender.toString())
+            .child(System.currentTimeMillis().toString())
+        val uploadTask = storeRef.putFile(imageUri)
+
+        uploadTask.addOnSuccessListener {
+            Toast.makeText(this@ChatActivity, "Image sent", Toast.LENGTH_LONG).show()
+        }
+            .addOnFailureListener{
+                Toast.makeText(this@ChatActivity, it.localizedMessage?.toString(), Toast.LENGTH_LONG).show()
+            }
+            .addOnCanceledListener {
+                Toast.makeText(this@ChatActivity, "Image cancel", Toast.LENGTH_LONG).show()
+            }
+    }
 }
 
