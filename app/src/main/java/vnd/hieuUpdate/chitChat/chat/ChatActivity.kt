@@ -15,7 +15,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +26,6 @@ import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -176,56 +174,10 @@ class ChatActivity : AppCompatActivity() {
             date = Calendar.getInstance().time
             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val currentDate = sdf.format(Date())
-            hadImage = false
-            val message = messageBox.text.toString().trim()
 
+            pushImageToStorage(currentDate)
 
-            if (imageUriTemp != null ) {
-                val storeRef = Firebase.storage.reference.child("chats").child(roomSender.toString())
-                    .child(currentDate)
-                val uploadTask = storeRef.putFile(imageUriTemp!!)
-
-                uploadTask.addOnSuccessListener {
-                    Toast.makeText(this@ChatActivity, "Image sent storage", Toast.LENGTH_LONG).show()
-
-                    hadImage = true
-
-                    val messageOb  = Message(
-                        message,
-                        userLogin.uid,
-                        userFriend.uid,
-                        currentDate,
-                        noAvatarMessage,
-                        seen,
-                        avatarSendUrl,
-                        avatarReceiveUrl,
-                        hadImage
-                    )
-                        mDbRef.child("chats").child(roomSender!!).child("messages").push()
-                            .setValue(messageOb).addOnSuccessListener {
-                                mDbRef.child("chats").child(roomReceiver!!).child("messages").push()
-                                    .setValue(messageOb) }
-//                    sendImage.setImageDrawable(getDrawable(R.drawable.ic_baseline_image_24))
-                    sendImage.setImageResource(R.drawable.ic_baseline_image_24)
-                } .addOnFailureListener{
-                    Toast.makeText(this@ChatActivity, it.localizedMessage, Toast.LENGTH_LONG).show()
-                }
-                imageUriTemp = null
-            } else {
-                Toast.makeText(this@ChatActivity, "image is null", Toast.LENGTH_LONG).show()
-            }
-
-
-            sendChatMessage(
-                userLogin.uid.toString(),
-                currentDate,
-                userFriend.uid ,
-                seen,
-                noAvatarMessage,
-                avatarSendUrl.toString(),
-                avatarReceiveUrl.toString(),
-                hadImage
-            )
+            sendChatMessage(userLogin.uid.toString(), currentDate, userFriend.uid , seen, noAvatarMessage, avatarSendUrl.toString(), avatarReceiveUrl.toString(), hadImage)
 
 
             chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
@@ -233,6 +185,47 @@ class ChatActivity : AppCompatActivity() {
         }
 
 //        checkTyping(messageBox)
+    }
+
+    private fun pushImageToStorage(currentDate: String) {
+        hadImage = false
+        val message = messageBox.text.toString().trim()
+
+        if (imageUriTemp != null ) {
+            val storeRef = Firebase.storage.reference.child("chats").child(roomSender.toString())
+                .child(currentDate)
+            val uploadTask = storeRef.putFile(imageUriTemp!!)
+
+            uploadTask.addOnSuccessListener {
+                Toast.makeText(this@ChatActivity, "Image sent storage", Toast.LENGTH_LONG).show()
+
+                hadImage = true
+
+                val messageOb  = Message(
+                    message,
+                    userLogin.uid,
+                    userFriend.uid,
+                    currentDate,
+                    noAvatarMessage,
+                    seen,
+                    avatarSendUrl,
+                    avatarReceiveUrl,
+                    hadImage
+                )
+                mDbRef.child("chats").child(roomSender!!).child("messages").push()
+                    .setValue(messageOb).addOnSuccessListener {
+                        mDbRef.child("chats").child(roomReceiver!!).child("messages").push()
+                            .setValue(messageOb) }
+//                    sendImage.setImageDrawable(getDrawable(R.drawable.ic_baseline_image_24))
+                sendImage.setImageResource(R.drawable.ic_baseline_image_24)
+            } .addOnFailureListener{
+                Toast.makeText(this@ChatActivity, it.localizedMessage, Toast.LENGTH_LONG).show()
+            }
+            imageUriTemp = null
+        } else {
+            Toast.makeText(this@ChatActivity, "image is null", Toast.LENGTH_LONG).show()
+        }
+
     }
 
     override fun onResume() {
@@ -305,12 +298,7 @@ class ChatActivity : AppCompatActivity() {
                     mDbRef.child("chats").child(roomReceiver!!).child("messages").push()
                         .setValue(messageObject) }
         } else {
-
-            if (imageUriTemp != null) {
-                
-            } else {
-                Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG).show()
-            }
+            Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG).show()
         }
 
         val title: String? = userLogin.name
@@ -844,14 +832,14 @@ class ChatActivity : AppCompatActivity() {
 //                val selectImage = data.data
 //                val storage = Firebase.storage
 //                val storageRef = storage.reference
-                pushImageToFirebase(data.data!!)
+                setImageUri(data.data!!)
 
             }
         }
         imageUriTemp = data!!.data
     }
 
-    private fun pushImageToFirebase(imageUri: Uri) {
+    private fun setImageUri(imageUri: Uri) {
 
 //        val storeRef = Firebase.storage.reference.child("chats").child(roomSender.toString())
 //            .child(System.currentTimeMillis().toString())
