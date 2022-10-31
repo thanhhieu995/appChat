@@ -177,6 +177,7 @@ class ChatActivity : AppCompatActivity() {
             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val currentDate = sdf.format(Date())
             hadImage = false
+            val message = messageBox.text.toString().trim()
 
 
             if (imageUriTemp != null ) {
@@ -189,7 +190,6 @@ class ChatActivity : AppCompatActivity() {
 
                     hadImage = true
 
-                    val message = messageBox.text.toString().trim()
                     val messageOb  = Message(
                         message,
                         userLogin.uid,
@@ -201,15 +201,12 @@ class ChatActivity : AppCompatActivity() {
                         avatarReceiveUrl,
                         hadImage
                     )
-//                    if (userLogin.uid != null && message.trim().isNotEmpty() && !hadImage) {
                         mDbRef.child("chats").child(roomSender!!).child("messages").push()
                             .setValue(messageOb).addOnSuccessListener {
                                 mDbRef.child("chats").child(roomReceiver!!).child("messages").push()
                                     .setValue(messageOb) }
-//                    }
-//                     pic = getDrawable(R.drawable.ic_baseline_image_24)
-//                    sendImage.setImageDrawable(pic)
-                    sendImage.setImageDrawable(getDrawable(R.drawable.ic_baseline_image_24))
+//                    sendImage.setImageDrawable(getDrawable(R.drawable.ic_baseline_image_24))
+                    sendImage.setImageResource(R.drawable.ic_baseline_image_24)
                 } .addOnFailureListener{
                     Toast.makeText(this@ChatActivity, it.localizedMessage, Toast.LENGTH_LONG).show()
                 }
@@ -308,8 +305,12 @@ class ChatActivity : AppCompatActivity() {
                     mDbRef.child("chats").child(roomReceiver!!).child("messages").push()
                         .setValue(messageObject) }
         } else {
-            Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG)
-                .show()
+
+            if (imageUriTemp != null) {
+                
+            } else {
+                Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG).show()
+            }
         }
 
         val title: String? = userLogin.name
