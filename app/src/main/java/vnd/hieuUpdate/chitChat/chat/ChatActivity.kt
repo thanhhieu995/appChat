@@ -815,8 +815,10 @@ class ChatActivity : AppCompatActivity() {
                 }
 
                 if (boolean1 && boolean2) {
+                    textTyping.visibility = View.VISIBLE
                     textTyping.text = userFriend.name + " is typing..."
                 } else {
+                    textTyping.visibility = View.GONE
                     textTyping.text = ""
                 }
 
