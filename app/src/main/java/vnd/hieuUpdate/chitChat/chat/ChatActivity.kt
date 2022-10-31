@@ -174,11 +174,15 @@ class ChatActivity : AppCompatActivity() {
             date = Calendar.getInstance().time
             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val currentDate = sdf.format(Date())
+            hadImage = false
 
             pushImageToStorage(currentDate)
 
             sendChatMessage(userLogin.uid.toString(), currentDate, userFriend.uid , seen, noAvatarMessage, avatarSendUrl.toString(), avatarReceiveUrl.toString(), hadImage)
 
+            if (imageUriTemp == null && messageBox.text.isNullOrEmpty()) {
+                Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG).show()
+            }
 
             chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
 
@@ -188,7 +192,6 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun pushImageToStorage(currentDate: String) {
-        hadImage = false
         val message = messageBox.text.toString().trim()
 
         if (imageUriTemp != null ) {
@@ -297,9 +300,10 @@ class ChatActivity : AppCompatActivity() {
                 .setValue(messageObject).addOnSuccessListener {
                     mDbRef.child("chats").child(roomReceiver!!).child("messages").push()
                         .setValue(messageObject) }
-        } else {
-            Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG).show()
         }
+//        else {
+//            Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG).show()
+//        }
 
         val title: String? = userLogin.name
 
@@ -833,10 +837,9 @@ class ChatActivity : AppCompatActivity() {
 //                val storage = Firebase.storage
 //                val storageRef = storage.reference
                 setImageUri(data.data!!)
-
+                imageUriTemp = data!!.data
             }
         }
-        imageUriTemp = data!!.data
     }
 
     private fun setImageUri(imageUri: Uri) {
