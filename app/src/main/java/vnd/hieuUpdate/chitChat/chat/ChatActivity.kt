@@ -32,6 +32,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import vnd.hieuUpdate.chitChat.Message
 import vnd.hieuUpdate.chitChat.User
 import java.text.SimpleDateFormat
 import java.util.*
@@ -99,6 +100,7 @@ class ChatActivity : AppCompatActivity() {
     var imageUriTemp: Uri? = null
     var hadImage: Boolean = false
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -188,7 +190,7 @@ class ChatActivity : AppCompatActivity() {
                     hadImage = true
 
                     val message = messageBox.text.toString().trim()
-                    val messageObject = vnd.hieuUpdate.chitChat.Message(
+                    val messageOb  = Message(
                         message,
                         userLogin.uid,
                         userFriend.uid,
@@ -201,9 +203,9 @@ class ChatActivity : AppCompatActivity() {
                     )
 //                    if (userLogin.uid != null && message.trim().isNotEmpty() && !hadImage) {
                         mDbRef.child("chats").child(roomSender!!).child("messages").push()
-                            .setValue(messageObject).addOnSuccessListener {
+                            .setValue(messageOb).addOnSuccessListener {
                                 mDbRef.child("chats").child(roomReceiver!!).child("messages").push()
-                                    .setValue(messageObject) }
+                                    .setValue(messageOb) }
 //                    }
 //                     pic = getDrawable(R.drawable.ic_baseline_image_24)
 //                    sendImage.setImageDrawable(pic)

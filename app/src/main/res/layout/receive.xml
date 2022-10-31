@@ -51,16 +51,16 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_receive_layout_receive"
-            tools:src="@mipmap/ic_image_load"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:background="@mipmap/picture_wait_load_foreground"
+            android:layout_width="200dp"
+            android:layout_height="200dp"/>
 
         <TextView
             android:id="@+id/time_receive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="time receive message"
+            tools:text="time receive message"
             app:layout_constraintStart_toStartOf="@+id/txt_receive_message"
             app:layout_constraintTop_toBottomOf="@+id/txt_receive_message" />
 

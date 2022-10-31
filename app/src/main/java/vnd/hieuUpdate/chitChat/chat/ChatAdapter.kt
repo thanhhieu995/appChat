@@ -127,10 +127,14 @@ class ChatAdapter(val context: Context) :
 //                viewHolder.img_Avatar_Status.visibility = View.GONE
 //            }
             if (currentMessage.hadImage) {
+                holder.img_send.visibility = View.VISIBLE
+//                holder.img_send.setImageResource(R.mipmap.picture_wait_load_foreground)
                 FirebaseStorage.getInstance().reference.child("chats").child(userLogin.uid + userFriend.uid)
                     .child(currentMessage.time.toString()).downloadUrl.addOnSuccessListener {
                         Picasso.get().load(it).into(holder.img_send)
                     }
+            } else {
+                holder.img_send.visibility = View.GONE
             }
 
 
@@ -175,10 +179,15 @@ class ChatAdapter(val context: Context) :
 //                viewHolder.typing.text = ""
 //            }
             if (currentMessage.hadImage) {
+                holder.img_receive.visibility = View.VISIBLE
+//                holder.img_receive.setImageDrawable(R.drawable.ic_baseline_image_24)
+//                holder.img_receive.setImageResource(R.mipmap.picture_wait_load_foreground)
                 FirebaseStorage.getInstance().reference.child("chats").child(userFriend.uid + userLogin.uid)
                     .child(currentMessage.time.toString()).downloadUrl.addOnSuccessListener {
                         Picasso.get().load(it).into(holder.img_receive)
                     }
+            } else {
+                holder.img_receive.visibility = View.GONE
             }
         }
     }
