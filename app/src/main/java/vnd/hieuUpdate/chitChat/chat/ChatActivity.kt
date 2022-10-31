@@ -1,12 +1,15 @@
 package vnd.hieuUpdate.chitChat.chat
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.View.OnClickListener
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,6 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -24,6 +30,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import vnd.hieuUpdate.chitChat.Message
 import vnd.hieuUpdate.chitChat.User
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,8 +48,12 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var chatRecyclerView: RecyclerView
     private lateinit var messageBox: EditText
     private lateinit var sentButton: ImageView
+
+    lateinit var sendImage: ImageView
+
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var mDbRef: DatabaseReference
+    lateinit var firebaseStorage: FirebaseStorage
 
     lateinit var textTyping: TextView
 
@@ -84,6 +95,10 @@ class ChatActivity : AppCompatActivity() {
     var senderUid: String? = null
     var receiveUid: String? = null
 
+    var imageUriTemp: Uri? = null
+    var hadImage: Boolean = false
+
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -121,7 +136,9 @@ class ChatActivity : AppCompatActivity() {
 
         textTyping = findViewById(R.id.textTyping)
 
-        sentButton = findViewById(R.id.img_sent)
+        sentButton = findViewById(R.id.img_sent_chat)
+
+        sendImage = findViewById(R.id.img_attach)
 
         chatAdapter = ChatAdapter(this)
 
@@ -136,29 +153,89 @@ class ChatActivity : AppCompatActivity() {
 
         date = Calendar.getInstance().time
 
+        sendImage.setOnClickListener(object : OnClickListener{
+            override fun onClick(p0: View?) {
+                val intent = Intent()
+                intent.type = "image/*"
+                intent.action = Intent.ACTION_GET_CONTENT
+                startActivityForResult(Intent.createChooser(intent, "Select picture"), 1)
+            }
+        })
+
+//       val pic = getDrawable(R.drawable.ic_baseline_image_24)
+//        if (sendImage.equals(pic)) {
+//            Toast.makeText(this@ChatActivity, "same", Toast.LENGTH_LONG).show()
+//        } else {
+//            Toast.makeText(this@ChatActivity, "different", Toast.LENGTH_LONG).show()
+//        }
+
 
         sentButton.setOnClickListener {
             date = Calendar.getInstance().time
             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val currentDate = sdf.format(Date())
+            hadImage = false
 
-            sendChatMessage(
-                userLogin.uid.toString(),
-                currentDate,
-                userFriend.uid ,
-                seen,
-                noAvatarMessage,
-                avatarSendUrl.toString(),
-                avatarReceiveUrl.toString()
-            )
+//            pushImageToStorage(currentDate)
 
+//            sendChatMessage(userLogin.uid.toString(), currentDate, userFriend.uid , seen, noAvatarMessage, avatarSendUrl.toString(), avatarReceiveUrl.toString(), hadImage)
 
+            if (!messageBox.text.isNullOrEmpty()) {
+                if (imageUriTemp != null) {
+                    pushImageToStorage(currentDate)
+                } else {
+                    sendChatMessage(userLogin.uid.toString(), currentDate, userFriend.uid , seen, noAvatarMessage, avatarSendUrl.toString(), avatarReceiveUrl.toString(), hadImage)
+                }
+            } else {
+                if (imageUriTemp != null){
+                    pushImageToStorage(currentDate)
+                } else {
+                    Toast.makeText(this@ChatActivity, "Please, enter message...", Toast.LENGTH_LONG).show()
+                }
+            }
 
             chatRecyclerView.scrollToPosition(chatAdapter.itemCount - 1)
 
         }
 
 //        checkTyping(messageBox)
+    }
+
+    private fun pushImageToStorage(currentDate: String) {
+        val message = messageBox.text.toString().trim()
+
+            val storeRef = Firebase.storage.reference.child("chats").child(roomSender.toString())
+                .child(currentDate)
+            val uploadTask = storeRef.putFile(imageUriTemp!!)
+
+            uploadTask.addOnSuccessListener {
+                Toast.makeText(this@ChatActivity, "Image sent", Toast.LENGTH_LONG).show()
+
+                hadImage = true
+
+                val messageOb  = Message(
+                    message,
+                    userLogin.uid,
+                    userFriend.uid,
+                    currentDate,
+                    noAvatarMessage,
+                    seen,
+                    avatarSendUrl,
+                    avatarReceiveUrl,
+                    hadImage
+                )
+                mDbRef.child("chats").child(roomSender!!).child("messages").push()
+                    .setValue(messageOb).addOnSuccessListener {
+                        mDbRef.child("chats").child(roomReceiver!!).child("messages").push()
+                            .setValue(messageOb) }.addOnSuccessListener {
+                                messageBox.setText("")
+                    }
+//                    sendImage.setImageDrawable(getDrawable(R.drawable.ic_baseline_image_24))
+                sendImage.setImageResource(R.drawable.ic_baseline_image_24)
+            } .addOnFailureListener{
+                Toast.makeText(this@ChatActivity, it.localizedMessage, Toast.LENGTH_LONG).show()
+            }
+            imageUriTemp = null
     }
 
     override fun onResume() {
@@ -211,10 +288,10 @@ class ChatActivity : AppCompatActivity() {
 
     }
 
-    private fun sendChatMessage(loginUid: String?, currentDate: String?, friendUid: String?, seen: Boolean, noAvatarMessage: Boolean, avatarSendUrl: String, avatarReceiveUrl: String) {
+    private fun sendChatMessage(loginUid: String?, currentDate: String?, friendUid: String?, seen: Boolean, noAvatarMessage: Boolean, avatarSendUrl: String, avatarReceiveUrl: String, hadImage: Boolean) {
         val message = messageBox.text.toString().trim()
 //        showTyping(messageBox)
-        val messageObject = vnd.hieuUpdate.chitChat.Message(
+        val messageObject = Message(
             message,
             loginUid,
             friendUid,
@@ -222,17 +299,18 @@ class ChatActivity : AppCompatActivity() {
             noAvatarMessage,
             seen,
             avatarSendUrl,
-            avatarReceiveUrl
+            avatarReceiveUrl,
+            hadImage
         )
         if (loginUid != null && message.trim().isNotEmpty()) {
             mDbRef.child("chats").child(roomSender!!).child("messages").push()
                 .setValue(messageObject).addOnSuccessListener {
                     mDbRef.child("chats").child(roomReceiver!!).child("messages").push()
                         .setValue(messageObject) }
-        } else {
-            Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG)
-                .show()
         }
+//        else {
+//            Toast.makeText(this@ChatActivity, "Please enter the character!!!!", Toast.LENGTH_LONG).show()
+//        }
 
         val title: String? = userLogin.name
 
@@ -757,32 +835,51 @@ class ChatActivity : AppCompatActivity() {
         })
     }
 
-//    fun typeEditText() {
-//        val editText: EditText = @SuppressLint("AppCompatCustomView")
-//        object : EditText(this) {
-//            override fun onCreateInputConnection(editorInfo: EditorInfo): InputConnection {
-//                val ic = super.onCreateInputConnection(editorInfo)
-//                EditorInfoCompat.setContentMimeTypes(editorInfo, arrayOf("image/png"))
-//                val callback =
-//                    OnCommitContentListener { inputContentInfo, flags, opts ->
-//                        // read and display inputContentInfo asynchronously
-//                        if (BuildCompat.isAtLeastNMR1() && flags and
-//                            InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION != 0
-//                        ) {
-//                            try {
-//                                inputContentInfo.requestPermission()
-//                            } catch (e: java.lang.Exception) {
-//                                return@OnCommitContentListener false // return false if failed
-//                            }
-//                        }
-//
-//                        // read and display inputContentInfo asynchronously.
-//                        // call inputContentInfo.releasePermission() as needed.
-//                        true // return true if succeeded
-//                    }
-//                return InputConnectionCompat.createWrapper(ic, editorInfo, callback)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK && requestCode == 1 && data != null) {
+            if (data.data != null) {
+//                val selectImage = data.data
+//                val storage = Firebase.storage
+//                val storageRef = storage.reference
+                setImageUri(data.data!!)
+                imageUriTemp = data!!.data
+            }
+        }
+    }
+
+    private fun setImageUri(imageUri: Uri) {
+
+//        val storeRef = Firebase.storage.reference.child("chats").child(roomSender.toString())
+//            .child(System.currentTimeMillis().toString())
+//        val uploadTask = storeRef.putFile(imageUri)
+
+        sendImage.setImageURI(imageUri)
+
+//        imageUriTemp = imageUri
+
+
+//        storeRef.downloadUrl.addOnSuccessListener {
+//            Picasso.get().load(it).into(sendImage)
+//        }.addOnFailureListener {
+//            Toast.makeText(this@ChatActivity, it.localizedMessage, Toast.LENGTH_LONG).show()
+//        }
+
+//        uploadTask.addOnSuccessListener {
+//            Toast.makeText(this@ChatActivity, "Image sent", Toast.LENGTH_LONG).show()
+//            storeRef.downloadUrl.addOnSuccessListener {
+//                Picasso.get().load(it).into(sendImage)
+//            }.addOnFailureListener {
+//                Toast.makeText(this@ChatActivity, it.localizedMessage, Toast.LENGTH_LONG).show()
 //            }
 //        }
-//    }
+//            .addOnFailureListener{
+//                Toast.makeText(this@ChatActivity, it.localizedMessage?.toString(), Toast.LENGTH_LONG).show()
+//            }
+//            .addOnCanceledListener {
+//                Toast.makeText(this@ChatActivity, "Image cancel", Toast.LENGTH_LONG).show()
+//            }
+    }
 }
 

@@ -12,4 +12,5 @@
     <color name="blue">#57B8C8</color>
     <color name="mid_white">#FFFEFE</color>
     <color name="blonde_blue">#C2F1FB</color>
+    <color name="transparency">#00000000</color>
 </resources>

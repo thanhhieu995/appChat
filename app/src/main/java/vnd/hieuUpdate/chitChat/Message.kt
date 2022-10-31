@@ -8,6 +8,7 @@ data class Message (
     var noAvatarMessage: Boolean = false,
     var seen: Boolean = false,
     var avatarSendUrl: String? = null,
-    var avatarReceiveUrl: String? = null
+    var avatarReceiveUrl: String? = null,
+    var hadImage: Boolean = false
 ) {
 }

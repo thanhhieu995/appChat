@@ -126,6 +126,17 @@ class ChatAdapter(val context: Context) :
 //                viewHolder.status_Sent.text = "sent"
 //                viewHolder.img_Avatar_Status.visibility = View.GONE
 //            }
+            if (currentMessage.hadImage) {
+                holder.img_send.visibility = View.VISIBLE
+//                holder.img_send.setImageResource(R.mipmap.picture_wait_load_foreground)
+                FirebaseStorage.getInstance().reference.child("chats").child(userLogin.uid + userFriend.uid)
+                    .child(currentMessage.time.toString()).downloadUrl.addOnSuccessListener {
+                        Picasso.get().load(it).into(holder.img_send)
+                    }
+            } else {
+                holder.img_send.visibility = View.GONE
+            }
+
 
         } else {
             val viewHolder = holder as ReceiveViewHolder
@@ -167,6 +178,17 @@ class ChatAdapter(val context: Context) :
 //            } else {
 //                viewHolder.typing.text = ""
 //            }
+            if (currentMessage.hadImage) {
+                holder.img_receive.visibility = View.VISIBLE
+//                holder.img_receive.setImageDrawable(R.drawable.ic_baseline_image_24)
+//                holder.img_receive.setImageResource(R.mipmap.picture_wait_load_foreground)
+                FirebaseStorage.getInstance().reference.child("chats").child(userFriend.uid + userLogin.uid)
+                    .child(currentMessage.time.toString()).downloadUrl.addOnSuccessListener {
+                        Picasso.get().load(it).into(holder.img_receive)
+                    }
+            } else {
+                holder.img_receive.visibility = View.GONE
+            }
         }
     }
 
@@ -190,6 +212,7 @@ class ChatAdapter(val context: Context) :
         val time_receive = itemView.findViewById<TextView>(R.id.time_receive)
         val img_avatar = itemView.findViewById<ImageView>(R.id.img_receiveProfile)
         val typing = itemView.findViewById<TextView>(R.id.textTyping)
+        val img_receive = itemView.findViewById<ImageView>(R.id.img_receive_layout_receive)
     }
 
     class SentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -198,6 +221,7 @@ class ChatAdapter(val context: Context) :
         val time_sent = itemView.findViewById<TextView>(R.id.time_sent)
         val status_Sent = itemView.findViewById<TextView>(R.id.status_messageSent)
         val img_Avatar_Status = itemView.findViewById<ImageView>(R.id.img_Avatar_Status)
+        val img_send = itemView.findViewById<ImageView>(R.id.img_sent_layout_sent)
     }
 
 
