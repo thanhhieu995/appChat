@@ -174,7 +174,6 @@ class ChatActivity : AppCompatActivity() {
             date = Calendar.getInstance().time
             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val currentDate = sdf.format(Date())
-            hadImage = false
 
 //            pushImageToStorage(currentDate)
 
@@ -211,8 +210,6 @@ class ChatActivity : AppCompatActivity() {
             uploadTask.addOnSuccessListener {
                 Toast.makeText(this@ChatActivity, "Image sent", Toast.LENGTH_LONG).show()
 
-                hadImage = true
-
                 val messageOb  = Message(
                     message,
                     userLogin.uid,
@@ -222,20 +219,20 @@ class ChatActivity : AppCompatActivity() {
                     seen,
                     avatarSendUrl,
                     avatarReceiveUrl,
-                    hadImage
+                    true
                 )
                 mDbRef.child("chats").child(roomSender!!).child("messages").push()
                     .setValue(messageOb).addOnSuccessListener {
                         mDbRef.child("chats").child(roomReceiver!!).child("messages").push()
                             .setValue(messageOb) }.addOnSuccessListener {
-                                messageBox.setText("")
+                        messageBox.setText("")
+                        imageUriTemp = null
                     }
 //                    sendImage.setImageDrawable(getDrawable(R.drawable.ic_baseline_image_24))
                 sendImage.setImageResource(R.drawable.ic_baseline_image_24)
             } .addOnFailureListener{
                 Toast.makeText(this@ChatActivity, it.localizedMessage, Toast.LENGTH_LONG).show()
             }
-            imageUriTemp = null
     }
 
     override fun onResume() {
@@ -815,9 +812,10 @@ class ChatActivity : AppCompatActivity() {
                 }
 
                 if (boolean1 && boolean2) {
-                    textTyping.text = userFriend.name + " is typing..."
+                    textTyping.visibility = View.VISIBLE
+                    textTyping.text = userFriend.name + " " + getString(R.string.show_typing_chat)
                 } else {
-                    textTyping.text = ""
+                    textTyping.visibility = View.GONE
                 }
 
 //                if (userFriend.isTyping) {
