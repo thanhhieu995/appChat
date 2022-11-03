@@ -192,7 +192,7 @@ class SignUp : AppCompatActivity() {
 
 
     private fun addUnreadToDataBase() {
-        mDbRef.child("unRead").child(mAuth.uid.toString()).setValue(Unread(0, "", ""))
+        mDbRef.child("unRead").child(mAuth.uid.toString()).child(mAuth.uid.toString()).setValue(Unread(0, "", ""))
     }
 
     private fun checkEmpty(): Boolean {

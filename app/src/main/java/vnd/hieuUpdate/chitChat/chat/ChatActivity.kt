@@ -491,12 +491,12 @@ class ChatActivity : AppCompatActivity() {
                         val unread = Unread(count, userLogin.uid.toString(), userFriend.uid.toString())
                         val hashMap: HashMap<String, Unread> = HashMap()
                         hashMap.put(userLogin.uid.toString(), unread)
-                        mDbRef.child("unRead").updateChildren(hashMap as Map<String, Any>)
+                        mDbRef.child("unRead").child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
                     } else {
                         val unread = Unread(count, "", "")
                         val hashMap: HashMap<String, Unread> = HashMap()
                         hashMap.put(userLogin.uid.toString(), unread)
-                        mDbRef.child("unRead").updateChildren(hashMap as Map<String, Any>)
+                        mDbRef.child("unRead").child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
                     }
 
 //                    if (count != 0) {
