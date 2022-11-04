@@ -22,7 +22,7 @@ private const val CHANNEL_ID = "my_channel"
 class FirebaseService : FirebaseMessagingService() {
 
     val channelId = "notification_channel"
-    val channelName = "com.example.chatapp"
+    val channelName = "vnd.hieuUpdate.chitChat"
 
     var tag: String = "FirebaseMessageReceiver"
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -57,7 +57,7 @@ class FirebaseService : FirebaseMessagingService() {
 //            .setContentText(remoteMessage.data["message"])
             .setContentTitle(remoteMessage.data["title"])
             .setContentText(remoteMessage.data["body"])
-            .setSmallIcon(R.drawable.chatlogo)
+            .setSmallIcon(R.mipmap.ic_launcher_foreground)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .build()

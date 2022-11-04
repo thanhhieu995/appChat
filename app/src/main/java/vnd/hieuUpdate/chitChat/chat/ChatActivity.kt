@@ -174,6 +174,7 @@ class ChatActivity : AppCompatActivity() {
             date = Calendar.getInstance().time
             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val currentDate = sdf.format(Date())
+            val message = messageBox.text.toString().trim()
 
 //            pushImageToStorage(currentDate)
 
@@ -181,13 +182,13 @@ class ChatActivity : AppCompatActivity() {
 
             if (!messageBox.text.isNullOrEmpty()) {
                 if (imageUriTemp != null) {
-                    pushImageToStorage(currentDate)
+                    pushImageToStorage(currentDate, message)
                 } else {
-                    sendChatMessage(userLogin.uid.toString(), currentDate, userFriend.uid , seen, noAvatarMessage, avatarSendUrl.toString(), avatarReceiveUrl.toString(), hadImage)
+                    sendChatMessage(message,userLogin.uid.toString(), currentDate, userFriend.uid , seen, noAvatarMessage, avatarSendUrl.toString(), avatarReceiveUrl.toString(), hadImage)
                 }
             } else {
                 if (imageUriTemp != null){
-                    pushImageToStorage(currentDate)
+                    pushImageToStorage(currentDate, message)
                 } else {
                     Toast.makeText(this@ChatActivity, "Please, enter message...", Toast.LENGTH_LONG).show()
                 }
@@ -200,8 +201,7 @@ class ChatActivity : AppCompatActivity() {
 //        checkTyping(messageBox)
     }
 
-    private fun pushImageToStorage(currentDate: String) {
-        val message = messageBox.text.toString().trim()
+    private fun pushImageToStorage(currentDate: String, message: String) {
 
             val storeRef = Firebase.storage.reference.child("chats").child(roomSender.toString())
                 .child(currentDate)
@@ -233,6 +233,19 @@ class ChatActivity : AppCompatActivity() {
             } .addOnFailureListener{
                 Toast.makeText(this@ChatActivity, it.localizedMessage, Toast.LENGTH_LONG).show()
             }
+
+        val title: String? = userLogin.name
+
+        if (title != null) {
+            if (title.isNotEmpty() && message.isNotEmpty()) {
+                for (token in userFriend.listToken!!) {
+                    PushNotification(NotificationData(userLogin, userFriend, hasMore, title, message), token, "high")
+                        .also {
+                            sendNotification(it)
+                        }
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -285,8 +298,7 @@ class ChatActivity : AppCompatActivity() {
 
     }
 
-    private fun sendChatMessage(loginUid: String?, currentDate: String?, friendUid: String?, seen: Boolean, noAvatarMessage: Boolean, avatarSendUrl: String, avatarReceiveUrl: String, hadImage: Boolean) {
-        val message = messageBox.text.toString().trim()
+    private fun sendChatMessage(message: String,loginUid: String?, currentDate: String?, friendUid: String?, seen: Boolean, noAvatarMessage: Boolean, avatarSendUrl: String, avatarReceiveUrl: String, hadImage: Boolean) {
 //        showTyping(messageBox)
         val messageObject = Message(
             message,
@@ -313,7 +325,7 @@ class ChatActivity : AppCompatActivity() {
 
         if (title != null) {
             if (title.isNotEmpty() && message.isNotEmpty()) {
-                for (token in listToken) {
+                for (token in userFriend.listToken!!) {
                     PushNotification(NotificationData(userLogin, userFriend, hasMore, title, message), token, "high")
                         .also {
                             sendNotification(it)
