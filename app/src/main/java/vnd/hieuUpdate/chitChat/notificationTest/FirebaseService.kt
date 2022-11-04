@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import vnd.hieuUpdate.chitChat.R
@@ -58,6 +59,8 @@ class FirebaseService : FirebaseMessagingService() {
             .setContentTitle(remoteMessage.data["title"])
             .setContentText(remoteMessage.data["body"])
             .setSmallIcon(R.mipmap.ic_launcher_foreground)
+            .setColor(ContextCompat.getColor(this,R.color.green))
+//            .setChannelId(channelId)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .build()
