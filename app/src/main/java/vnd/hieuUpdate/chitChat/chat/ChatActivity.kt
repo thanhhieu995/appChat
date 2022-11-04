@@ -236,14 +236,23 @@ class ChatActivity : AppCompatActivity() {
 
         val title: String? = userLogin.name
 
-        if (title != null) {
-            if (title.isNotEmpty() && message.isNotEmpty()) {
-                for (token in userFriend.listToken!!) {
-                    PushNotification(NotificationData(userLogin, userFriend, hasMore, title, message), token, "high")
-                        .also {
-                            sendNotification(it)
-                        }
-                }
+        if (!title.isNullOrEmpty() && message.isNotEmpty()) {
+            for (token in userFriend.listToken!!) {
+                PushNotification(NotificationData(userLogin, userFriend, hasMore, title,
+                    "$message... image"
+                ), token, "high")
+                    .also {
+                        sendNotification(it)
+                    }
+            }
+        }
+
+        if (!title.isNullOrEmpty() && message.isEmpty()) {
+            for (token in userFriend.listToken!!) {
+                PushNotification(NotificationData(userLogin, userFriend, hasMore, title, "send you image"), token, "high")
+                    .also {
+                        sendNotification(it)
+                    }
             }
         }
     }
