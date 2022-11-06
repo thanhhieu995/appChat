@@ -22,9 +22,9 @@ import com.google.firebase.database.*
 import vnd.hieuUpdate.chitChat.main.MainActivity
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.view.WindowManager
 import android.widget.TextView
 import vnd.hieuUpdate.chitChat.R
-import vnd.hieuUpdate.chitChat.ResetActivity
 
 
 class LogIn : AppCompatActivity() {
@@ -149,6 +149,7 @@ class LogIn : AppCompatActivity() {
         super.onResume()
         hasMore = true
         forgetPass()
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
     private fun login(email: String, password: String) {

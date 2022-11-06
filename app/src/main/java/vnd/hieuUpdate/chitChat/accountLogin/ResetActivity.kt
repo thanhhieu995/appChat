@@ -1,16 +1,16 @@
-package vnd.hieuUpdate.chitChat
+package vnd.hieuUpdate.chitChat.accountLogin
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.View.OnClickListener
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import vnd.hieuUpdate.chitChat.accountLogin.LogIn
+import vnd.hieuUpdate.chitChat.R
 
 class ResetActivity : AppCompatActivity() {
 
@@ -36,6 +36,11 @@ class ResetActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
     fun beginRecoverPass(email: String) {

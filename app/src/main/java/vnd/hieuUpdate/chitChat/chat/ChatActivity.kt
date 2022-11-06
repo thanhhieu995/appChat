@@ -49,7 +49,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageBox: EditText
     private lateinit var sentButton: ImageView
 
-    lateinit var sendImage: ImageView
+     lateinit var sendImage: ImageView
 
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var mDbRef: DatabaseReference
@@ -97,6 +97,8 @@ class ChatActivity : AppCompatActivity() {
 
     var imageUriTemp: Uri? = null
     var hadImage: Boolean = false
+
+    var isActive: Boolean = false
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -174,6 +176,7 @@ class ChatActivity : AppCompatActivity() {
             date = Calendar.getInstance().time
             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val currentDate = sdf.format(Date())
+            val message = messageBox.text.toString().trim()
 
 //            pushImageToStorage(currentDate)
 
@@ -181,13 +184,13 @@ class ChatActivity : AppCompatActivity() {
 
             if (!messageBox.text.isNullOrEmpty()) {
                 if (imageUriTemp != null) {
-                    pushImageToStorage(currentDate)
+                    pushImageToStorage(currentDate, message)
                 } else {
-                    sendChatMessage(userLogin.uid.toString(), currentDate, userFriend.uid , seen, noAvatarMessage, avatarSendUrl.toString(), avatarReceiveUrl.toString(), hadImage)
+                    sendChatMessage(message,userLogin.uid.toString(), currentDate, userFriend.uid , seen, noAvatarMessage, avatarSendUrl.toString(), avatarReceiveUrl.toString(), hadImage)
                 }
             } else {
                 if (imageUriTemp != null){
-                    pushImageToStorage(currentDate)
+                    pushImageToStorage(currentDate, message)
                 } else {
                     Toast.makeText(this@ChatActivity, "Please, enter message...", Toast.LENGTH_LONG).show()
                 }
@@ -200,8 +203,7 @@ class ChatActivity : AppCompatActivity() {
 //        checkTyping(messageBox)
     }
 
-    private fun pushImageToStorage(currentDate: String) {
-        val message = messageBox.text.toString().trim()
+    private fun pushImageToStorage(currentDate: String, message: String) {
 
             val storeRef = Firebase.storage.reference.child("chats").child(roomSender.toString())
                 .child(currentDate)
@@ -233,10 +235,35 @@ class ChatActivity : AppCompatActivity() {
             } .addOnFailureListener{
                 Toast.makeText(this@ChatActivity, it.localizedMessage, Toast.LENGTH_LONG).show()
             }
+
+        val title: String? = userLogin.name
+
+        if (!title.isNullOrEmpty() && message.isNotEmpty()) {
+            for (token in userFriend.listToken!!) {
+                PushNotification(NotificationData(userLogin, userFriend, hasMore, title,
+                    "$message... image"
+                ), token, "high")
+                    .also {
+                        sendNotification(it)
+                    }
+            }
+        }
+
+        if (!title.isNullOrEmpty() && message.isEmpty()) {
+            for (token in userFriend.listToken!!) {
+                PushNotification(NotificationData(userLogin, userFriend, hasMore, title, "send you image"), token, "high")
+                    .also {
+                        sendNotification(it)
+                    }
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
+
+        isActive = true
+
         val hasMoreTemp = intent.extras?.get("hasMore")
         hasMore = if (hasMoreTemp is String) {
             hasMoreTemp.toBoolean()
@@ -277,6 +304,11 @@ class ChatActivity : AppCompatActivity() {
 //        isSeen()
     }
 
+    override fun onPause() {
+        super.onPause()
+        isActive = false
+    }
+
     private fun addStatusFriend(status: String?) {
         this.statusFriend = status
 
@@ -285,8 +317,7 @@ class ChatActivity : AppCompatActivity() {
 
     }
 
-    private fun sendChatMessage(loginUid: String?, currentDate: String?, friendUid: String?, seen: Boolean, noAvatarMessage: Boolean, avatarSendUrl: String, avatarReceiveUrl: String, hadImage: Boolean) {
-        val message = messageBox.text.toString().trim()
+    private fun sendChatMessage(message: String,loginUid: String?, currentDate: String?, friendUid: String?, seen: Boolean, noAvatarMessage: Boolean, avatarSendUrl: String, avatarReceiveUrl: String, hadImage: Boolean) {
 //        showTyping(messageBox)
         val messageObject = Message(
             message,
@@ -313,7 +344,7 @@ class ChatActivity : AppCompatActivity() {
 
         if (title != null) {
             if (title.isNotEmpty() && message.isNotEmpty()) {
-                for (token in listToken) {
+                for (token in userFriend.listToken!!) {
                     PushNotification(NotificationData(userLogin, userFriend, hasMore, title, message), token, "high")
                         .also {
                             sendNotification(it)
@@ -491,12 +522,12 @@ class ChatActivity : AppCompatActivity() {
                         val unread = Unread(count, userLogin.uid.toString(), userFriend.uid.toString())
                         val hashMap: HashMap<String, Unread> = HashMap()
                         hashMap.put(userLogin.uid.toString(), unread)
-                        mDbRef.child("unRead").updateChildren(hashMap as Map<String, Any>)
+                        mDbRef.child("unRead").child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
                     } else {
                         val unread = Unread(count, "", "")
                         val hashMap: HashMap<String, Unread> = HashMap()
                         hashMap.put(userLogin.uid.toString(), unread)
-                        mDbRef.child("unRead").updateChildren(hashMap as Map<String, Any>)
+                        mDbRef.child("unRead").child(userFriend.uid.toString()).updateChildren(hashMap as Map<String, Any>)
                     }
 
 //                    if (count != 0) {
@@ -679,7 +710,7 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    fun parseJSON(jsonResponse: String): User {
+    private fun parseJSON(jsonResponse: String): User {
         return Gson().fromJson(jsonResponse, User::class.java)
     }
 
@@ -704,13 +735,13 @@ class ChatActivity : AppCompatActivity() {
         })
     }
 
-    fun isSeen() {
+    private fun isSeen() {
         mDbRef.child("chats").child(roomReceiver!!).child("messages")
             .addValueEventListener(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (postSnapshot in snapshot.children) {
-                        val message = postSnapshot.getValue(vnd.hieuUpdate.chitChat.Message::class.java)
-                        if (message != null && hasMore && message.receiveId == userLogin.uid && message.senderId == userFriend.uid) {
+                        val message = postSnapshot.getValue(Message::class.java)
+                        if (message != null && !message.seen && hasMore && message.receiveId == userLogin.uid && message.senderId == userFriend.uid && userFriend.status == "online" && isActive) {
                             val hashMap: HashMap<String, Boolean> = HashMap()
                             hashMap.put("seen", true)
                             postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)

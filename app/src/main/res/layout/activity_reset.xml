@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blonde_blue"
-    tools:context=".ResetActivity">
+    tools:context=".accountLogin.ResetActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/rs_crv_main"

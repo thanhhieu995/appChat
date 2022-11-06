@@ -358,7 +358,7 @@ class MainActivity : AppCompatActivity() {
     }
 
    private fun unReadChange() {
-       mDbRef.child("unRead").addValueEventListener(object : ValueEventListener{
+       mDbRef.child("unRead").child(mAuth.uid.toString()).addValueEventListener(object : ValueEventListener{
            override fun onDataChange(snapshot: DataSnapshot) {
                for (postSnapshot in snapshot.children) {
                    val unRead: Unread? = postSnapshot.getValue(Unread::class.java)

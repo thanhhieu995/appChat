@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
@@ -74,6 +75,11 @@ class SetUpActivity : AppCompatActivity() {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             startActivityForResult(intent, 2)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
