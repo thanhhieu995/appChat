@@ -31,8 +31,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatApp">
         <activity
-            android:name=".ResetActivity"
+            android:name=".accountLogin.ResetActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|adjustResize"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -79,6 +80,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".accountLogin.SetUpActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
@@ -103,10 +105,12 @@
         </activity>
         <activity
             android:name=".accountLogin.SignUp"
+            android:windowSoftInputMode="adjustPan|adjustResize"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name=".accountLogin.LogIn"
+            android:windowSoftInputMode="adjustPan|adjustResize"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity

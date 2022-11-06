@@ -8,6 +8,7 @@ import android.text.method.PasswordTransformationMethod
 import android.util.Patterns
 import android.view.View
 import android.view.View.OnClickListener
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -188,6 +189,7 @@ class SignUp : AppCompatActivity() {
         hasTransfer = true
         createAccount()
         clickEyePass()
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
 
