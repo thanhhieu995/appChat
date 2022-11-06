@@ -49,7 +49,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageBox: EditText
     private lateinit var sentButton: ImageView
 
-    lateinit var sendImage: ImageView
+     lateinit var sendImage: ImageView
 
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var mDbRef: DatabaseReference
@@ -97,6 +97,8 @@ class ChatActivity : AppCompatActivity() {
 
     var imageUriTemp: Uri? = null
     var hadImage: Boolean = false
+
+    var isActive: Boolean = false
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -259,6 +261,9 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        isActive = true
+
         val hasMoreTemp = intent.extras?.get("hasMore")
         hasMore = if (hasMoreTemp is String) {
             hasMoreTemp.toBoolean()
@@ -297,6 +302,11 @@ class ChatActivity : AppCompatActivity() {
         chatAdapter.setValueUser(userLogin, userFriend, hasMore)
 
 //        isSeen()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isActive = false
     }
 
     private fun addStatusFriend(status: String?) {
@@ -700,7 +710,7 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    fun parseJSON(jsonResponse: String): User {
+    private fun parseJSON(jsonResponse: String): User {
         return Gson().fromJson(jsonResponse, User::class.java)
     }
 
@@ -725,13 +735,13 @@ class ChatActivity : AppCompatActivity() {
         })
     }
 
-    fun isSeen() {
+    private fun isSeen() {
         mDbRef.child("chats").child(roomReceiver!!).child("messages")
             .addValueEventListener(object : ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (postSnapshot in snapshot.children) {
-                        val message = postSnapshot.getValue(vnd.hieuUpdate.chitChat.Message::class.java)
-                        if (message != null && hasMore && message.receiveId == userLogin.uid && message.senderId == userFriend.uid) {
+                        val message = postSnapshot.getValue(Message::class.java)
+                        if (message != null && !message.seen && hasMore && message.receiveId == userLogin.uid && message.senderId == userFriend.uid && userFriend.status == "online" && isActive) {
                             val hashMap: HashMap<String, Boolean> = HashMap()
                             hashMap.put("seen", true)
                             postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
