@@ -11,6 +11,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -53,6 +54,8 @@ class MainActivity : AppCompatActivity() {
 
     var newToken: String? = null
 
+    lateinit var btnAddFriend: Button
+
 //    var logging: Boolean = true
     val TIME_INTERVAL = 2000
 
@@ -65,7 +68,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
 
         mAuth = FirebaseAuth.getInstance()
         mDbRef = FirebaseDatabase.getInstance().reference
@@ -105,6 +107,12 @@ class MainActivity : AppCompatActivity() {
             } else
                 Toast.makeText(this, "token from firebase fail!!!", Toast.LENGTH_LONG).show()
         }
+
+        adapter.setButtonAddFriendClick(object : UserAdapter.ClickAddFriend {
+            override fun onClick(user: User) {
+                Toast.makeText(this@MainActivity, "Add friend", Toast.LENGTH_LONG).show()
+            }
+        })
     }
 
 
@@ -185,7 +193,6 @@ class MainActivity : AppCompatActivity() {
                             mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
                         }
                     }
-
                 }
             }
 

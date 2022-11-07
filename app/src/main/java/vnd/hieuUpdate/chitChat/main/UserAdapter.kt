@@ -5,12 +5,10 @@ import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
@@ -45,6 +43,7 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 //    val islandRef = storageRef.child("images").child(mAuth.uid.toString())
     var unRead: Unread = Unread(0, "", "")
 
+    lateinit var clickAddFriend: ClickAddFriend
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.user_layout, parent, false)
@@ -85,7 +84,6 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
             override fun onClick(v: View?) {
                 val intent = Intent(context, ChatActivity::class.java)
 
-
                 hasMore = true
                 intent.putExtra("hasMore", hasMore)
 
@@ -95,6 +93,12 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
                 intent.putExtra("userFriend", currentUser)
 
                 context.startActivity(intent)
+            }
+        })
+
+        holder.addFriendButton.setOnClickListener(object : View.OnClickListener{
+            override fun onClick(p0: View?) {
+                clickAddFriend.onClick(currentUser)
             }
         })
     }
@@ -150,5 +154,13 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 
     fun addLastMsg(lastMsg: String) {
         this.lastMsg = lastMsg
+    }
+
+    interface ClickAddFriend{
+        fun onClick(user: User)
+    }
+
+    fun setButtonAddFriendClick(clickAddFriend: ClickAddFriend) {
+        this.clickAddFriend = clickAddFriend
     }
 }
