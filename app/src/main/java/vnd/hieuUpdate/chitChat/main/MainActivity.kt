@@ -110,7 +110,9 @@ class MainActivity : AppCompatActivity() {
 
         adapter.setButtonAddFriendClick(object : UserAdapter.ClickAddFriend {
             override fun onClick(user: User) {
-                Toast.makeText(this@MainActivity, "Add friend", Toast.LENGTH_LONG).show()
+//                Toast.makeText(this@MainActivity, "Add friend", Toast.LENGTH_LONG).show()
+                mDbRef.child("friendRequest").child(user.uid.toString()).child(userLogin.uid.toString()).setValue(userLogin)
+                Toast.makeText(this@MainActivity, "send friend request success", Toast.LENGTH_LONG).show()
             }
         })
     }
@@ -211,8 +213,38 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, ProfileLoginActivity::class.java)
             intent.putExtra("userLogin", userLogin)
             startActivity(intent)
+        } else if (item.itemId == R.id.request_friend) {
+            userList.clear()
+            addListFriendRequest()
         }
         return false
+    }
+
+    private fun addListFriendRequest() {
+        mDbRef.child("friendRequest").child(userLogin.uid.toString()).addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.key == userLogin.uid && snapshot.value != null && snapshot.exists()) {
+                    for (postSnapshot in snapshot.children) {
+                        val user = postSnapshot.getValue(User::class.java)
+                        if (user?.uid != null) {
+                            if (mAuth.uid != null && user.uid != mAuth.uid) {
+                                if (user.lastMsg != null) {
+                                    adapter.addLastMsg(user.lastMsg.toString())
+                                }
+
+                                userList.add(user)
+                            }
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     private fun statusAccount(Uid: String? ) {
