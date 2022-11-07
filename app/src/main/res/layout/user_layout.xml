@@ -10,9 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="8dp"
         app:cardCornerRadius="10dp"
-        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +39,7 @@
 
                 <TextView
                     android:id="@+id/txt_name"
-                    android:layout_width="250dp"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:ellipsize="end"
@@ -63,15 +63,16 @@
                     android:id="@+id/countNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
+                    android:layout_marginEnd="16dp"
                     android:text=""
                     android:textColor="@color/red"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/txt_name" />
+                    app:layout_constraintBottom_toBottomOf="@+id/user_btn_addFriend"
+                    app:layout_constraintEnd_toStartOf="@+id/user_btn_addFriend"
+                    app:layout_constraintTop_toTopOf="@+id/user_btn_addFriend" />
 
                 <TextView
                     android:id="@+id/msg_recently"
-                    android:layout_width="220dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
@@ -90,7 +91,18 @@
                     android:text="@string/user_layout_typing"
                     android:textColor="@color/green"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/msg_recently" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/user_btn_addFriend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/btn_addFriend"
+                    android:textAllCaps="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/txt_name" />
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardImageView"
