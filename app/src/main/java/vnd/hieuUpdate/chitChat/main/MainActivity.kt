@@ -112,6 +112,8 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.actionbar_title, menu)
         menuInflater.inflate(R.menu.menu, menu)
         menuInflater.inflate(R.menu.dashboard, menu)
+        menuInflater.inflate(R.menu.request_friend, menu)
+//        menuInflater.inflate(R.menu.icon_status, menu)
         //menuInflater.inflate(R.layout.actionbar_title, menu)
 
         val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
@@ -202,7 +204,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, ProfileLoginActivity::class.java)
             intent.putExtra("userLogin", userLogin)
             startActivity(intent)
-            finish()
         }
         return false
     }

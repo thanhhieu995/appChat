@@ -5,9 +5,12 @@ import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
@@ -78,8 +81,6 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
             holder.textStatus.setTextColor(Color.BLACK)
         }
 
-
-
         holder.itemView.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
                 val intent = Intent(context, ChatActivity::class.java)
@@ -103,12 +104,13 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
     }
 
     class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textName = itemView.findViewById<TextView>(R.id.txt_name)
-        val textStatus = itemView.findViewById<TextView>(R.id.txt_statusMain)
-        var imgAvatar = itemView.findViewById<ImageView>(R.id.imgAva_main)
+        val textName: TextView = itemView.findViewById(R.id.txt_name)
+        val textStatus: TextView = itemView.findViewById(R.id.txt_statusMain)
+        var imgAvatar: ImageView = itemView.findViewById(R.id.imgAva_main)
         var recentMessage = itemView.findViewById<TextView>(R.id.msg_recently)
-        var typing = itemView.findViewById<TextView>(R.id.main_typing)
-        val numberNotification = itemView.findViewById<TextView>(R.id.countNumber)
+        var typing: TextView = itemView.findViewById(R.id.main_typing)
+        val numberNotification: TextView = itemView.findViewById(R.id.countNumber)
+        val addFriendButton = itemView.findViewById<Button>(R.id.user_btn_addFriend)
     }
 
     fun addItems(item: User?) {
