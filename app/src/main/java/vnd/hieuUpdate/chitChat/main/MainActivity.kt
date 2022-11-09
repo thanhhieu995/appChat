@@ -17,16 +17,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuItemCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.iid.FirebaseInstanceId
 import vnd.hieuUpdate.chitChat.ProfileLoginActivity
-import vnd.hieuUpdate.chitChat.User
-import vnd.hieuUpdate.chitChat.Unread
-import vnd.hieuUpdate.chitChat.accountLogin.LogIn
 import vnd.hieuUpdate.chitChat.R
+import vnd.hieuUpdate.chitChat.Unread
+import vnd.hieuUpdate.chitChat.User
+import vnd.hieuUpdate.chitChat.accountLogin.LogIn
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -65,6 +67,8 @@ class MainActivity : AppCompatActivity() {
 
     var count: Int = 0
 
+    var empty: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -91,8 +95,9 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         hasMore = intent.getBooleanExtra("hasMore", false)
-        addFriendUser()
-
+//        addFriendUser()
+        findUserLogin()
+        addListFriend()
 
         unReadChange()
 
@@ -111,8 +116,8 @@ class MainActivity : AppCompatActivity() {
         adapter.setButtonAddFriendClick(object : UserAdapter.ClickAddFriend {
             override fun onClick(user: User) {
 //                Toast.makeText(this@MainActivity, "Add friend", Toast.LENGTH_LONG).show()
-                mDbRef.child("friendRequest").child(user.uid.toString()).child(userLogin.uid.toString()).setValue(userLogin)
-                Toast.makeText(this@MainActivity, "send friend request success", Toast.LENGTH_LONG).show()
+                mDbRef.child("listFriend").child(userLogin.uid.toString()).child(user.uid.toString()).setValue(user)
+                Toast.makeText(this@MainActivity, "add friend", Toast.LENGTH_LONG).show()
             }
         })
     }
@@ -122,7 +127,7 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.actionbar_title, menu)
         menuInflater.inflate(R.menu.menu, menu)
         menuInflater.inflate(R.menu.dashboard, menu)
-        menuInflater.inflate(R.menu.request_friend, menu)
+//        menuInflater.inflate(R.menu.request_friend, menu)
 //        menuInflater.inflate(R.menu.icon_status, menu)
         //menuInflater.inflate(R.layout.actionbar_title, menu)
 
@@ -151,6 +156,38 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
         })
+
+        MenuItemCompat.setOnActionExpandListener(
+            searchItem,
+            object : MenuItemCompat.OnActionExpandListener {
+                override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "onMenuItemActionExpand called",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return true
+                }
+
+                override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "onMenutItemActionCollapse called",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    addListFriend()
+                    return true
+                }
+            })
+//        searchView.setOnCloseListener(object : SearchView.OnCloseListener{
+//            override fun onClose(): Boolean {
+//                addListFriend()
+//                Toast.makeText(this@MainActivity, "back list friend", Toast.LENGTH_LONG).show()
+//                return true
+//            }
+//
+//        })
+
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         return super.onCreateOptionsMenu(menu)
@@ -213,16 +250,17 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, ProfileLoginActivity::class.java)
             intent.putExtra("userLogin", userLogin)
             startActivity(intent)
-        } else if (item.itemId == R.id.request_friend) {
-            userList.clear()
-            addListFriendRequest()
+        } else if (item.itemId == R.id.action_search) {
+            addFriendUser()
         }
         return false
     }
 
-    private fun addListFriendRequest() {
-        mDbRef.child("friendRequest").child(userLogin.uid.toString()).addValueEventListener(object : ValueEventListener{
+    private fun addListFriend() {
+        mDbRef.child("listFriend").child(mAuth.uid.toString()).addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
+                userList.clear()
+                adapter.addUidLogin(mAuth.uid)
                 if (snapshot.key == userLogin.uid && snapshot.value != null && snapshot.exists()) {
                     for (postSnapshot in snapshot.children) {
                         val user = postSnapshot.getValue(User::class.java)
@@ -231,11 +269,13 @@ class MainActivity : AppCompatActivity() {
                                 if (user.lastMsg != null) {
                                     adapter.addLastMsg(user.lastMsg.toString())
                                 }
-
                                 userList.add(user)
                             }
                         }
                     }
+                }
+                if (userList.isEmpty() && userLogin.uid == mAuth.uid) {
+                    addFriendUser()
                 }
                 adapter.notifyDataSetChanged()
             }
@@ -273,7 +313,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-
 
         AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Are you want to exit app?")
             .setMessage("Are you sure?")
@@ -348,6 +387,46 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun findUserLogin() {
+        mDbRef.child("user").addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                userList.clear()
+                adapter.addUidLogin(mAuth.uid)
+                if (snapshot.key == "user" && snapshot.value != null && snapshot.exists()) {
+                    for (postSnapshot in snapshot.children) {
+                        val user = postSnapshot.getValue(User::class.java)
+                        if (user != null) {
+                            if (mAuth.uid != null && user.uid == mAuth.uid) {
+                                userLogin = user
+                                if (userLogin.unRead != 0 && userLogin.receiveUid != "") {
+                                    adapter.addUserLogin(userLogin)
+                                }
+                                adapter.addUserLogin(userLogin)
+                                FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+
+
+                                    if (!userLogin.listToken?.contains(it.token)!! && userLogin.status == "online") {
+
+                                        val listToken = ArrayList<String>()
+                                        listToken.add(it.token)
+
+                                        mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(listToken)
+                                    } else {
+                                        Log.d("token", it.token)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
 
     fun addSearchFriend(query: String) {
         mDbRef.child("user").addValueEventListener(object: ValueEventListener{
