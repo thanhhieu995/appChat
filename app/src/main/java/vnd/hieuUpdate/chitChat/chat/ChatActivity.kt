@@ -371,7 +371,6 @@ class ChatActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("hasMore", hasMore)
         startActivity(intent)
-        finish()
     }
 
 

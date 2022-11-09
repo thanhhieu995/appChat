@@ -258,7 +258,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-                if (userList.isEmpty()) {
+                if (userList.isEmpty() && userLogin.uid == mAuth.uid) {
                     addFriendUser()
                 } else {
                     adapter.addUserList(userList)
