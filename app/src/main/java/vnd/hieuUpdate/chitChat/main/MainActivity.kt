@@ -11,6 +11,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -161,32 +162,14 @@ class MainActivity : AppCompatActivity() {
             searchItem,
             object : MenuItemCompat.OnActionExpandListener {
                 override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "onMenuItemActionExpand called",
-                        Toast.LENGTH_SHORT
-                    ).show()
                     return true
                 }
 
                 override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "onMenutItemActionCollapse called",
-                        Toast.LENGTH_SHORT
-                    ).show()
                     addListFriend()
                     return true
                 }
             })
-//        searchView.setOnCloseListener(object : SearchView.OnCloseListener{
-//            override fun onClose(): Boolean {
-//                addListFriend()
-//                Toast.makeText(this@MainActivity, "back list friend", Toast.LENGTH_LONG).show()
-//                return true
-//            }
-//
-//        })
 
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
@@ -261,7 +244,7 @@ class MainActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 userList.clear()
                 adapter.addUidLogin(mAuth.uid)
-                if (snapshot.key == userLogin.uid && snapshot.value != null && snapshot.exists()) {
+                if (snapshot.key == mAuth.uid && snapshot.value != null && snapshot.exists()) {
                     for (postSnapshot in snapshot.children) {
                         val user = postSnapshot.getValue(User::class.java)
                         if (user?.uid != null) {
@@ -270,12 +253,15 @@ class MainActivity : AppCompatActivity() {
                                     adapter.addLastMsg(user.lastMsg.toString())
                                 }
                                 userList.add(user)
+                                adapter.setGoneButtonAdd(true)
                             }
                         }
                     }
                 }
-                if (userList.isEmpty() && userLogin.uid == mAuth.uid) {
+                if (userList.isEmpty()) {
                     addFriendUser()
+                } else {
+                    adapter.addUserList(userList)
                 }
                 adapter.notifyDataSetChanged()
             }
@@ -313,7 +299,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-
         AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Are you want to exit app?")
             .setMessage("Are you sure?")
             .setPositiveButton("yes", DialogInterface.OnClickListener { dialog, which ->
@@ -346,7 +331,7 @@ class MainActivity : AppCompatActivity() {
                                 if (user.lastMsg != null) {
                                     adapter.addLastMsg(user.lastMsg.toString())
                                 }
-
+                                adapter.setGoneButtonAdd(false)
                                 userList.add(user)
                             } else {
                                 userLogin = postSnapshot.getValue(User::class.java)!!
@@ -390,7 +375,6 @@ class MainActivity : AppCompatActivity() {
     private fun findUserLogin() {
         mDbRef.child("user").addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                userList.clear()
                 adapter.addUidLogin(mAuth.uid)
                 if (snapshot.key == "user" && snapshot.value != null && snapshot.exists()) {
                     for (postSnapshot in snapshot.children) {

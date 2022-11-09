@@ -39,6 +39,8 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 
     var lastMsg: String? = null
 
+    var isGone: Boolean = false
+
     private val storageRef = FirebaseStorage.getInstance().reference
 //    val islandRef = storageRef.child("images").child(mAuth.uid.toString())
     var unRead: Unread = Unread(0, "", "")
@@ -95,6 +97,12 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
                 context.startActivity(intent)
             }
         })
+
+        if (isGone) {
+            holder.addFriendButton.visibility = View.GONE
+        } else {
+            holder.addFriendButton.visibility = View.VISIBLE
+        }
 
         holder.addFriendButton.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
@@ -162,5 +170,9 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 
     fun setButtonAddFriendClick(clickAddFriend: ClickAddFriend) {
         this.clickAddFriend = clickAddFriend
+    }
+
+    fun setGoneButtonAdd(isGone: Boolean) {
+        this.isGone = isGone
     }
 }
