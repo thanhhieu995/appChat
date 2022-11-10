@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Chit Chat</string>
+    <string name="app_name">Chat</string>
     <string name="search_hint">search…</string>
     <string name="default_notification_channel_id">notification</string>
     <string name="lg_email_hint">Enter your email…</string>

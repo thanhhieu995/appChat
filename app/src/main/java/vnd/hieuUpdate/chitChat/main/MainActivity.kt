@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         mDbRef = FirebaseDatabase.getInstance().reference
 
         userList = ArrayList()
-        adapter = UserAdapter(this, userList)
+        adapter = UserAdapter(this)
 
         userRecyclerView = findViewById(R.id.userRecyclerView)
 
@@ -199,42 +199,46 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        if(item.itemId == R.id.logout) {
-            //hasMore = true
-            if (mAuth.uid != null) {
-                val hashMap: HashMap<String, String> = HashMap()
-                hashMap.put("status", "offline")
-                FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString())
-                    .updateChildren(hashMap as Map<String, Any>)
+        when (item.itemId) {
+            R.id.logout -> {
+                //hasMore = true
+                if (mAuth.uid != null) {
+                    val hashMap: HashMap<String, String> = HashMap()
+                    hashMap.put("status", "offline")
+                    FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString())
+                        .updateChildren(hashMap as Map<String, Any>)
 
-                if (mAuth.uid.toString() == userLogin.uid.toString() && !userLogin.listToken.isNullOrEmpty()) {
+                    if (mAuth.uid.toString() == userLogin.uid.toString() && !userLogin.listToken.isNullOrEmpty()) {
 
 
-                    for (token in userLogin.listToken!!) {
-                        if (token == newToken) {
-                            mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
+                        for (token in userLogin.listToken!!) {
+                            if (token == newToken) {
+                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
+                            }
                         }
                     }
                 }
+
+                mAuth.signOut()
+
+                editor.putBoolean("logging_Success", false)
+                editor.commit()
+
+
+
+                val intent = Intent(this@MainActivity, LogIn::class.java)
+                startActivity(intent)
+                finish()
+                return true
             }
-
-            mAuth.signOut()
-
-            editor.putBoolean("logging_Success", false)
-            editor.commit()
-
-
-
-            val intent = Intent(this@MainActivity, LogIn::class.java)
-            startActivity(intent)
-            finish()
-            return true
-        } else if (item.itemId == R.id.action_name_title) {
-            val intent = Intent(this@MainActivity, ProfileLoginActivity::class.java)
-            intent.putExtra("userLogin", userLogin)
-            startActivity(intent)
-        } else if (item.itemId == R.id.action_search) {
-            addFriendUser()
+            R.id.action_name_title -> {
+                val intent = Intent(this@MainActivity, ProfileLoginActivity::class.java)
+                intent.putExtra("userLogin", userLogin)
+                startActivity(intent)
+            }
+            R.id.action_search -> {
+                addFriendUser()
+            }
         }
         return false
     }
@@ -261,9 +265,10 @@ class MainActivity : AppCompatActivity() {
                 if (userList.isEmpty() && userLogin.uid == mAuth.uid) {
                     addFriendUser()
                 } else {
-                    adapter.addUserList(userList)
+//                    adapter.addUserList(userList)
+                    adapter.updateListFriend(userList)
                 }
-                adapter.notifyDataSetChanged()
+//                adapter.updateListFriend(userList)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -358,11 +363,11 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                adapter.addUserList(userList)
+//                adapter.addUserList(userList)
 //                if (userList.isEmpty() && hasMore && userLogin.uid == mAuth.uid) {
 //                    Toast.makeText(this@MainActivity, "No friend to show", Toast.LENGTH_LONG).show()
 //                }
-                adapter.notifyDataSetChanged()
+                adapter.updateListFriend(userList)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -424,7 +429,7 @@ class MainActivity : AppCompatActivity() {
                         if (query == postSnapshot.getValue(User::class.java)!!.name.toString().toLowerCase()) {
                             userList.add(postSnapshot.getValue(User::class.java)!!)
                         }
-                        adapter.notifyDataSetChanged()
+                        adapter.updateListFriend(userList)
                     }
                 }
             }
@@ -448,7 +453,7 @@ class MainActivity : AppCompatActivity() {
                         if (postSnapshot.getValue(User::class.java)!!.name?.toLowerCase()!!.startsWith(query.toLowerCase())) {
                             userList.add(postSnapshot.getValue(User::class.java)!!)
                         }
-                        adapter.notifyDataSetChanged()
+                        adapter.updateListFriend(userList)
                     }
                 }
             }

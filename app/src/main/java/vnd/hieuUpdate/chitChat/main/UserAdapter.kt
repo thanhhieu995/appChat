@@ -9,17 +9,19 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import vnd.hieuUpdate.chitChat.R
 import vnd.hieuUpdate.chitChat.Unread
 import vnd.hieuUpdate.chitChat.User
+import vnd.hieuUpdate.chitChat.UserDiffUtil
 import vnd.hieuUpdate.chitChat.chat.ChatActivity
 
-class UserAdapter(val context: Context, private var userList: ArrayList<User>): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class UserAdapter(val context: Context): RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
-    private var dataList = ArrayList<User>(userList)
+    private var userList = ArrayList<User>()
 
     var uidLogin: String? = null
 
@@ -125,35 +127,14 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
         val addFriendButton = itemView.findViewById<Button>(R.id.user_btn_addFriend)
     }
 
-    fun addItems(item: User?) {
-        if (item != null) {
-            dataList.add(item)
-        }
-        notifyDataSetChanged()
-    }
 
     fun addUidLogin(Uid: String?) {
         this.uidLogin = Uid
         notifyDataSetChanged()
     }
 
-    fun addStatusAccountLogin(status: String?) {
-        this.statusLogin = status
-        notifyDataSetChanged()
-    }
-
-    fun addStatusFriend(status: String?) {
-        this.statusFriend = status
-        notifyDataSetChanged()
-    }
-
-
     fun addUserLogin(userLogin: User) {
         this.userLogin = userLogin
-    }
-
-    fun addUserList(userList: ArrayList<User>) {
-        this.userList = userList
     }
 
     fun unRead(unRead: Unread) {
@@ -174,5 +155,14 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 
     fun setGoneButtonAdd(isGone: Boolean) {
         this.isGone = isGone
+    }
+
+    fun updateListFriend(newList: ArrayList<User>) {
+        val diffCallBack = UserDiffUtil(userList, newList)
+        val diffResult = DiffUtil.calculateDiff(diffCallBack)
+
+        userList.clear()
+        userList.addAll(newList)
+        diffResult.dispatchUpdatesTo(this)
     }
 }
