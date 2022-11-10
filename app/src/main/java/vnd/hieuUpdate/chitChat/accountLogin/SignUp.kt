@@ -177,7 +177,7 @@ class SignUp : AppCompatActivity() {
                 }
             })
             .addOnSuccessListener {
-                Toast.makeText(this@SignUp, "Account add to data", Toast.LENGTH_LONG).show()
+//                Toast.makeText(this@SignUp, "Account add to data", Toast.LENGTH_LONG).show()
             }
             .addOnFailureListener {
                 Toast.makeText(this@SignUp, it.localizedMessage?.toString(), Toast.LENGTH_LONG).show()

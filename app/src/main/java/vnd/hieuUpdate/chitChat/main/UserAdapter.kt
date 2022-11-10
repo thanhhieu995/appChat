@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -38,10 +39,13 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 
     var lastMsg: String? = null
 
+    var isGone: Boolean = false
+
     private val storageRef = FirebaseStorage.getInstance().reference
 //    val islandRef = storageRef.child("images").child(mAuth.uid.toString())
     var unRead: Unread = Unread(0, "", "")
 
+    lateinit var clickAddFriend: ClickAddFriend
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.user_layout, parent, false)
@@ -78,12 +82,9 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
             holder.textStatus.setTextColor(Color.BLACK)
         }
 
-
-
         holder.itemView.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
                 val intent = Intent(context, ChatActivity::class.java)
-
 
                 hasMore = true
                 intent.putExtra("hasMore", hasMore)
@@ -96,6 +97,18 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
                 context.startActivity(intent)
             }
         })
+
+        if (isGone) {
+            holder.addFriendButton.visibility = View.GONE
+        } else {
+            holder.addFriendButton.visibility = View.VISIBLE
+        }
+
+        holder.addFriendButton.setOnClickListener(object : View.OnClickListener{
+            override fun onClick(p0: View?) {
+                clickAddFriend.onClick(currentUser)
+            }
+        })
     }
 
     override fun getItemCount(): Int {
@@ -103,12 +116,13 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
     }
 
     class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textName = itemView.findViewById<TextView>(R.id.txt_name)
-        val textStatus = itemView.findViewById<TextView>(R.id.txt_statusMain)
-        var imgAvatar = itemView.findViewById<ImageView>(R.id.imgAva_main)
+        val textName: TextView = itemView.findViewById(R.id.txt_name)
+        val textStatus: TextView = itemView.findViewById(R.id.txt_statusMain)
+        var imgAvatar: ImageView = itemView.findViewById(R.id.imgAva_main)
         var recentMessage = itemView.findViewById<TextView>(R.id.msg_recently)
-        var typing = itemView.findViewById<TextView>(R.id.main_typing)
-        val numberNotification = itemView.findViewById<TextView>(R.id.countNumber)
+        var typing: TextView = itemView.findViewById(R.id.main_typing)
+        val numberNotification: TextView = itemView.findViewById(R.id.countNumber)
+        val addFriendButton = itemView.findViewById<Button>(R.id.user_btn_addFriend)
     }
 
     fun addItems(item: User?) {
@@ -148,5 +162,17 @@ class UserAdapter(val context: Context, private var userList: ArrayList<User>): 
 
     fun addLastMsg(lastMsg: String) {
         this.lastMsg = lastMsg
+    }
+
+    interface ClickAddFriend{
+        fun onClick(user: User)
+    }
+
+    fun setButtonAddFriendClick(clickAddFriend: ClickAddFriend) {
+        this.clickAddFriend = clickAddFriend
+    }
+
+    fun setGoneButtonAdd(isGone: Boolean) {
+        this.isGone = isGone
     }
 }
