@@ -45,30 +45,11 @@ class MainActivity : AppCompatActivity() {
 
     private var hasMore: Boolean = false
 
-    var statusUserLogin: String = ""
-
-    var statusFriend: String = ""
-
-    lateinit var actionTitle: TextView
-
     var title: String = ""
 
     var userLogin: User = User()
 
     var newToken: String? = null
-
-    lateinit var btnAddFriend: Button
-
-//    var logging: Boolean = true
-    val TIME_INTERVAL = 2000
-
-    var deleteToken: Boolean = false
-
-    val listTokenTem: ArrayList<String> = ArrayList()
-
-    var count: Int = 0
-
-    var empty: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,12 +77,9 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         hasMore = intent.getBooleanExtra("hasMore", false)
-//        addFriendUser()
         findUserLogin()
         addListFriend()
-
         unReadChange()
-
         val hashMap: HashMap<String, String> = HashMap()
         hashMap.put("status", "online")
         FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid.toString())
@@ -113,11 +91,10 @@ class MainActivity : AppCompatActivity() {
             } else
                 Toast.makeText(this, "token from firebase fail!!!", Toast.LENGTH_LONG).show()
         }
-
         adapter.setButtonAddFriendClick(object : UserAdapter.ClickAddFriend {
             override fun onClick(user: User) {
-//                Toast.makeText(this@MainActivity, "Add friend", Toast.LENGTH_LONG).show()
-                mDbRef.child("listFriend").child(userLogin.uid.toString()).child(user.uid.toString()).setValue(user)
+                mDbRef.child("listFriend").child(userLogin.uid.toString())
+                    .child(user.uid.toString()).setValue(user)
                 Toast.makeText(this@MainActivity, "add into list", Toast.LENGTH_LONG).show()
             }
         })
@@ -128,9 +105,6 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.actionbar_title, menu)
         menuInflater.inflate(R.menu.menu, menu)
         menuInflater.inflate(R.menu.dashboard, menu)
-//        menuInflater.inflate(R.menu.request_friend, menu)
-//        menuInflater.inflate(R.menu.icon_status, menu)
-        //menuInflater.inflate(R.layout.actionbar_title, menu)
 
         val searchItem: MenuItem? = menu?.findItem(R.id.action_search)
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
@@ -148,7 +122,6 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (TextUtils.isEmpty(newText)) {
                     addFriendUser()
-                    adapter.notifyDataSetChanged()
                 } else {
                     if (newText != null) {
                         addSearchCharacter(newText)
@@ -177,13 +150,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        var menuItem: MenuItem = menu!!.findItem(R.id.action_name_title)
-        mDbRef.child("user").addValueEventListener(object : ValueEventListener{
+        val menuItem: MenuItem = menu!!.findItem(R.id.action_name_title)
+        mDbRef.child("user").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (postSnapshot in snapshot.children) {
                     if (postSnapshot.getValue(User::class.java)?.uid == mAuth.currentUser?.uid) {
                         menuItem.title = userLogin.name
-
                     }
                 }
             }
@@ -191,17 +163,13 @@ class MainActivity : AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
             }
-
         })
-
         return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         when (item.itemId) {
             R.id.logout -> {
-                //hasMore = true
                 if (mAuth.uid != null) {
                     val hashMap: HashMap<String, String> = HashMap()
                     hashMap.put("status", "offline")
@@ -213,19 +181,15 @@ class MainActivity : AppCompatActivity() {
 
                         for (token in userLogin.listToken!!) {
                             if (token == newToken) {
-                                mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").removeValue()
+                                mDbRef.child("user").child(userLogin.uid.toString())
+                                    .child("listToken").removeValue()
                             }
                         }
                     }
                 }
-
                 mAuth.signOut()
-
                 editor.putBoolean("logging_Success", false)
                 editor.commit()
-
-
-
                 val intent = Intent(this@MainActivity, LogIn::class.java)
                 startActivity(intent)
                 finish()
@@ -244,55 +208,52 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addListFriend() {
-        mDbRef.child("listFriend").child(mAuth.uid.toString()).addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                userList.clear()
-                adapter.addUidLogin(mAuth.uid)
-                if (snapshot.key == mAuth.uid && snapshot.value != null && snapshot.exists()) {
-                    for (postSnapshot in snapshot.children) {
-                        val user = postSnapshot.getValue(User::class.java)
-                        if (user?.uid != null) {
-                            if (mAuth.uid != null && user.uid != mAuth.uid) {
-                                if (user.lastMsg != null) {
-                                    adapter.addLastMsg(user.lastMsg.toString())
+        mDbRef.child("listFriend").child(mAuth.uid.toString())
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val list: ArrayList<String> = ArrayList()
+                    list.clear()
+                    adapter.addUidLogin(mAuth.uid)
+                    if (snapshot.key == mAuth.uid && snapshot.value != null && snapshot.exists()) {
+                        for (postSnapshot in snapshot.children) {
+                            val user = postSnapshot.getValue(User::class.java)
+                            if (user?.uid != null) {
+                                if (mAuth.uid != null && user.uid != mAuth.uid) {
+                                    list.add(user.uid.toString())
                                 }
-                                userList.add(user)
-                                adapter.setGoneButtonAdd(true)
                             }
                         }
                     }
+                    if (list.isEmpty() && userLogin.uid == mAuth.uid) {
+                        addFriendUser()
+                    } else {
+                        checkShowFriend(list)
+                    }
                 }
-                if (userList.isEmpty() && userLogin.uid == mAuth.uid) {
-                    addFriendUser()
-                } else {
-//                    adapter.addUserList(userList)
-                    adapter.updateListFriend(userList)
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
                 }
-//                adapter.updateListFriend(userList)
-            }
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
-            }
-        })
+            })
     }
 
-    private fun statusAccount(Uid: String? ) {
+    private fun statusAccount(Uid: String?) {
         val studentRef = FirebaseDatabase.getInstance().getReference("user").child(Uid!!)
         val connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected")
 
         connectedRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val connected = snapshot.getValue(Boolean::class.java)!!
-                val hashMap1 : HashMap<String, String> = HashMap()
+                val hashMap1: HashMap<String, String> = HashMap()
                 hashMap1.put("status", "offline")
                 val hashMap2: HashMap<String, String> = HashMap()
                 hashMap2.put("status", "online")
                 if (connected) {
                     studentRef.onDisconnect().updateChildren(hashMap1 as Map<String, Any>)
                     studentRef.updateChildren(hashMap2 as Map<String, Any>)
-                }else {
+                } else {
                     studentRef.updateChildren(hashMap1 as Map<String, Any>)
-                    }
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -303,7 +264,8 @@ class MainActivity : AppCompatActivity() {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Are you want to exit app?")
+        AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
+            .setTitle("Are you want to exit app?")
             .setMessage("Are you sure?")
             .setPositiveButton("yes", DialogInterface.OnClickListener { dialog, which ->
                 val intent = Intent(Intent.ACTION_MAIN)
@@ -311,22 +273,62 @@ class MainActivity : AppCompatActivity() {
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 val hashMap: HashMap<String, String> = HashMap()
                 hashMap.put("status", "offline")
-                //.ref.updateChildren(hashMap as Map<String, Any>)
-                FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid!!).updateChildren(
-                    hashMap as Map<String, Any>)
+                FirebaseDatabase.getInstance().getReference("user").child(mAuth.uid!!)
+                    .updateChildren(
+                        hashMap as Map<String, Any>
+                    )
                 startActivity(intent)
                 finish()
             }).setNegativeButton("no", null).show()
     }
 
-
-    private fun addFriendUser() {
-        mDbRef.child("user").addValueEventListener(object: ValueEventListener{
+    fun checkShowFriend(list: ArrayList<String>) {
+        mDbRef.child("user").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-
                 userList.clear()
                 adapter.addUidLogin(mAuth.uid)
+                if (snapshot.key == "user" && snapshot.value != null && snapshot.exists()) {
+                    for (postSnapshot in snapshot.children) {
+                        val user = postSnapshot.getValue(User::class.java)
+                        if (user?.uid != null) {
+                            if (mAuth.uid != null && user.uid != mAuth.uid) {
+                                if (list.contains(user.uid)) {
+                                    userList.add(user)
+                                    adapter.setGoneButtonAdd(true)
+                                }
+                            } else {
+                                userLogin = postSnapshot.getValue(User::class.java)!!
+                                adapter.addUserLogin(userLogin)
+                                FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+                                    if (!userLogin.listToken?.contains(it.token)!! && userLogin.status == "online") {
 
+                                        val listToken = ArrayList<String>()
+                                        listToken.add(it.token)
+
+                                        mDbRef.child("user").child(userLogin.uid.toString())
+                                            .child("listToken").setValue(listToken)
+                                    } else {
+                                        Log.d("token", it.token)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    adapter.updateListFriend(userList)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+
+    private fun addFriendUser() {
+        mDbRef.child("user").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                userList.clear()
+                adapter.addUidLogin(mAuth.uid)
                 if (snapshot.key == "user" && snapshot.value != null && snapshot.exists()) {
                     for (postSnapshot in snapshot.children) {
                         val user = postSnapshot.getValue(User::class.java)
@@ -351,23 +353,19 @@ class MainActivity : AppCompatActivity() {
                                         val listToken = ArrayList<String>()
                                         listToken.add(it.token)
 
-                                        mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(listToken)
+                                        mDbRef.child("user").child(userLogin.uid.toString())
+                                            .child("listToken").setValue(listToken)
                                     } else {
                                         Log.d("token", it.token)
                                     }
                                 }
-
                             }
                         }
                     }
                 }
-
-//                adapter.addUserList(userList)
-//                if (userList.isEmpty() && hasMore && userLogin.uid == mAuth.uid) {
-//                    Toast.makeText(this@MainActivity, "No friend to show", Toast.LENGTH_LONG).show()
-//                }
                 adapter.updateListFriend(userList)
             }
+
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
             }
@@ -375,7 +373,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun findUserLogin() {
-        mDbRef.child("user").addValueEventListener(object: ValueEventListener{
+        mDbRef.child("user").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 adapter.addUidLogin(mAuth.uid)
                 if (snapshot.key == "user" && snapshot.value != null && snapshot.exists()) {
@@ -389,14 +387,11 @@ class MainActivity : AppCompatActivity() {
                                 }
                                 adapter.addUserLogin(userLogin)
                                 FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-
-
                                     if (!userLogin.listToken?.contains(it.token)!! && userLogin.status == "online") {
-
                                         val listToken = ArrayList<String>()
                                         listToken.add(it.token)
-
-                                        mDbRef.child("user").child(userLogin.uid.toString()).child("listToken").setValue(listToken)
+                                        mDbRef.child("user").child(userLogin.uid.toString())
+                                            .child("listToken").setValue(listToken)
                                     } else {
                                         Log.d("token", it.token)
                                     }
@@ -406,6 +401,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
             }
@@ -413,15 +409,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun addSearchFriend(query: String) {
-        mDbRef.child("user").addValueEventListener(object: ValueEventListener{
+        mDbRef.child("user").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-
                 userList.clear()
                 adapter.addUidLogin(mAuth.uid)
-
                 for (postSnapshot in snapshot.children) {
-                    if (postSnapshot.getValue(User::class.java)?.uid != null && postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
-                        if (query == postSnapshot.getValue(User::class.java)!!.name.toString().toLowerCase()) {
+                    if (postSnapshot.getValue(User::class.java)?.uid != null && postSnapshot.getValue(
+                            User::class.java
+                        )?.uid != mAuth.uid
+                    ) {
+                        if (query == postSnapshot.getValue(User::class.java)!!.name.toString()
+                                .toLowerCase()
+                        ) {
                             userList.add(postSnapshot.getValue(User::class.java)!!)
                         }
                         adapter.updateListFriend(userList)
@@ -432,20 +431,22 @@ class MainActivity : AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
             }
-
         })
     }
 
     fun addSearchCharacter(query: String) {
-        mDbRef.child("user").addValueEventListener(object: ValueEventListener{
+        mDbRef.child("user").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-
                 userList.clear()
                 adapter.addUidLogin(mAuth.uid)
-
                 for (postSnapshot in snapshot.children) {
-                    if (postSnapshot.getValue(User::class.java)?.uid != null && postSnapshot.getValue(User::class.java)?.uid != mAuth.uid) {
-                        if (postSnapshot.getValue(User::class.java)!!.name?.toLowerCase()!!.startsWith(query.toLowerCase())) {
+                    if (postSnapshot.getValue(User::class.java)?.uid != null && postSnapshot.getValue(
+                            User::class.java
+                        )?.uid != mAuth.uid
+                    ) {
+                        if (postSnapshot.getValue(User::class.java)!!.name?.toLowerCase()!!
+                                .startsWith(query.toLowerCase())
+                        ) {
                             userList.add(postSnapshot.getValue(User::class.java)!!)
                         }
                         adapter.updateListFriend(userList)
@@ -456,28 +457,26 @@ class MainActivity : AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
             }
-
         })
     }
 
-   private fun unReadChange() {
-       mDbRef.child("unRead").child(mAuth.uid.toString()).addValueEventListener(object : ValueEventListener{
-           override fun onDataChange(snapshot: DataSnapshot) {
-               for (postSnapshot in snapshot.children) {
-                   val unRead: Unread? = postSnapshot.getValue(Unread::class.java)
-                   if (unRead != null && postSnapshot.key != userLogin.uid) {
-                       if (unRead.fromUid != "" || unRead.toUid != ""&& unRead.toUid == userLogin.uid) {
-                           adapter.unRead(unRead)
-                       }
+    private fun unReadChange() {
+        mDbRef.child("unRead").child(mAuth.uid.toString())
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (postSnapshot in snapshot.children) {
+                        val unRead: Unread? = postSnapshot.getValue(Unread::class.java)
+                        if (unRead != null && postSnapshot.key != userLogin.uid) {
+                            if (unRead.fromUid != "" || unRead.toUid != "" && unRead.toUid == userLogin.uid) {
+                                adapter.unRead(unRead)
+                            }
+                        }
+                    }
+                }
 
-                   }
-               }
-           }
-
-           override fun onCancelled(error: DatabaseError) {
-               TODO("Not yet implemented")
-           }
-
-       })
-   }
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
+                }
+            })
+    }
 }
