@@ -64,7 +64,7 @@ class UserAdapter(val context: Context): RecyclerView.Adapter<UserAdapter.UserVi
         }
 
         if (currentUser.isTyping && userLogin.showTyping) {
-            holder.typing.text = "Typing..."
+            holder.typing.setText(R.string.user_layout_typing)
         } else {
             holder.typing.text = ""
         }
