@@ -69,14 +69,14 @@ class UserAdapter(val context: Context): RecyclerView.Adapter<UserAdapter.UserVi
             holder.typing.text = ""
         }
 
-        if (currentUser.uid == unRead.fromUid && userLogin.uid == unRead.toUid) {
-            holder.numberNotification.text = unRead.unread.toString()
-            if (unRead.unread == 0) {
-                holder.numberNotification.text = ""
-            }
-        }
+//        if (currentUser.uid == unRead.fromUid && userLogin.uid == unRead.toUid) {
+//            holder.numberNotification.text = unRead.unread.toString()
+//            if (unRead.unread == 0) {
+//                holder.numberNotification.text = ""
+//            }
+//        }
 
-            holder.textName.text = currentUser.name
+        holder.textName.text = currentUser.name
         holder.textStatus.text = currentUser.status
         if (holder.textStatus.text == "online") {
             holder.textStatus.setTextColor(Color.GREEN)

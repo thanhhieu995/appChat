@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity() {
             override fun onClick(user: User) {
 //                Toast.makeText(this@MainActivity, "Add friend", Toast.LENGTH_LONG).show()
                 mDbRef.child("listFriend").child(userLogin.uid.toString()).child(user.uid.toString()).setValue(user)
-                Toast.makeText(this@MainActivity, "add friend", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@MainActivity, "add into list", Toast.LENGTH_LONG).show()
             }
         })
     }
@@ -270,11 +270,9 @@ class MainActivity : AppCompatActivity() {
                 }
 //                adapter.updateListFriend(userList)
             }
-
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
             }
-
         })
     }
 
@@ -303,6 +301,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Are you want to exit app?")
             .setMessage("Are you sure?")
@@ -369,11 +368,9 @@ class MainActivity : AppCompatActivity() {
 //                }
                 adapter.updateListFriend(userList)
             }
-
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
             }
-
         })
     }
 
@@ -409,11 +406,9 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Toast.makeText(this@MainActivity, error.message, Toast.LENGTH_LONG).show()
             }
-
         })
     }
 
