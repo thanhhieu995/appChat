@@ -16,8 +16,7 @@ import com.squareup.picasso.Picasso
 import vnd.hieuUpdate.chitChat.R
 import vnd.hieuUpdate.chitChat.User
 
-class ChatAdapter(val context: Context) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ChatAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val ITEM_RECEIVE = 1
     val ITEM_SENT = 2
