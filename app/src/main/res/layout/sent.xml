@@ -44,6 +44,7 @@
             android:id="@+id/time_sent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:layout_marginStart="8dp"
             tools:text="time message sent"
             app:layout_constraintStart_toStartOf="@+id/txt_sent_message"
@@ -56,6 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="status message sent"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="@+id/RL_sentLayout"
         app:layout_constraintTop_toBottomOf="@+id/RL_sentLayout" />
 

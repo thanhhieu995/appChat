@@ -3,6 +3,7 @@
     <style name="et_input">
         <item name="android:textSize">20sp</item>
         <item name="android:background">@drawable/bg_et_input</item>
+        <item name="android:color">@color/black</item>
     </style>
 
     <style name="btn_login">

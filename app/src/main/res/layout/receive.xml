@@ -46,6 +46,7 @@
             android:padding="10dp"
             tools:text="This is receive message"
             android:textSize="18sp"
+            android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,6 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             tools:text="time receive message"
+            android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="@+id/txt_receive_message"
             app:layout_constraintTop_toBottomOf="@+id/txt_receive_message" />
 

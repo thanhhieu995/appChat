@@ -19,4 +19,5 @@
     <string name="show_typing_chat"> is typing…</string>
     <string name="btn_addFriend">add</string>
     <string name="request_friend">request friend</string>
+    <string name="hint_message">Type a message</string>
 </resources>
