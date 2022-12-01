@@ -56,6 +56,7 @@
             app:layout_constraintEnd_toStartOf="@+id/img_sent_chat"
             app:layout_constraintStart_toEndOf="@+id/img_attach"
             android:textColor="@color/black"
+            android:textColorHint="@color/blue"
             android:hint="@string/hint_message"/>
 
 
