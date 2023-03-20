@@ -3,6 +3,7 @@ package vnd.hieuUpdate.chitChat.main
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,7 +60,13 @@ class UserAdapter(val context: Context): RecyclerView.Adapter<UserAdapter.UserVi
         currentUser.uid?.let {
             storageRef.child("images").child(it)
                 .downloadUrl.addOnSuccessListener {
-                    Picasso.get().load(it).into(holder.imgAvatar)
+                    if (holder.imgAvatar.drawable == null) {
+                        Log.d("hieu", "true")
+                        Picasso.get().load(it).into(holder.imgAvatar)
+                    } else {
+                        Log.d("hieu", "false")
+                    }
+//                    Picasso.get().load(it).into(holder.imgAvatar)
                 }
         }
 

@@ -2,9 +2,15 @@ package vnd.hieuUpdate.chitChat.chat
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Application.ActivityLifecycleCallbacks
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -14,6 +20,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,19 +38,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import vnd.hieuUpdate.chitChat.Message
-import vnd.hieuUpdate.chitChat.User
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.HashMap
+import vnd.hieuUpdate.chitChat.R
 import vnd.hieuUpdate.chitChat.Unread
+import vnd.hieuUpdate.chitChat.User
 import vnd.hieuUpdate.chitChat.main.MainActivity
 import vnd.hieuUpdate.chitChat.notificationTest.NotificationData
 import vnd.hieuUpdate.chitChat.notificationTest.PushNotification
 import vnd.hieuUpdate.chitChat.notificationTest.RetrofitInstance
-import vnd.hieuUpdate.chitChat.R
+import java.text.SimpleDateFormat
+import java.util.*
 
 
-class ChatActivity : AppCompatActivity() {
+class ChatActivity : AppCompatActivity(), ActivityLifecycleCallbacks {
 
     private lateinit var chatRecyclerView: RecyclerView
     private lateinit var messageBox: EditText
@@ -100,10 +106,17 @@ class ChatActivity : AppCompatActivity() {
 
     var isActive: Boolean = false
 
+    lateinit var sharedPreferences: SharedPreferences
+    lateinit var editor: SharedPreferences.Editor
+
+    @RequiresApi(Build.VERSION_CODES.Q)
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        editor = sharedPreferences.edit()
 
         mAuth = FirebaseAuth.getInstance()
 
@@ -201,6 +214,7 @@ class ChatActivity : AppCompatActivity() {
         }
 
 //        checkTyping(messageBox)
+//        registerActivityLifecycleCallbacks(this)
     }
 
     private fun pushImageToStorage(currentDate: String, message: String) {
@@ -240,7 +254,7 @@ class ChatActivity : AppCompatActivity() {
 
         if (!title.isNullOrEmpty() && message.isNotEmpty()) {
             for (token in userFriend.listToken!!) {
-                PushNotification(NotificationData(userLogin, userFriend, hasMore, title,
+                PushNotification(NotificationData(userLogin, userFriend, roomSender.toString(), hasMore, title,
                     "$message... image"
                 ), token, "high")
                     .also {
@@ -251,7 +265,8 @@ class ChatActivity : AppCompatActivity() {
 
         if (!title.isNullOrEmpty() && message.isEmpty()) {
             for (token in userFriend.listToken!!) {
-                PushNotification(NotificationData(userLogin, userFriend, hasMore, title, "send you image"), token, "high")
+                PushNotification(NotificationData(userLogin, userFriend,
+                    roomSender.toString(), hasMore, title, "send you image"), token, "high")
                     .also {
                         sendNotification(it)
                     }
@@ -261,8 +276,6 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
-        isActive = true
 
         val hasMoreTemp = intent.extras?.get("hasMore")
         hasMore = if (hasMoreTemp is String) {
@@ -302,11 +315,13 @@ class ChatActivity : AppCompatActivity() {
         chatAdapter.setValueUser(userLogin, userFriend, hasMore)
 
 //        isSeen()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        isActive = false
+        val roomSenderService = intent.getStringExtra("roomSenderService")
+//        val roomSharePref = sharedPreferences.getString("roomSender", "")
+//        if (roomSharePref == roomSender || roomSharePref == roomReceiver) {
+        Log.d("roomSenderService", roomSenderService.toString())
+            val nMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            nMgr.cancelAll()
+//        }
     }
 
     private fun addStatusFriend(status: String?) {
@@ -345,7 +360,7 @@ class ChatActivity : AppCompatActivity() {
         if (title != null) {
             if (title.isNotEmpty() && message.isNotEmpty()) {
                 for (token in userFriend.listToken!!) {
-                    PushNotification(NotificationData(userLogin, userFriend, hasMore, title, message), token, "high")
+                    PushNotification(NotificationData(userLogin, userFriend, roomSender.toString(),hasMore, title, message), token, "high")
                         .also {
                             sendNotification(it)
                         }
@@ -740,7 +755,7 @@ class ChatActivity : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (postSnapshot in snapshot.children) {
                         val message = postSnapshot.getValue(Message::class.java)
-                        if (message != null && !message.seen && hasMore && message.receiveId == userLogin.uid && message.senderId == userFriend.uid && userFriend.status == "online" && isActive) {
+                        if (message != null && !message.seen && hasMore && message.receiveId == userLogin.uid && message.senderId == userFriend.uid && userFriend.status == "online") {
                             val hashMap: HashMap<String, Boolean> = HashMap()
                             hashMap.put("seen", true)
                             postSnapshot.ref.updateChildren(hashMap as Map<String, Any>)
@@ -908,6 +923,42 @@ class ChatActivity : AppCompatActivity() {
 //            .addOnCanceledListener {
 //                Toast.makeText(this@ChatActivity, "Image cancel", Toast.LENGTH_LONG).show()
 //            }
+    }
+
+    override fun onActivityCreated(p0: Activity, p1: Bundle?) {
+        Log.d("onActivityCreated", "true")
+    }
+
+    override fun onActivityStarted(p0: Activity) {
+        Log.d("onActivityStarted", "true")
+    }
+
+    override fun onActivityResumed(p0: Activity) {
+        Log.d("onActivityResumed", "true")
+        isActive = true
+        editor.putString("roomSender",roomSender)
+        editor.putBoolean("isActive", isActive)
+        editor.commit()
+    }
+
+    override fun onActivityPaused(p0: Activity) {
+        Log.d("onActivityPaused", "true")
+    }
+
+    override fun onActivityStopped(p0: Activity) {
+        Log.d("onActivityStopped", "true")
+    }
+
+    override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) {
+        Log.d("instancesState", "true")
+    }
+
+    override fun onActivityDestroyed(p0: Activity) {
+        Log.d("onActivityDestroyed", "true")
+        isActive = false
+        editor.putString("roomSender","")
+        editor.putBoolean("isActive", isActive)
+        editor.commit()
     }
 }
 
